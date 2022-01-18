@@ -1,96 +1,85 @@
-" :h只要路径
-" https://github.com/vim/vim/issues/6793
-" Register % contains the name of the current file.
-" 这3行结果貌似一样, expand和fnamemodify只有细微区别？
-" let $no_vscode = expand('%:h') . "/no_vscode.vim"
-" let $no_vscode = fnamemodify('%',':h') . "/no_vscode.vim"
-let $no_vscode = fnamemodify($MYVIMRC,':h') . "/no_vscode.vim"
+" 文件路径
+    if exists('g:vscode')
+        " 用vscode时，本文件里也有依赖于$MYVIMRC的变量。别扔掉$MYVIMRC
+        let $MYVIMRC =  "~/dotF/cfg/nvim/init.vim"
+        " 放进if？ gf无法跳到has_vscode.vim
+        " let $has_vscode = fnamemodify($MYVIMRC,':h') . "/has_vscode.vim"
+    endif
+    let $has_vscode = fnamemodify($MYVIMRC,':h') . "/has_vscode.vim"
+    " :h只要路径
+    let $no_vscode = fnamemodify($MYVIMRC,':h') . "/no_vscode.vim"
 
-if exists('g:vscode')
-    " 用vscode时，本文件里也有依赖于$MYVIMRC的变量。别扔掉$MYVIMRC
-    let $MYVIMRC =  "~/dotF/cfg/nvim/init.vim"
-    " 放进if？ gf无法跳到has_vscode.vim
-    " let $has_vscode = fnamemodify($MYVIMRC,':h') . "/has_vscode.vim"
-endif
-let $has_vscode = fnamemodify($MYVIMRC,':h') . "/has_vscode.vim"
-
-" 无法expand/扩展/识别 文件名
-" let $has_vscode = fnamemodify($MYVIMRC,':h') . "/has_vscode.vim"
-" let $has_vscode = expand('%:h') . "/has_vscode.vim"
-" let $has_vscode = fnamemodify('%',':h') . "/has_vscode.vim"
+    " notes.vim
+    " todo.vim
 
 
-" echom 'has_vscode找到了吗'
-" echom $has_vscode
+" 让配置变更立即生效
+    " >_>_>===================================================================begin
+    " 1.  `:augroup {name}`
+    " 	Define the autocmd group name for the  following ":autocmd"
+    augroup Reload
+
+    " 2. Delete any old autocommands  `:help autocmd-remove`
+    autocmd!
+
+    " 或者： 先在group内删除匹配{event}和{pat}的autocmd，再定义新的cmd
+    ":autocmd! [group]   {event}     {pat}      {cmd}
+    " autocmd! Reload BufWritePost $MYVIMRC  echom '改了init.vim'
+
+    " When resourcing vimrc always use autocmd-nested  因为autocmd执行时 会又遇到autocmd
+    " ++nested 在老版本中是nested
+                                                                                    " 点号拼接字符串
+    autocmd Reload BufWritePost $MYVIMRC    ++nested   source $MYVIMRC | echom "更新了"."init.vim "| redraw
+    autocmd Reload BufWritePost $no_vscode  ++nested   source $MYVIMRC | echom '根据环境变量，改了no_vscode.vim, 加载了init.vim' | redraw
+    autocmd Reload BufWritePost $has_vscode  ++nested  source $MYVIMRC | echom '(改了has_vscode.vim, 更新init.vim)'  | redraw
+
+    " 4. Go back to the default group, named "end"
+    augroup end
+    " end=====================================================================<_<_<
 
 
+let mapleader =" "
+inoremap jj <esc>
+
+ " 主要影响map
+    set timeoutlen=500
+    " set notimeout
+
+" tty?
+    set ttimeout ttimeoutlen=10
 
 nnoremap <c-d> 15<c-d>
 nnoremap <c-u> 15<c-u>
 
-" 禁用netrw，不过应该用不着了。我删掉了对应文件
-" let g:loaded_netrw       = 1
-" let g:netrw_banner=0
-" let g:loaded_netrwPlugin = 1
-"
-
-" 让配置变更立即生效
-" >_>_>===================================================================begin
-" 1.  `:augroup {name}`
-" 	Define the autocmd group name for the  following ":autocmd"
-augroup Reload
-
-" 2. Delete any old autocommands  `:help autocmd-remove`
-autocmd!
-
-" 或者： 先在group内删除匹配{event}和{pat}的autocmd，再定义新的cmd
-":autocmd! [group]   {event}     {pat}      {cmd}
-" autocmd! Reload BufWritePost $MYVIMRC  echom '改了init.vim'
-
-" When resourcing vimrc always use autocmd-nested  因为autocmd执行时 会又遇到autocmd
-" ++nested 在老版本中是nested
-                                                                                " 点号拼接字符串
-autocmd Reload BufWritePost $MYVIMRC    ++nested   source $MYVIMRC | echom "更新了"."init.vim "| redraw
-autocmd Reload BufWritePost $no_vscode  ++nested   source $MYVIMRC | echom '根据环境变量，改了no_vscode.vim, 加载了init.vim' | redraw
-autocmd Reload BufWritePost $has_vscode  ++nested   source $MYVIMRC | echom '(改了has_vscode.vim, 更新init.vim)'  | redraw
-
-" 4. Go back to the default group, named "end"
-augroup end
-" end=====================================================================<_<_<
-
-
+" z: zhe折叠
+nnoremap <leader>z :set fdm=indent<CR>
 nnoremap gf :tabedit <cfile><CR>
 
 
-" =============================================================
 " block模式
-" 记忆：c for block
-" c发音:ke
-nnoremap <c-c> <c-v>
-" 变成^  作用是 显示ASCII码 （以^H等方式显示一些控制字符）
-cnoremap <c-c> <c-v>
-" vscod里不生效：
-inoremap <c-c> <c-v>
+    " 记忆：c for block
+    " c发音:ke
+    nnoremap <c-c> <c-v>
+    " 变成^  作用是 显示ASCII码 （以^H等方式显示一些控制字符）
+    cnoremap <c-c> <c-v>
+    " vscod里不生效：
+    inoremap <c-c> <c-v>
 
-" 加了几行，还是粘贴
-" inoremap <c-v> <c-v>
-" cnoremap <c-v> <c-v>
-" nnoremap <c-v> <c-v>
-"
-" 加了这两行，还是删除到行首
-" cnoremap <c-q> <c-v>
-" inoremap <c-q> <c-v>
-"
-" =============================================================
+    " 加了几行，还是粘贴
+    " inoremap <c-v> <c-v>
+    " cnoremap <c-v> <c-v>
+    " nnoremap <c-v> <c-v>
+
+    " 加了这两行，还是删除到行首
+    " cnoremap <c-q> <c-v>
+    " inoremap <c-q> <c-v>
+
 
 
 set iskeyword+=-
 
-let mapleader =" "
-
 " About search
 " >_>_>===================================================================begin
-
     set incsearch         " incremental searching
     set wrapscan
     set ignorecase smartcase
@@ -137,7 +126,6 @@ let mapleader =" "
     " echom &filetype
     " echom "文件类型输出结束"
 
-
     " ms: mark as searh, 回头敲's跳回来
     " https://stackoverflow.com/a/3760486/14972148
     " 据说map了slash会影响其他插件. 不过先用着吧
@@ -171,18 +159,10 @@ let mapleader =" "
     " end=====================================================================<_<_<
 
 
-
-
-" U is seldom useful in practice,U 本身的功能，不及C-R
-nnoremap U <C-R>
-nnoremap <M-u> <C-R>
-
-set timeoutlen=500  " 主要影响map
-inoremap jj <esc>
-
-" set notimeout
-" tty?
-set ttimeout ttimeoutlen=10
+" todo
+    " U is seldom useful in practice,U 本身的功能，不及C-R
+    nnoremap U <C-R>
+    nnoremap <M-u> <C-R>
 
 let g:selecmode="mouse"
 
@@ -191,72 +171,20 @@ let g:selecmode="mouse"
 " set listchars=tab:>_,trail:-,nbsp:+
 
 
-" `:autocmd` adds to the list of autocommands regardless of whether they are
-        " already present.  When your .vimrc file is sourced twice, the autocommands
-        " will appear twice.  To avoid this, define your autocommands in a group, so
-        " that you can easily clear them:
-
-
-
-" When a function by this name already exists and [!] is
-" not used an error message is given.  There is one
-" exception: When sourcing a script again, a function
-" that was previously defined in that script will be
-" silently replaced.
-" When [!] is used, an existing function is silently
-" replaced.  Unless it is currently being executed, that
-" is an error.
-" NOTE: Use ! wisely.  If used without care it can cause
-" an existing function to be replaced unexpectedly,
-" which is hard to debug.
-
-" 改了 beautify_wf并保存后， 保存init.vim会说function already exist
-" 些别想着避免这个问题，毕竟很少改init.vim以外的文件.
-" https://github.com/xolox/vim-reload
-
-
-" " 竖着分屏打开help
-" augroup my_filetype_settings
-"     autocmd!
-"     " winnr: 当前window的编号，top winodw是1
-"     " $  表示 last window
-"     autocmd FileType help if winnr('$') > 2 | wincmd K | else | wincmd L | endif
-"     augroup end
-
-" 1.4 LISTING MAPPINGS                  *map-listing*
-" When listing mappings the characters in the first two columns are:
-
-"       CHAR    MODE    ~
-"      <Space>  Normal, Visual, Select and Operator-pending
-"     n Normal
-"     v Visual and Select
-"     s Select
-"     x Visual
-"     o Operator-pending
-"     ! Insert and Command-line
-"     i Insert
-"     l ":lmap" mappings for Insert, Command-line and Lang-Arg
-"     c Command-line
-"     t Terminal-Job
-"
-" Just before the {rhs} a special character can appear:
-"     * indicates that it is not remappable
-"     & indicates that only script-local mappings are remappable
-"     @ indicates a buffer-local mapping
-
-
 " todo
-" shif left
-" map <S-Left>
-" map <S-Right>
-" map <C-Left>
-" map <C-Right>
+    " shif left
+    " map <S-Left>
+    " map <S-Right>
+    " map <C-Left>
+    " map <C-Right>
 
-"  系统粘贴板  "+
-inoremap <C-V> "+p
-set clipboard+=unnamedplus  " vim外也可以粘贴vim的registry了
-" echo 'wls有bug， 别设unnamedplus'
-" xsel换成xcliip, 貌似可以在wsl下用unnamedplus了
+"  和系统粘贴板 "+ 打通
+    set clipboard+=unnamedplus  " vim外也可以粘贴vim的registry了
+    inoremap <C-V> "+p
+    inoremap <C-P> <Esc>pa
+
+    " echo 'wls有bug， 别设unnamedplus'
+    " update: xsel换成xcliip, 貌似可以在wsl下用unnamedplus了
         " if hostname() == 'redmi14-leo' && !exists('g:vscode')
         "     " set clipboard=""  " 默认就是这样
         "
@@ -266,26 +194,7 @@ set clipboard+=unnamedplus  " vim外也可以粘贴vim的registry了
         "     " https://gist.github.com/MinSomai/c732fc66e36534feb5a8fb9e0a3c8fb2
         " endif
 
-inoremap <C-P> <Esc>pa
-" 现在的ctrl v能在normal模式下直接粘贴系统粘贴板的内容
 
-noremap <Right> *
-noremap <Left> #
-" CTRL-O                Go to [count] Older cursor position in jump list
-                        " (not a motion command).
-
-" <Tab>
-" CTRL-I                  Go to [count] newer cursor position in jump list
-"                         (not a motion command).
-
-" 在vusial mode下好像没功能
-noremap <Up> <C-O>
-vnoremap <Up> <Esc><C-O>
-" CTRL-I <Tab>          Go to [count] newer cursor position in jump list
-                        " (not a motion command)
-" 在vusial mode下好像没功能
-nnoremap <Down> <C-I>
-vnoremap <Down> <Esc><C-I>
 
 
 " :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
@@ -298,350 +207,90 @@ nnoremap <M-F2> :  .,$subs  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
                                 " 这些不能作为delimiter : 双引号， 竖线， backslash
                                 " 其他single-byte character都可以
 
+" 上下左右
+    noremap <Right> *
+    noremap <Left> #
 
+    noremap <Up> <C-O>
+        " up在vusial mode下好像没功能
+    vnoremap <Up> :<esc><C-O>
+        " vnoremap <Up> <Esc><C-O>  " 不行
 
+    nnoremap <Down> <C-I>
+        " CTRL-I 等价于<Tab>
+    vnoremap <Down> :<esc><C-I>
 
-noremap <Up> <C-O>
-
-
-
-
-
-" vscode里是切到terminal
-" nnoremap <C-J>
 
 noremap <BS> <left>
-" normal模式：<C-X>  数字减1
-" shift在ctrl上，加1 vs 减一，刚好
 nnoremap X <C-A>
+    " normal模式：<C-X>  数字减1
+    " shift在ctrl上，加1 vs 减一，刚好
 
-" 被coc占用了？
-" <C-X> 调自带的omnicomplete
 inoremap <C-F> <C-X><C-F>
+    " <C-X> 调自带的omnicomplete
+    " 被coc占用了？
+    " 对于vscode-nvim：insert mode is being handled by vscode 所以<C-X>没反应
 
-" 对于vscode-nvim：insert mode is being handled by vscode 所以<C-X>没反应
-
-                        " *i_CTRL-X* *insert_expand*
-" CTRL-X enters a sub-mode where several commands can be used.  Most of these
-" commands do keyword completion; see |ins-completion|.
-
-
-" no help for <C-X>
-" no help for CTRL-X CRTL-O
-" 这样才行：
-" h i_CTRL-X
-
-
-
-
-" 这样可以 不那么死板地 只能用~/AppData/Local/nvim/init.vim来进入windows的nvim, 从而管理插件(
-    " windows的nvim和vscode的nvim共用):
-"nvim -u '\\wsl$\Ubuntu\root\dotF\.config\nvim\init.vim'
-" 插件位置:
-" C:\Users\noway\AppData\Local\nvim-data
-" 把wsl下的dotfile发送快捷方式到 ~/AppData/Local/nvim/init.vim , 不行.因为shortcut和软链接还不一样
-" https://superuser.com/questions/253935/what-is-the-difference-between-symbolic-link-and-shortcut
-
-" todo:  有些粘贴来的配置，应该要清理掉
-
-
-" 【【-----------------------------------------------------------begin
 " Return to last edit position when opening files
-" 有bug: autocmd BufReadPost * normal! g`"zv
-"  normal! 表示 Execute Normal mode commands,    [!] :  mappings will not be used.
-"  g`"表示 跳到 the last known position in a file
-"  zv 取消折叠光标所在行
-" 如果: the file is truncated outside of vim, and vim's mark is on a line that no longer exists, vim throws an error. Fixed that with:
-" autocmd BufReadPost * silent! normal! g`"zv
-" 或者:
-autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   execute "normal! g`\"zv" |
-     \ endif
-" end-------------------------------------------------------------】】
+    autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   execute "normal! g`\"zv" |
+        \ endif
 
-
-" T:tab, tab to space
-func T2S()
-    " vscode 有个插件：takumii.tabspace  " 不过应该用不着了
-    set expandtab tabstop=4
-    " [range]retab 百分号% 表示全文
-    %retab!
-    echo "  Tab变成4空格"
-endfunc
-" 没有混淆时，任意缩写都可以？endfunc
-
-" autocmd对neovim-vscode无效？
-autocmd BufNewFile,BufRead *.py  execute ":call T2S()"
-
-" https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
 autocmd FileType json syntax match Comment +\/\/.\+$+
+    " https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
+" 空格 tab
+    " T:tab, tab to space
+    func T2S()
+        " vscode 有个插件：takumii.tabspace  " 不过应该用不着了
+        set expandtab tabstop=4
+        " [range]retab 百分号% 表示全文
+        %retab!
+        echo "  Tab变成4空格"
+        endfunc
 
-func T2F()
-    echom "  2个空格 变成tab"
-    set noexpandtab tabstop=2
-    " [range]retab 百分号% 表示全文
-    %retab!
-    call T2S()
-endfunc
+    autocmd BufNewFile,BufRead *.py  execute ":call T2S()"
+        " autocmd对neovim-vscode无效？
 
-" nnoremap <F10> :call Indent_wf()<CR>
-" inoremap <F10> <ESC>:call Indent_wf()<CR>i
+    " Two to Four
+    func T2F()
+        echom "  2个空格 变成tab"
+        set noexpandtab tabstop=2
+        " [range]retab 百分号% 表示全文
+        %retab!
+        call T2S()
+        endfunc
+
+    " nnoremap <F10> :call Indent_wf()<CR>
+    " inoremap <F10> <ESC>:call Indent_wf()<CR>i
 
 
-" python文件中输入新行时#号注释不切回行首
+" python文件中输入新行时 #号注释不切回行首
 " autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
 
 
-" 保存python等文件时删除多余空格
+" 保存文件时删除多余空格
 func <SID>TrailingWhiteSpace()
         let l = line(".")
         let c = col(".")
         %s/\s\+$//e
         call cursor(l, c)
-endfunc
-autocmd FileType c,cpp,javascript,python,vim,sh,zsh autocmd BufWritePre <buffer> :call <SID>TrailingWhiteSpace()
+    endfunc
+    autocmd FileType c,cpp,javascript,python,vim,sh,zsh autocmd BufWritePre <buffer> :call <SID>TrailingWhiteSpace()
 
 
-" 让光标看着没动
-nnoremap yf ggyG<C-O>  " 让光标看着没动
-nnoremap df ggdG
-" p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
+nnoremap yf ggyG<C-O>
+  " ctrl o 让光标看着没动
 nnoremap vf ggVGp:echo"已粘贴之前复制的内容"<CR>
-
-" comment at the end of line
-
-
-" vscode里不行，别试了:
+nnoremap df ggdG
+    " p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
 " inoremap yf <Esc>ggyG<C-O>
-
-" Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
-" https://github.com/junegunn/vim-plug/wiki/tips
-" leo改过
-func VimPlugConds(arg1, ...)
-
-    " a: 表示argument
-    " You must prefix a parameter name with "a:" (argument).
-        " a:0  等于 len(a:000)),
-        " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
-    " A function cannot change a parameter
-
-            " To avoid an error for an invalid index use the get() function
-            " get(list, idx, default)
-    let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
-    " Borrowed from the C language is the conditional expression:
-    " a ? b : c
-    " If "a" evaluates to true, "b" is used
-    let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
-    " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
-    return  out
-endfunc
+    " vscode里不行，vscode外也别试了, 保持一致
 
 
 
-" =============================================vim-plug===============================begin
-" plugin在~/.local/share/nvim下的plugged
-call plug#begin(stdpath('data') . '/plugged')
-    Plug 'junegunn/vim-plug' " 为了能用:help plug-options
-
-    Plug 'voldikss/vim-translator'
-        " todo mobaxterm 2080ti上不行
-
-        " <Leader>t 翻译光标下的文本，在命令行回显
-        nnoremap  <Leader>a <Plug>Translate
-        vnoremap <silent> <Leader>a <Plug>TranslateV
-        " h被占了
-        " <Leader>h 翻译光标下的文本，在窗口中显示   h：here
-        nnoremap <silent> <Leader>a <Plug>TranslateW
-        vnoremap <silent> <Leader>a <Plug>TranslateWV
-        " Leader h被 set hlsearch！占用了
-
-
-    Plug 'sheerun/vim-polyglot'
-    Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-
-    Plug 'andymass/vim-matchup'
-    Plug 'junegunn/vim-easy-align'
-    echom 'line465'
-
-    # Plug 'neoclide/coc.nvim', VimPlugConds(!exists('g:vscode'), {'branch': 'release'})
-
-    " 装了没啥变化，neovim本身就可以实现：多个窗口编辑同一个文件时，只要一个窗口保存了，
-    " 跳到另一个窗口，会看到变化
-        " Plug 'gioele/vim-autoswap'
-        " set title
-        " " the default titlestring will work just fine
-        " set titlestring=
-        " let g:autoswap_detect_tmux = 1
-
-
-
-    " 要编译python+，难搞 放弃
-    " 允许多人同时编辑一个文件。避免多处打开同一个文件
-    " Plug 'FredKSchott/CoVim', VimPlugConds(!exists('g:vscode'))
-
-    " ga :  记作 get alignment,  本来是get ascii
-    " Start interactive EasyAlign in visual mode (e.g. vipga)
-    xmap ga <Plug>(EasyAlign)
-
-    " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-    nmap ga <Plug>(EasyAlign)
-    " wf_align
-        " \|是竖线的escape   dict里面不能放注释？ shell的换行也是，不像python
-        " 空行分开的前面几个,是我自定义的
-        " 小心对齐后 字符串里多出来的空格
-        let g:easy_align_delimiters = {
-            \                          'r': { 'pattern': "whatever_wf_want" },
-            \
-            \                          '?': { 'pattern': '?' },
-            \                          ':': { 'pattern': ":" },
-            \                          '\': { 'pattern': '\' },
-            \
-            \                          '>': { 'pattern': '>>\|=>\|>' },
-            \                          '/': {
-            \                                 'pattern'         : '//\+\|/\*\|\*/',
-            \                                 'delimiter_align' : 'l',
-            \                                 'ignore_groups'   : ['!Comment']
-            \                               },
-            \                          ']': {
-            \                                 'pattern'       : '[[\]]',
-            \                                 'left_margin'   : 0,
-            \                                 'right_margin'  : 0,
-            \                                 'stick_to_left' : 0
-            \                               },
-            \                          ')': {
-            \                                 'pattern'       : '[()]',
-            \                                 'left_margin'   : 0,
-            \                                 'right_margin'  : 0,
-            \                                 'stick_to_left' : 0
-            \                            },
-            \                          'd': {
-            \                                 'pattern'      : ' \(\S\+\s*[;=]\)\@=',
-            \                                 'left_margin'  : 0,
-            \                                 'right_margin' : 0
-            \                               }
-            \                          }
-
-    " [[==============================easymotion 配置=====================begin
-
-    " Plug 'asvetliakov/vim-easymotion'   " vscode定制的easymotion
-    " Plug 'easymotion/vim-easymotion'    " 只用裸nvim下的easymotion  千万别这么干。会把正在编辑的文件全搞乱
-
-    Plug 'easymotion/vim-easymotion', VimPlugConds(!exists('g:vscode'))
-    Plug 'asvetliakov/vim-easymotion', VimPlugConds(exists('g:vscode'), { 'as': 'leo-jump' })  " as的名字随便起，
-
-    " 这样可能更容易理解，没那么绕: 【an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.】
-    " Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { as': 'ori-easymotion', 'on': [] } : {}
-    " Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {} : { 'on': [] }
-
-    " map <Leader> <Plug>(easymotion-prefix)
-    " 默认:
-    map <Leader><Leader> <Plug>(easymotion-prefix)
-
-    let g:EasyMotion_do_mapping = 0 " Disable default mappings
-    let g:EasyMotion_smartcase = 1 " 敲小写，能匹配大写。反之不然
-
-    " Line motions
-    map <Leader>j <Plug>(easymotion-j)
-    map <Leader>k <Plug>(easymotion-k)
-
-    " todo  debug buggy 出了问题来这里
-    "s for search
-    " 用了vim-sandwich的默认keymapping，sa代表sandwich add.  sd 代表sandwich delete
-    " 干脆用大写的S算了，避免冲突
-    nmap S <Plug>(easymotion-f)
-    " 用nnoremap不行
-
-
-    " Need one more keystroke
-    nmap f <Plug>(easymotion-f2)
-
-    " 会抽风颤抖
-    " nmap f <Plug>(easymotion-f) "f{char}
-    " map  <Leader>f <Plug>(easymotion-bd-f) " <Leader>f{char} to move to {char}
-    "" umap后，变回默然的功能
-    " unmap f
-
-    " 会显示高亮字母后，光标到下一行
-    " nmap S <Plug>(easymotion-f2) " {char}{char} 怎样可以上下文都搜索？现在只能搜下文
-    " map  <Leader>w <Plug>(easymotion-w) " Move to word    " buftype option is set??
-    " ================================easymotion 配置=====================]]
-
-    Plug 'kurkale6ka/vim-pairs'   " 和sandwich“互补”
-
-    Plug 'machakann/vim-sandwich'
-    " 别再试同类(前浪)
-    "  Plug 'tpope/vim-surround'
-    "  Plug 'kana/vim-textobj-user'
-    "  Plug 'sgur/vim-textobj-parameter'
-
-
-
-    Plug 'scrooloose/nerdcommenter'
-
-
-
-    Plug  'Yggdroot/LeaderF'
-    " >>>---------------------------------------------------------------------LeaderF
-    " don't show the help in normal mode
-    let g:Lf_HideHelp = 1
-    let g:Lf_UseCache = 0
-    let g:Lf_UseVersionControlTool = 0
-    let g:Lf_IgnoreCurrentBufferName = 1
-
-
-    " popup mode
-    let g:Lf_WindowPosition = 'popup'
-    let g:Lf_PreviewInPopup = 1
-    let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-    let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
-
-    " let g:Lf_ShortcutF = "<leader>o"
-    " 和zsh下按ctrl f 作用一致
-    let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符
-    " mru: most recently used file
-    " C-u: 删掉cmdline的字符。主要对visual mode有用？很多插件都这么设
-        nnoremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-    " search a line in current buffer.  " 有点vscode下的感觉
-        nnoremap <leader>/ :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-    " <cword> is replaced with the word under the cursor (like |star|)
-        " nnoremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
-        " 删掉了叹号
-        "  LeaderfFunction! 叹号版本直接打开 normal 模式，并且定位到对应位置
-        nnoremap <C-B> :<C-U><C-R>=printf("Leaderf rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
-        " 不确定是否靠谱  " 代替在zsh中用rg
-        nnoremap <leader>f :<C-U><C-R>=printf("Leaderf rg -g '!*.zsh_history' -g '!*.lesshst' -g '!/data1/weifeng_liu/.large_trash' ")<CR><CR>
-        " 这个不起作用，不能ctrl+shift？
-        " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
-        " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR><CR>
-
-    " search visually selected text literally
-    " xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
-    " noremap go :<C-U>Leaderf! rg --recall<CR>
-
-    " should use `Leaderf gtags --update` first
-    let g:Lf_GtagsAutoGenerate = 0
-    let g:Lf_Gtagslabel = 'native-pygments'
-    " noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
-    " noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
-    " noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
-    " noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
-    " noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
-    " ---------------------------------------------------------------------<<<LeaderF
-
-
-
-
-    Plug 'sisrfeng/toggle-bool'
-
-    " leaderf里有这个keybind，我这里覆盖掉
-    noremap <leader>b :ToggleBool<CR>
-
-    Plug 'mbbill/undotree'
-call plug#end()
-
-
-
+nnoremap <F4> :UndotreeToggle<CR>
+let g:undotree_SetFocusWhenToggle = 1
 if has('persistent_undo')
     let target_path = expand('~/.undodir')
     " let target_path = expand('~/.undo_dir_nvim_wf')
@@ -651,9 +300,7 @@ if has('persistent_undo')
 
     let &undodir=target_path
     set undofile
-endif
-nnoremap <F4> :UndotreeToggle<CR>
-let g:undotree_SetFocusWhenToggle = 1
+    endif
 
 
 
@@ -689,49 +336,49 @@ endif
 
 
 " [[----------------------------nerdcommenter-config-------------------------------begin
-" g代表Global Variable
-let g:NERDCreateDefaultMappings = 0    " 别用默认的键位
+    " g代表Global Variable
+    let g:NERDCreateDefaultMappings = 0    " 别用默认的键位
 
-let g:NERDSpaceDelims = 1 " Add spaces after comment delimiters
-let g:NERDCompactSexyComs = 1 " Use compact syntax for  multi-line comments
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
+    let g:NERDSpaceDelims = 1 " Add spaces after comment delimiters
+    let g:NERDCompactSexyComs = 1 " Use compact syntax for  multi-line comments
+    " Align line-wise comment delimiters flush left instead of following code indentation
+    let g:NERDDefaultAlign = 'left'
 
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = { 'c': { 'left': '/*','right': '*/' } }
-let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
-let g:NERDToggleCheckAllLines = 1 " check all selected lines is commented or not
+    " Add your own custom formats or override the defaults
+    let g:NERDCustomDelimiters = { 'c': { 'left': '/*','right': '*/' } }
+    let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
+    let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
+    let g:NERDToggleCheckAllLines = 1 " check all selected lines is commented or not
 
-" 对vscode无效,不知道为啥
-" <C-/> 在vim中由C-_表示 zsh下敲cat后，ctrl / 显示  ^_
-nnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>j
-inoremap <C-_> <ESC>:call nerdcommenter#Comment('n', 'toggle')<CR>j
-vnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
-
-
-" 不行
-" func! InlineCommentWf()
-"     execute "normal A"
-"     execute "normal o/"
-"     call nerdcommenter#Comment("n", "Comment")
-"     execute "normal kJA"
-" endfunc
+    " 对vscode无效,不知道为啥
+    " <C-/> 在vim中由C-_表示 zsh下敲cat后，ctrl / 显示  ^_
+    nnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>j
+    inoremap <C-_> <ESC>:call nerdcommenter#Comment('n', 'toggle')<CR>j
+    vnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
 
 
+    " 不行
+    " func! InlineCommentWf()
+    "     execute "normal A"
+    "     execute "normal o/"
+    "     call nerdcommenter#Comment("n", "Comment")
+    "     execute "normal kJA"
+    " endfunc
 
 
 
-nnoremap <M-/> yy:call nerdcommenter#Comment('n', 'toggle')<CR>p
-
-" 好慢：
-" nnoremap = :<plug>nerdcommentertoggle<cr>j
-" nnoremap - :k<plug>nerdcommentertoggle<cr>
-" 这行不行:
-" nnoremap = :call <Plug>NERDCommenterInvert<CR>
 
 
-"let g:NERDDefaultNesting = 1
+    nnoremap <M-/> yy:call nerdcommenter#Comment('n', 'toggle')<CR>p
+
+    " 好慢：
+    " nnoremap = :<plug>nerdcommentertoggle<cr>j
+    " nnoremap - :k<plug>nerdcommentertoggle<cr>
+    " 这行不行:
+    " nnoremap = :call <Plug>NERDCommenterInvert<CR>
+
+
+    "let g:NERDDefaultNesting = 1
 " ---------------------------nerdcommenter-config----------------------------------end]]
 
 
@@ -1242,7 +889,7 @@ nnoremap <C-E> $
 
 
 
-let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
+" let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
 " 在vscode里 只有sa生效，其他不行，不知道为啥
 
 " easy-motion的nmap用的是S
@@ -1358,104 +1005,47 @@ func Conceal_strang_chr_3()
     " set concealcursor=vcni
 endfunc
 
+func VimPlugConds(arg1, ...)
+    " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
+    " https://github.com/junegunn/vim-plug/wiki/tips
+    " leo改过
 
-if !has('win32')
-    " 这行要调用lucius， 要在它后面：call plug#end()
-    source ~/dotF/cfg/nvim/beautify_wf.vim
-    " 这么写比较啰嗦：
-    " let s:beauty_path = fnamemodify($MYVIMRC, ":p:h") . "/beautify_wf.vim"    " 字符串concat，用点号
-    " exe 'source ' . s:beauty_path      " 这样不行： source  . s:beauty_path
-endif
+        " a: 表示argument
+        " You must prefix a parameter name with "a:" (argument).
+            " a:0  等于 len(a:000)),
+            " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
+        " A function cannot change a parameter
 
+                " To avoid an error for an invalid index use the get() function
+                " get(list, idx, default)
+        let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
+        " Borrowed from the C language is the conditional expression:
+        " a ? b : c
+        " If "a" evaluates to true, "b" is used
+        let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
+        " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
+        return  out
+    endfunc
 
+" 插件 (plugin) 在~/.local/share/nvim/plugged
+call plug#begin(stdpath('data') . '/plugged')
+    source ~/dotF/cfg/nvim/plug_wf.vim
+    if !exists('g:vscode')
+        Plug 'plasticboy/vim-markdown'
+        Plug 'preservim/nerdtree'
+        " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+            autocmd StdinReadPre * let s:std_in=1
+            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+        Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+    endif
+call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
 
-" todo
-" Each status line item is of the form: ( All fields except the {item} are optional.)
-"       %-0{minwid}.{maxwid}{item}
-" 在上面的基础上：  (几表示某个highlight设置)
-" %Highlight配色号码
-
-"    %=   右对齐
-"    %r  readonly, 显示 [RO]
-set statusline=
-set statusline=%7*=%r
-set statusline=%=%t                            " tittle
-set statusline+=%=\ buffer号:%n\            "buffer number
-set statusline+=%=%m                         "modified flag
-" set statusline+=%=文件格式:%{&ff}            "是否unix
-" flag[Preview] ??
-set statusline+=%=\ %h
-set statusline+=%=\ %w
-set statusline+=%=\ %k
-set statusline+=%=\ %q
-set statusline+=%999X
-" set statusline+=
-set statusline+=%=第%l行/
-set statusline+=%L行               "total lines
-set statusline+=(%p%%)
-set statusline+=%=第%v列         "virtual column number (screen column)
-" set statusline+=\ %c           " Column number (byte index).
-
-
-
-set statusline=
-set statusline+=%0*\ %<%F\                                "File+path
-set statusline+=%0*\ \ %m%r%w\                       "Modified? Readonly? Top/bot.
-" buffer号码
-set statusline+=%2*\[buffer:%n]                                  "buffernr
-" set statusline+=%2*\ %y\                                  "FileType
-" set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}      "Encoding
-" set statusline+=%3*\ %{(&bomb?\",BOM\":\"\")}\            "Encoding2
-" set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..)
-" set statusline+=%5*\ %{&spelllang}\                         "Spellanguage
-set statusline+=%8*\ %=\ 行:%l/%L\ (%3p%%)\             "Rownumber/total (%)
-set statusline+=%9*\ 列:%3c\                            "Colnr
-" set statusline+=%0*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
-
-" set laststatus=1  " only if there are at least two windows
-" 没有statusline时，命令那行和代码容易混在一起
-set laststatus=2  "  always show statusline
-
-" put the  block above in your vimrc file and
-" the following lines in your current colorscheme file.
-" hi User1 guifg=#ffdad8  guibg=#880c0e
-"
+source ~/dotF/cfg/nvim/status_line_wf.vim
+source ~/dotF/cfg/nvim/tabline.vim
+    " 或者叫tabline? tab statusline tab栏 tab status
 
 map <leader>h :tabprev<cr>
 map <leader>l :tabnext<cr>
-" 或者叫tabline? tab statusline tab栏 tab status
-" 改了不生效：
-set guitablabel=\[%N\]\ %t\ %M
-" set guitablabel=%t
-
-
-" function GuiTabLabel()
-"     let label = ''
-"     let bufnrlist = tabpagebuflist(v:lnum)
-"
-"     " Add '+' if one of the buffers in the tab page is modified
-"     for bufnr in bufnrlist
-"     if getbufvar(bufnr, "&modified")
-"         let label = '+'
-"         break
-"     endif
-"     endfor
-"
-"     " Append the number of windows in the tab page if more than one
-"     let wincount = tabpagewinnr(v:lnum, '$')
-"     if wincount > 1
-"     let label .= wincount
-"     endif
-"     if label != ''
-"     let label .= ' '
-"     endif
-"
-"     " Append the buffer name
-"     return label . bufname(bufnrlist[tabpagewinnr(v:lnum) - 1])
-" endfunction
-"
-" set guitablabel=%{GuiTabLabel()}
-"
 
 
 if exists('g:vscode')

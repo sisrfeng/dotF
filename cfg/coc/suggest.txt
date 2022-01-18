@@ -1,0 +1,2 @@
+cnore|cnoreabbrev|around
+sta|status_line_wf.vim|file

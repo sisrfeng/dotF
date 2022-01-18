@@ -45,8 +45,6 @@ nnoremap qq <Cmd>call VSCodeNotify('workbench.action.revertAndCloseActiveEditor'
 " filetype on        " 检测文件类型  不会和vscode 打架吧
 
 
-
-
 nnoremap ce A<space><space><Esc>o/<Esc><Esc>:::::call nerdcommenter#Comment("n", "Comment")<space><CR>kJA<BS>
 " 有时会弄脏代码，可能是vscode-nvim弹出窗口太慢了？它不能接管inputmode？  " 提issue吧
     " vscode里，<C-_>注释，用的是vscode的"editor.action.comment"之类的,不是vim的命令,这样不行：
