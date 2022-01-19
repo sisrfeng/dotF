@@ -1033,7 +1033,6 @@ func VimPlugConds(arg1, ...)
 " 插件 (plugin) 在~/.local/share/nvim/plugged
 call plug#begin(stdpath('data') . '/plugged')
     source ~/dotF/cfg/nvim/plug_wf.vim
-<<<<<<< Updated upstream
     if !exists('g:vscode')
         Plug 'plasticboy/vim-markdown'
         Plug 'preservim/nerdtree'
@@ -1042,15 +1041,6 @@ call plug#begin(stdpath('data') . '/plugged')
             autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
         Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
     endif
-||||||| constructed merge base
-=======
-
-    autocmd VimEnter *
-    \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-    \|   PlugInstall --sync | q
-    \| endif
-
->>>>>>> Stashed changes
 call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
     " update &runtimepath and initialize plugin system
     " Automatically executes

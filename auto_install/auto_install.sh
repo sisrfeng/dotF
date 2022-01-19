@@ -130,9 +130,6 @@ yes |(mv ~/.tmux ~/.tmux_bk)
 yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
 yes |(cp ~/dotF/local_template_zshrc.zsh ~/.zshrc )
 
-<<<<<<< Updated upstream
-git clone https://github.com/tmux-plugins/tpm ~/dotF/cfg/tmux/plugins/tpm
-||||||| constructed merge base
 ai network-manager
 cat ./auto_install/git_url.txt>>/etc/hosts
 service network-manager restart
@@ -140,16 +137,6 @@ service network-manager restart
     # Ubuntu uses network-manager instead of the traditional Linux networking model.
     # so you should restart the network-manager service instead of the network service
 
-git clone https://github.com/tmux-plugins/tpm ~/dotF/cfg/tmux/plugins/tpm
-=======
-ai network-manager
-cat ./auto_install/git_url.txt>>/etc/hosts
-service network-manager restart
-    # 不用这行: /etc/rc.d/init.d/network restart
-    # Ubuntu uses network-manager instead of the traditional Linux networking model.
-    # so you should restart the network-manager service instead of the network service
-
->>>>>>> Stashed changes
 
 
 # 不知道和github下载的nvim是否冲突
@@ -221,22 +208,6 @@ git config --global credential.helper store
 export ZPLUG_HOME=$HOME/.zplug
 git clone https://github.com/zplug/zplug $ZPLUG_HOME
 
-<<<<<<< Updated upstream
-||||||| constructed merge base
-# coc
-    mkdir -p ~/.local/share/nvim/site/pack/coc/start
-    cd ~/.local/share/nvim/site/pack/coc/start
-    git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
-
-
-echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n
-pip install -r pip_useful_tool.txt  \n
-pip uninstall pynvim  \n'
-
-pip install -r pip_useful_tool.txt
-pip uninstall pynvim  # 不删会报错
-
-=======
 # coc
     mkdir -p ~/.local/share/nvim/site/pack/coc/start
     cd ~/.local/share/nvim/site/pack/coc/start
@@ -261,6 +232,5 @@ else
     echo '之前装了tpm'
 fi
 
->>>>>>> Stashed changes
 zsh
 
