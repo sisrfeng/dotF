@@ -821,39 +821,34 @@ alias omd='\chezmoi --config ~/.config/chezmoi/wf_omd.toml'
 alias chezmoi='\chezmoi --config ~/.config/chezmoi/wf_omd.toml'
 
 # get github
-# gg(){
-#     chpwd_functions=()  # 别显示 所去目录下的文件
-#     cd ~/dotF
-#     # echo "\n-----------1. stash，藏起本地修改（但忽略新增文件）------------"
-#     git stash --include-untracked --message="【stash的message_`date  +"%m月%d日%H:%M"`】"
-#     # echo "\n-----------------2. pull, 拉远程的新代码-----------------"
-#     git pull  # Update the branch to the latest code   = fetch + merge? 还是只fetch?
-#     # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
-#     # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
-#     git stash pop  # Merge your local changes into the latest code, 并且在没有conflict时，删掉stash里的这个东西
-#     # 貌似比git stash apply好
-#     # echo '会报：Dropped refs/stash@{0}'
-#     # echo "\n 【亲，检查一下有没有冲突】 "
-# }
-
 gg(){
-    omd update --verbose
+    chpwd_functions=()  # 别显示 所去目录下的文件
+    cd ~/dotF
+    # echo "\n-----------1. stash，藏起本地修改（但忽略新增文件）------------"
+    git stash --include-untracked --message="【stash的message_`date  +"%m月%d日%H:%M"`】"
+    # echo "\n-----------------2. pull, 拉远程的新代码-----------------"
+    git pull  # Update the branch to the latest code   = fetch + merge? 还是只fetch?
+    # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
+    # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
+    git stash pop  # Merge your local changes into the latest code, 并且在没有conflict时，删掉stash里的这个东西
+    # 貌似比git stash apply好
+    # echo '会报：Dropped refs/stash@{0}'
+    # echo "\n 【亲，检查一下有没有冲突】 "
 }
+
 
 # 我最新的配置 真是yyds
 
 
 yy(){
+    # echo "\n--------------------------------4. add commit push三连-----------------------------------------------"
+    cd ~/dotF
+    git stash clear  # 避免pull后有冲突，合并完后，再敲gg，死循环地有冲突
     echo "\n--------------------------------add commit push三连-----------------------------------------------"
-    # oh my dotF ( 其实是chezmoi）
-    cd $(omd source-path)
-    omd add ~/dotF/*
-
-
     git add --verbose  --all .
     if [[ "$1" != "" ]]  # if [[ "$1" == "" ]] 容易出bug？一般都不这么写
     then
-        # 不加--all时，如果github有些文件，而本地删掉了，则github上不想要的文件 还在
+        # 不加--all时，如过github有些文件，而本地删掉了，则github上不想要的文件 还在
         git commit --all --message "$1"
     else
         git commit --all --message "我是commit名__`date  +"%m月%d日%H:%M"`"
@@ -863,24 +858,6 @@ yy(){
     cd -
     zsh
 }
-# yy(){
-#     # echo "\n--------------------------------4. add commit push三连-----------------------------------------------"
-#     cd ~/dotF
-#     git stash clear  # 避免pull后有冲突，合并完后，再敲gg，死循环地有冲突
-#     echo "\n--------------------------------add commit push三连-----------------------------------------------"
-#     git add --verbose  --all .
-#     if [[ "$1" != "" ]]  # if [[ "$1" == "" ]] 容易出bug？一般都不这么写
-#     then
-#         # 不加--all时，如过github有些文件，而本地删掉了，则github上不想要的文件 还在
-#         git commit --all --message "$1"
-#     else
-#         git commit --all --message "我是commit名__`date  +"%m月%d日%H:%M"`"
-#     fi
-#     git push --quiet  #  只在出错时有输出
-#     # git push 2>&1 >~/.t/git_push的stdout  # 不行
-#     cd -
-#     zsh
-# }
 
 
 
