@@ -52,7 +52,6 @@ nnoremap <c-d> 15<c-d>
 nnoremap <c-u> 15<c-u>
 
 " z: zhe折叠
-set fdm=indent
 nnoremap <leader>z :set fdm=indent<CR>
 nnoremap gf :tabedit <cfile><CR>
 
@@ -196,6 +195,8 @@ let g:selecmode="mouse"
         " endif
 
 
+
+
 " :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
 nnoremap <F2> :    .,$subs  #\<\>##gc<Left><Left><Left><Left><Left><Left><C-R><C-W><Right><Right><Right><C-R><C-W>
 nnoremap <M-F2> :  .,$subs  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
@@ -285,6 +286,7 @@ nnoremap df ggdG
     " p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
 " inoremap yf <Esc>ggyG<C-O>
     " vscode里不行，vscode外也别试了, 保持一致
+
 
 
 nnoremap <F4> :UndotreeToggle<CR>
@@ -742,7 +744,6 @@ endif
 set title
 set mouse=a
 " syntax on  " 别用，会覆盖DIY的配置
-" syntax enable 一样
 
 set nocompatible  " 别兼容老的vi
 set backspace=indent,eol,start
@@ -1004,14 +1005,40 @@ func Conceal_strang_chr_3()
     " set concealcursor=vcni
 endfunc
 
+func VimPlugConds(arg1, ...)
+    " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
+    " https://github.com/junegunn/vim-plug/wiki/tips
+    " leo改过
+
+        " a: 表示argument
+        " You must prefix a parameter name with "a:" (argument).
+            " a:0  等于 len(a:000)),
+            " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
+        " A function cannot change a parameter
+
+                " To avoid an error for an invalid index use the get() function
+                " get(list, idx, default)
+        let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
+        " Borrowed from the C language is the conditional expression:
+        " a ? b : c
+        " If "a" evaluates to true, "b" is used
+        let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
+        " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
+        return  out
+    endfunc
+
 " 插件 (plugin) 在~/.local/share/nvim/plugged
 call plug#begin(stdpath('data') . '/plugged')
     source ~/dotF/cfg/nvim/plug_wf.vim
+    if !exists('g:vscode')
+        Plug 'plasticboy/vim-markdown'
+        Plug 'preservim/nerdtree'
+        " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+            autocmd StdinReadPre * let s:std_in=1
+            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+        Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+    endif
 call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
-    " update &runtimepath and initialize plugin system
-    " Automatically executes
-        " filetype plugin indent on
-        " syntax enable
 
 source ~/dotF/cfg/nvim/status_line_wf.vim
 source ~/dotF/cfg/nvim/tabline.vim

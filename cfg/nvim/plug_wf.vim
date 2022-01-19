@@ -1,26 +1,3 @@
-
-func VimPlugConds(arg1, ...)
-    " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
-    " https://github.com/junegunn/vim-plug/wiki/tips
-    " leo改过
-
-        " a: 表示argument
-        " You must prefix a parameter name with "a:" (argument).
-            " a:0  等于 len(a:000)),
-            " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
-        " A function cannot change a parameter
-
-                " To avoid an error for an invalid index use the get() function
-                " get(list, idx, default)
-        let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
-        " Borrowed from the C language is the conditional expression:
-        " a ? b : c
-        " If "a" evaluates to true, "b" is used
-        let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
-        " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
-        return  out
-    endfunc
-
 Plug 'junegunn/vim-plug'
     " 为了能用:help plug-options
 
@@ -40,7 +17,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/vim-easy-align'
 
-
+Plug 'neoclide/coc.nvim', VimPlugConds(!exists('g:vscode'), {'branch': 'release'})
 
 " 装了没啥变化，neovim本身就可以实现：多个窗口编辑同一个文件时，只要一个窗口保存了，
 " 跳到另一个窗口，会看到变化
@@ -51,23 +28,6 @@ Plug 'junegunn/vim-easy-align'
     " let g:autoswap_detect_tmux = 1
 
 
-if !exists('g:vscode')
-    Plug 'plasticboy/vim-markdown'
-    Plug 'preservim/nerdtree'
-    " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
-        autocmd StdinReadPre * let s:std_in=1
-        autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-    Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    " Plug 'easymotion/vim-easymotion'
-else
-    " Plug 'asvetliakov/vim-easymotion', VimPlugConds(exists('g:vscode'), { 'as': 'leo-jump' })  " as的名字随便起，
-        " 这样可能更容易理解，没那么绕:
-        " Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { as': 'ori-easymotion', 'on': [] } : {}
-        " Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {} : { 'on': [] }
-            " 【an empty `on` or `for` option :
-            " plugin is registered but not loaded by default depending on the condition.】
-endif
 
 " 要编译python+，难搞 放弃
 " 允许多人同时编辑一个文件。避免多处打开同一个文件
@@ -120,6 +80,12 @@ nmap ga <Plug>(EasyAlign)
 " Plug 'asvetliakov/vim-easymotion'   " vscode定制的easymotion
 " Plug 'easymotion/vim-easymotion'    " 只用裸nvim下的easymotion  千万别这么干。会把正在编辑的文件全搞乱
 
+Plug 'easymotion/vim-easymotion', VimPlugConds(!exists('g:vscode'))
+Plug 'asvetliakov/vim-easymotion', VimPlugConds(exists('g:vscode'), { 'as': 'leo-jump' })  " as的名字随便起，
+
+" 这样可能更容易理解，没那么绕: 【an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.】
+" Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { as': 'ori-easymotion', 'on': [] } : {}
+" Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {} : { 'on': [] }
 
 " map <Leader> <Plug>(easymotion-prefix)
 " 默认:
