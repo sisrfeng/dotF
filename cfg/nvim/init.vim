@@ -115,12 +115,14 @@ set iskeyword+=-
     " filetype plugin on        " 针对不同的文件类型, load不同plugin
     " filetype indent on        " 针对不同的文件类型采用不同的缩进格式
     filetype plugin indent on " 实现了上面3行
-                                " there is no need  to do ":filetype on" after ":syntax on".
+        " 注意下, vim-plug的call plug#end() 会Automatically executes:
+                    " filetype plugin indent on
+                    " syntax enable或者syntax on
 
     " if the file type is not detected automatically, or it finds the wrong type,
     " you can  add a modeline to your  file.
-    " 但我用笔记本时，root用户或者vscode-neovim使得modeline是off的，不能靠modeline这时要靠这行：
-
+        " 但root用户或者vscode-neovim使得modeline是off的，而且, vscode neovim无法识别filetype?
+        " 不能靠modelinem 这时要靠这行：
     filetype detect
     " echom "文件类型是"
     " echom &filetype
@@ -744,6 +746,7 @@ endif
 set title
 set mouse=a
 " syntax on  " 别用，会覆盖DIY的配置
+" syntax enable 一样
 
 set nocompatible  " 别兼容老的vi
 set backspace=indent,eol,start
@@ -1039,6 +1042,10 @@ call plug#begin(stdpath('data') . '/plugged')
         Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
     endif
 call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
+    " update &runtimepath and initialize plugin system
+    " Automatically executes
+        " filetype plugin indent on
+        " syntax enable或者syntax on
 
 source ~/dotF/cfg/nvim/status_line_wf.vim
 source ~/dotF/cfg/nvim/tabline.vim

@@ -28,6 +28,20 @@ Plug 'neoclide/coc.nvim', VimPlugConds(!exists('g:vscode'), {'branch': 'release'
     " let g:autoswap_detect_tmux = 1
 
 
+if !exists('g:vscode')
+    Plug 'plasticboy/vim-markdown'
+    Plug 'preservim/nerdtree'
+    " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+        autocmd StdinReadPre * let s:std_in=1
+        autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+    Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
+Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { 'as': 'easymotion_ori', 'on': [] } : {'as': 'easymotion_ori'}
+Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {'as': 'easymotion_vsc'}             : { 'as': 'easymotion_vsc', 'on': [] }
+                                                                " 【an empty `on` or `for` option :
+                                                                "    not loaded by default depending on the condition.】
+                                                                "    but plugin is registered  防止PlugClean清掉
 
 " 要编译python+，难搞 放弃
 " 允许多人同时编辑一个文件。避免多处打开同一个文件
