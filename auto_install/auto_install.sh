@@ -25,10 +25,6 @@ ln -s ~/dotF/.pip/ ~/
 # ln -s ~/d/dotF ~/
 
 
-cat ./auto_install/git_url.txt>>/etc/hosts
-#### Ubuntu uses network-manager instead of the traditional Linux networking model. so you should restart the network-manager service instead of the network service
-# /etc/rc.d/init.d/network restart
-service network-manager restart
 
 shopt -s  expand_aliases
 # alias apt='apt -y -qq'
@@ -117,25 +113,22 @@ rm -f /etc/localtime &&  ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
 # 中文]]
 
 
-rm -rf ~/.SpaceVim.d ~/.Spacevim
-
-cp ./squashfs-root ~/.squashfs-root
-
-curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
 
 mkdir ~/.cache
 yes |(mv ~/.tmux ~/.tmux_bk)
 yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
 yes |(cp ~/dotF/local_template_zshrc.zsh ~/.zshrc )
 
+ai network-manager
+cat ./auto_install/git_url.txt>>/etc/hosts
+service network-manager restart
+    # 不用这行: /etc/rc.d/init.d/network restart
+    # Ubuntu uses network-manager instead of the traditional Linux networking model.
+    # so you should restart the network-manager service instead of the network service
+
 git clone https://github.com/tmux-plugins/tpm ~/dotF/cfg/tmux/plugins/tpm
 
 
-# 不知道和github下载的nvim是否冲突
-ai python-neovim
-ai python3-neovim
 
 
 yes | (ai silversearcher-ag)
@@ -152,11 +145,18 @@ ln -s /usr/bin/python3.? /usr/bin/python
 chsh -s `which zsh`
 
 
-
 export ZPLUG_HOME=$HOME/dotF/zplug
 export ZPLUG_LOADFILE=$HOME/dotF/zplug/zplug_loadfile.sh
 git clone https://github.com/zplug/zplug $ZPLUG_HOME
 
+rm -rf ~/.SpaceVim.d ~/.Spacevim
+
+curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# 不知道和github下载的nvim是否冲突
+ai python-neovim
+ai python3-neovim
 
 mkdir -p ~/.config/nvim/pack/kite/start/kite
 git clone https://github.com/kiteco/vim-plugin.git ~/.config/nvim/pack/kite/start/kite/
@@ -187,13 +187,7 @@ yes | (ai python3-pip)
 \apt autoremove -y -q
 
 yes | (unset ALL_PROXY ; pip install --upgrade pip  ; pip install pysocks)
-pip install -r pip_useful_tool.txt
 
-pip uninstall pynvim  # 不删会报错
-
-echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n
-pip install -r pip_useful_tool.txt  \n
-pip uninstall pynvim  \n'
 
 git config --global credential.helper store
 
@@ -202,5 +196,17 @@ git config --global credential.helper store
 export ZPLUG_HOME=$HOME/.zplug
 git clone https://github.com/zplug/zplug $ZPLUG_HOME
 
-zsh
+# coc
+    mkdir -p ~/.local/share/nvim/site/pack/coc/start
+    cd ~/.local/share/nvim/site/pack/coc/start
+    git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
 
+
+echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n
+pip install -r pip_useful_tool.txt  \n
+pip uninstall pynvim  \n'
+
+pip install -r pip_useful_tool.txt
+pip uninstall pynvim  # 不删会报错
+
+zsh
