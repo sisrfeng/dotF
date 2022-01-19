@@ -35,7 +35,8 @@ if !exists('g:vscode')
         autocmd StdinReadPre * let s:std_in=1
         autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
     Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " 把coc装的东西从我的dotfile改到其他位置, 不然弄脏目录
+    " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
 Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { 'as': 'easymotion_ori', 'on': [] } : {'as': 'easymotion_ori'}
 Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {'as': 'easymotion_vsc'}             : { 'as': 'easymotion_vsc', 'on': [] }

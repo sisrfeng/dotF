@@ -153,8 +153,10 @@ set wrap    " vscode里, 要在setting.json设置warp
 nnoremap ce A<space><space><Esc>o/<Esc><Esc>:call nerdcommenter#Comment("n", "Comment")<CR>kJA<BS>
     " 有缩进时，有时会把开头的注释符号删掉，别完美主义吧
 
-" autocmd VimEnter * set autochdir
+autocmd VimEnter * set autochdir
     " Note: When this option is on some plugins may not work.
-" 要是放到vscode里会报错:
-" vscode里, 可以手动敲 :lcd
+    " todo: debug / buggy
+
+    " 要是放到vscode里会报错:
+    " vscode里, 可以手动敲 :lcd
 

@@ -241,6 +241,8 @@ inoremap <C-F> <C-X><C-F>
 
 autocmd FileType json syntax match Comment +\/\/.\+$+
     " get correct comment highlighting for jonsc
+    "
+
     " https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
 " 空格 tab
     " T:tab, tab to space
@@ -1032,21 +1034,27 @@ func VimPlugConds(arg1, ...)
     endfunc
 
 " 插件 (plugin) 在~/.local/share/nvim/plugged
-call plug#begin(stdpath('data') . '/plugged')
-    source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
-    if !exists('g:vscode')
-        Plug 'plasticboy/vim-markdown'
-        Plug 'preservim/nerdtree'
-        " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
-            autocmd StdinReadPre * let s:std_in=1
-            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-        Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-    endif
-call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
-    " update &runtimepath and initialize plugin system
-    " Automatically executes
-        " filetype plugin indent on
-        " syntax enable或者syntax on
+    call plug#begin(stdpath('data') . '/plugged')
+        source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
+        if !exists('g:vscode')
+            Plug 'plasticboy/vim-markdown'
+            " Plug 'preservim/nerdtree'
+            " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+            "
+                autocmd StdinReadPre * let s:std_in=1
+                autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+            Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+        endif
+    call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
+        " update &runtimepath and initialize plugin system
+        " Automatically executes
+            " filetype plugin indent on
+            " syntax enable或者syntax on
+
+    autocmd VimEnter *
+            \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+            \|   PlugInstall --sync | q
+            \| endif
 
 source ~/dotF/cfg/nvim/status_line_wf.vim
 source ~/dotF/cfg/nvim/tabline.vim
