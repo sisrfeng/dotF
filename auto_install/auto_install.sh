@@ -222,12 +222,12 @@ pip install -r pip_useful_tool.txt
 pip uninstall pynvim  # 不删会报错
 
 # export TP="$HOME/.wf_tmux/plugins"  没必要export. 不是本shell的子shell又用不了..
-TP="$HOME/.tmux_wf/plugins"
+TP="$HOME/.tmux_wf/plugins/tpm"
 if  [[ ! -d $TP ]] ; then
     echo '在装tpm'
     mkdir -p $TP
-    git clone https://github.com/tmux-plugins/tpm $TP/tpm
-    $TP/tpm/bin/install_plugins
+    git clone https://github.com/tmux-plugins/tpm $TP
+    $TP/bin/install_plugins
 else
     echo '之前装了tpm'
 fi
