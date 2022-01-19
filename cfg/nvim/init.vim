@@ -240,6 +240,7 @@ inoremap <C-F> <C-X><C-F>
         \ endif
 
 autocmd FileType json syntax match Comment +\/\/.\+$+
+    " get correct comment highlighting for jonsc
     " https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
 " 空格 tab
     " T:tab, tab to space
@@ -1032,7 +1033,7 @@ func VimPlugConds(arg1, ...)
 
 " 插件 (plugin) 在~/.local/share/nvim/plugged
 call plug#begin(stdpath('data') . '/plugged')
-    source ~/dotF/cfg/nvim/plug_wf.vim
+    source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
     if !exists('g:vscode')
         Plug 'plasticboy/vim-markdown'
         Plug 'preservim/nerdtree'
