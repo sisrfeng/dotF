@@ -3,10 +3,18 @@
 
 # zsh bindkey
 alias zbk='e ~/dotF/bindkey_wf.zsh ; zsh'
+
+alias con='conda'
+alias ci='conda install -y'
+# conda create --name new_name --clone old_name
+# conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
 cda(){
     conda activate $1
     echo $1 > ~/.cache/conda_name
 }
+alias c_ac='conda activate'
+alias c_de='conda deactivate &&  t ~/.cache/conda_name'
+    # 结合tmux send-keys  'conda activate `cat ~/.cache/conda_name`' Enter
 
 
 # https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
@@ -682,10 +690,6 @@ alias tt='python ~/d/tmp.py'
 alias bd='e ~/.zshrc ; zsh'
 # alias jn='jupyter notebook'
 
-alias con='conda'
-alias ci='conda install -y'
-# conda create --name new_name --clone old_name
-# conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
 
 alias snp='~/dotF/wf_snippet.py'
 

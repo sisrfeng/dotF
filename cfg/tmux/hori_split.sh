@@ -10,9 +10,12 @@
 
 tmux split-window -v -p 50  -c '#{pane_current_path}'
                    # -p percent,
-if [[ -f `~/.cache/conda_name` ]]; then
-    tmux send-keys  ' conda activate `cat ~/.cache/conda_name` ' Enter
+if [[ -f ~/.cache/conda_name ]]; then
+    tmux send-keys  'conda activate `cat ~/.cache/conda_name`' Enter
+    tmux send-keys  'clear' Enter
 fi
+
+
 #                                             # Enter加不加引号都行
 # tmux send-keys  "clear && figlet Welcome" 'Enter'
 
