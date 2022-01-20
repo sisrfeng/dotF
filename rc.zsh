@@ -317,7 +317,7 @@ else # set DISPLAY  under tmux
     if [[ -v "$TMUX" ]]; then
         session_name=`tmux display-message -p "#S"`
         # DIS_file='~/d/.DISPLAY_for_tmux'  别用~代表$HOME ,  $HOME 要在双引号里
-        DIS_file="$HOME/d/.DISPLAY_for_$session_name"
+        DIS_file="$HOME/cache/.DISPLAY_for_tmux_$session_name"
         if [[ -f $DIS_file ]]; then  # 读
             export DISPLAY=`cat ${DIS_file}`
         else

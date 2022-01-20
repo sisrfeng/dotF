@@ -5,7 +5,7 @@
 alias zbk='e ~/dotF/bindkey_wf.zsh ; zsh'
 cda(){
     conda activate $1
-    echo $1 > ~/.t/conda_name
+    echo $1 > ~/.cache/conda_name
 }
 
 
@@ -577,7 +577,8 @@ chpwd_functions=(${chpwd_functions[@]} "ls_after_cd")
 alias e='nvim'
 # edit diff
 alias ed='nvim -d'
-if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
+# if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
+if [[ -z "$TMUX" ]];then
     alias e='code'
     alias ed='code -d'
 fi
