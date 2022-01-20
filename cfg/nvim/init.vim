@@ -1058,7 +1058,7 @@ map <leader>l :tabnext<cr>
 
 if exists('g:vscode')
     " cnoremap s/ s/\v
-    " vscode里，用了camp时，必须在光标后有字符才能正常map
+    " vscode里，用了cmap时，必须在光标后有字符才能正常map
     " echom '准备进入has_vscode.vim: 路径'
     echom $has_vscode
     source $has_vscode

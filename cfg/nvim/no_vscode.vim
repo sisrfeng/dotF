@@ -10,6 +10,7 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
     inoreabbrev al alias
     inoreabbrev df ~/dotF/
     inoreabbrev HO $HOME/
+    inoreabbrev ture true
 
 
 " cnoremap s/ s/\v

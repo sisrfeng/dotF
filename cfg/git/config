@@ -20,14 +20,35 @@
 [color]
 	ui = auto
 
+[color "status"]
+  changed =  yellow 
+  ; 未git add的
+  untracked = magenta 
+  added = green bold
+
+[color "branch"]
+  remote = yellow
+
 [interactive]
     diffFilter = delta --color-only
 
 [delta]
+    ; Most delta options can be
+    ; given in a git config file,
+    ; using the usual 命令行 option namesr but without the initial '--'.
     navigate = true
+    light = true
+    ; ul: underline
+    ; minus-style = red bold ul "#ffeeee"
+    minus-style = black  ul "#ffeeff"
+
 
 [merge]
+    ; The default is "merge",
+    ; which shows a <<<<<<< conflict marker, changes made by one side,
+    ; a ======= marker, changes made by the other side, and then a >>>>>>> marker
     conflictstyle = diff3
+    ; 多加了 ||||||| marker and the original text before the ======= marker
 
 [diff]
     colorMoved = default

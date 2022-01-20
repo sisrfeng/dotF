@@ -695,7 +695,7 @@ alias snp='~/dotF/wf_snippet.py'
 # S socket-path:  Specify a full alternative path to the server socket.
 # If -S is specified, the default socket directory is not  used and any -L flag is ignored
 alias tmux='\tmux \
-            -S ~/d/.socket_file_for_tmux_svr  \
+            -S ~/.cache/socket_file_for_tmux_svr  \
             -f ~/dotF/cfg/tmux/tmux.conf'
 
 tm() {
