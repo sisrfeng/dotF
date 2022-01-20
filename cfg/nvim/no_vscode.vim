@@ -16,14 +16,10 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
 " cnoremap s/ s/\v
 " vscode里，用了camp时，必须在光标后有字符才能正常map
 
-" cnoremap    <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'   ? 'tabedit ~/.zshrc' : 'tabedit'
-    " <expr> 指明了right hand side是表达式
-    " bd 本来是buffer delete的意思。现在用bde代替吧
 
 " cnoreabbrev
+    cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           :   'e'
     cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/bindkey_wf.zsh'     :   'zbk'
-    cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       :   'pi'
-    cnoreabbrev <expr> ctr   getcmdtype() == ":" && getcmdline() == 'tab help ctr' ? 'CTRL'                              :   'ctr'
     cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/.zshrc'                  :   'bd'
     cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           :   'e'
     cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/d/tmp.py'                :   'et'
@@ -31,16 +27,13 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
     cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tabedit ~/dotF/cfg/nvim/init.vim'  :   'in'
     cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/rc.zsh'             :   's'
     cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/alias.zsh'          :   'al'
-    cnoreabbrev <expr> map   getcmdtype() == ":" && getcmdline() == 'map'          ? 'verbose map'                       :   'map'
-    cnoreabbrev <expr> imap  getcmdtype() == ":" && getcmdline() == 'imap'         ? 'verbose imap'                      :   'imap'
-    cnoreabbrev <expr> cmap  getcmdtype() == ":" && getcmdline() == 'cmap'         ? 'verbose cmap'                      :   'cmap'
+
+    cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       :   'pi'
+    cnoreabbrev <expr> ctr   getcmdtype() == ":" && getcmdline() == 'tab help ctr' ? 'CTRL'                              :   'ctr'
+"   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件
     cnoreabbrev <expr> cm    getcmdtype() == ":" && getcmdline() == 'cm'           ? 'tab help'                          :   'cm'
     cnoreabbrev <expr> h     getcmdtype() == ":" && getcmdline() == 'h'            ? 'tab help'                          :   'h'
-    cnoreabbrev <expr> cfg   getcmdtype() == ":" && getcmdline() == 'cfg'          ? 'cd ~/dotF/cfg'                     :   'cfg'
-    cnoreabbrev <expr> mdf   getcmdtype() == ":" && getcmdline() == 'mdf'          ? 'cd ~/dotF/'                        :   'mdf'
-    cnoreabbrev <expr> dot   getcmdtype() == ":" && getcmdline() == 'dot'          ? 'cd ~/dotF/'                        :   'dot'
-    cnoreabbrev <expr> ~/    getcmdtype() == ":" && getcmdline() == '~/'           ? 'cd ~/'                             :   '~/'
-
+    "
 
 " noremap
     cnoremap <C-a> <Home>

@@ -1055,6 +1055,18 @@ source ~/dotF/cfg/nvim/tabline.vim
 map <leader>h :tabprev<cr>
 map <leader>l :tabnext<cr>
 
+" cnoreabbrev
+" map 对vscode也有效
+        cnoreabbrev <expr> map   getcmdtype() == ":" && getcmdline() == 'map'          ? 'verbose map'                       :   'map'
+        cnoreabbrev <expr> imap  getcmdtype() == ":" && getcmdline() == 'imap'         ? 'verbose imap'                      :   'imap'
+        cnoreabbrev <expr> cmap  getcmdtype() == ":" && getcmdline() == 'cmap'         ? 'verbose cmap'                      :   'cmap'
+
+" cd
+        cnoreabbrev <expr> cfg   getcmdtype() == ":" && getcmdline() == 'cfg'          ? 'cd ~/dotF/cfg'                     :   'cfg'
+        cnoreabbrev <expr> mdf   getcmdtype() == ":" && getcmdline() == 'mdf'          ? 'cd ~/dotF/'                        :   'mdf'
+        cnoreabbrev <expr> dot   getcmdtype() == ":" && getcmdline() == 'dot'          ? 'cd ~/dotF/'                        :   'dot'
+        cnoreabbrev <expr> ~/    getcmdtype() == ":" && getcmdline() == '~/'           ? 'cd ~/'                             :   '~/'
+
 
 if exists('g:vscode')
     " cnoremap s/ s/\v
@@ -1067,4 +1079,3 @@ if exists('g:vscode')
 else
     source $no_vscode
 endif
-
