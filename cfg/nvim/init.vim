@@ -548,16 +548,6 @@ set pastetoggle=<F9>
 
 
 
-" 这两个都不行， airblade/vim-rooter也不行了
-" set autochdir
-" autocmd BufEnter * silent! lcd %:p:h
-
-" Note: When this option is on some plugins may not work.
-" 在vscode里会报错, 放到no_vscode.vim
-    " autocmd VimEnter * set autochdir
-" vscode里, 可以手动敲 :lcd
-
-
 noremap <Leader>y "*y
 noremap <Leader>Y "+y
 " noremap <Leader>p "*p
@@ -1034,27 +1024,29 @@ func VimPlugConds(arg1, ...)
     endfunc
 
 " 插件 (plugin) 在~/.local/share/nvim/plugged
-    call plug#begin(stdpath('data') . '/plugged')
-        source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
-        if !exists('g:vscode')
-            Plug 'plasticboy/vim-markdown'
-            " Plug 'preservim/nerdtree'
-            " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
-            "
-                autocmd StdinReadPre * let s:std_in=1
-                autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-            Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-        endif
-    call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
-        " update &runtimepath and initialize plugin system
-        " Automatically executes
-            " filetype plugin indent on
-            " syntax enable或者syntax on
+        call plug#begin(stdpath('data') . '/plugged')
+            source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
 
-    autocmd VimEnter *
-            \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-            \|   PlugInstall --sync | q
-            \| endif
+            if !exists('g:vscode')
+                Plug 'plasticboy/vim-markdown'
+                " Plug 'preservim/nerdtree'
+                " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+                "
+                    autocmd StdinReadPre * let s:std_in=1
+                    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+                Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+            endif
+        call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
+          " 如果多次出现, 会让registered的插件可以plugclean, (被视为invalid plugins)
+            " update &runtimepath and initialize plugin system
+            " Automatically executes
+                " filetype plugin indent on
+                " syntax enable或者syntax on
+
+        autocmd VimEnter *
+                \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+                \|   PlugInstall --sync | q
+                \| endif
 
 source ~/dotF/cfg/nvim/status_line_wf.vim
 source ~/dotF/cfg/nvim/tabline.vim

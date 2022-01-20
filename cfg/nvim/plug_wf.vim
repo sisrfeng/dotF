@@ -146,55 +146,63 @@ Plug 'machakann/vim-sandwich'
 
 Plug 'scrooloose/nerdcommenter'
 
+Plug 'https://github.com/airblade/vim-rooter'
+    " 如果这个插件有问题, 就试下面的( 但leaderF似乎没了vim-rooter就不能自动跳转pwd)
+        " autocmd VimEnter * set autochdir
+            " Note: When this option is on some plugins may not work.
+            " 在vscode里会报错, 放到no_vscode.vim
+        " vscode里: 可以手动敲 :lcd
+                    " 或者这个?:    autocmd BufEnter * silent! lcd %:p:h
 
 
-Plug  'Yggdroot/LeaderF'
-" >>>---------------------------------------------------------------------LeaderF
-" don't show the help in normal mode
-let g:Lf_HideHelp = 1
-let g:Lf_UseCache = 0
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 1
+
+        Plug  'Yggdroot/LeaderF'
+        " >>>---------------------------------------------------------------------LeaderF
+        " don't show the help in normal mode
+        let g:Lf_HideHelp = 1
+        let g:Lf_UseCache = 0
+        let g:Lf_UseVersionControlTool = 0
+        let g:Lf_IgnoreCurrentBufferName = 1
 
 
-" popup mode
-let g:Lf_WindowPosition = 'popup'
-let g:Lf_PreviewInPopup = 1
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+        " popup mode
+        let g:Lf_WindowPosition = 'popup'
+        let g:Lf_PreviewInPopup = 1
+        let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+        let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
-" let g:Lf_ShortcutF = "<leader>o"
-" 和zsh下按ctrl f 作用一致
-let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符
-" mru: most recently used file
-" C-u: 删掉cmdline的字符。主要对visual mode有用？很多插件都这么设
-    nnoremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-" search a line in current buffer.  " 有点vscode下的感觉
-    nnoremap <leader>/ :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-" <cword> is replaced with the word under the cursor (like |star|)
-    " nnoremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
-    " 删掉了叹号
-    "  LeaderfFunction! 叹号版本直接打开 normal 模式，并且定位到对应位置
-    nnoremap <C-B> :<C-U><C-R>=printf("Leaderf rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
-    " 不确定是否靠谱  " 代替在zsh中用rg
-    nnoremap <leader>f :<C-U><C-R>=printf("Leaderf rg -g '!*.zsh_history' -g '!*.lesshst' -g '!/data1/weifeng_liu/.large_trash' ")<CR><CR>
-    " 这个不起作用，不能ctrl+shift？
-    " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
-    " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR><CR>
+        " let g:Lf_ShortcutF = "<leader>o"
+        " 和zsh下按ctrl f 作用一致
+        let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符
+        " mru: most recently used file
+        " C-u: 删掉cmdline的字符。主要对visual mode有用？很多插件都这么设
+            nnoremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+        " search a line in current buffer.  " 有点vscode下的感觉
+            nnoremap <leader>/ :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+        " <cword> is replaced with the word under the cursor (like |star|)
+            " nnoremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+            " 删掉了叹号
+            "  LeaderfFunction! 叹号版本直接打开 normal 模式，并且定位到对应位置
+            nnoremap <C-B> :<C-U><C-R>=printf("Leaderf rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+            " 不确定是否靠谱  " 代替在zsh中用rg
+            nnoremap <leader>f :<C-U><C-R>=printf("Leaderf rg -g '!*.zsh_history' -g '!*.lesshst' -g '!/data1/weifeng_liu/.large_trash' ")<CR><CR>
+            " 这个不起作用，不能ctrl+shift？
+            " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+            " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR><CR>
 
-" search visually selected text literally
-" xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
-" noremap go :<C-U>Leaderf! rg --recall<CR>
+        " search visually selected text literally
+        " xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
+        " noremap go :<C-U>Leaderf! rg --recall<CR>
 
-" should use `Leaderf gtags --update` first
-let g:Lf_GtagsAutoGenerate = 0
-let g:Lf_Gtagslabel = 'native-pygments'
-" noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
-" noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
-" noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
-" noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
-" noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
-" ---------------------------------------------------------------------<<<LeaderF
+        " should use `Leaderf gtags --update` first
+        let g:Lf_GtagsAutoGenerate = 0
+        let g:Lf_Gtagslabel = 'native-pygments'
+        " noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+        " noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+        " noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+        " noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+        " noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+        " ---------------------------------------------------------------------<<<LeaderF
 
 Plug 'sisrfeng/toggle-bool'
 
