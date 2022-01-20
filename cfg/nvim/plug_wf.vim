@@ -148,6 +148,7 @@ Plug 'scrooloose/nerdcommenter'
 
 Plug 'https://github.com/airblade/vim-rooter'
     " 如果这个插件有问题, 就试下面的( 但leaderF似乎没了vim-rooter就不能自动跳转pwd)
+    " todo: leaderF每个命令前都要敲一下 :pwd
         " autocmd VimEnter * set autochdir
             " Note: When this option is on some plugins may not work.
             " 在vscode里会报错, 放到no_vscode.vim
