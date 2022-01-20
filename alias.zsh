@@ -1223,8 +1223,7 @@ cj(){
 }
 alias -s json=cj
 
-if [[ -n "$TMUX" ]];
-then
+if [[ -n "$TMUX" ]];  then
     # zsh默认用vim打开，导致无法执行？有其他bug？但是很多人都这么写
     alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s}=vim
     # 后缀名s表示seting,简洁,代替conf
