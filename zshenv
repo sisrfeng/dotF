@@ -2,6 +2,7 @@
 # if they depend on the $PATH.
 # Your $PATH and any other important ENV variable should be set in .zshenv.
 
+export  XDG_CACHE_HOME="$HOME/d/.cache"
 
 # github.com/rafi/.config
 # 注意 这是为bash配置的, 可能和zsh不同?

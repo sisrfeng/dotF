@@ -161,6 +161,7 @@ function peco-find-file() {
         -path "$HOME/d/.t" -prune -o       \
         -path "$HOME/t" -prune -o       \
         -path "./.t" -prune -o       \
+        -path "./.t" -prune -o       \
         -name "*$1*"  | peco --query "$BUFFER" )
         # 别用系统的根目录下的peco，太老，用dotF下的
         CURSOR=$#BUFFER
@@ -238,11 +239,13 @@ zle -N peco-history
         bind '\C-S' quoted-insert
                         # self-insert  # 原样输入
         bind '\C-_' push-line-or-edit
-        bind '\C-q' push-line-or-edit  # ctrl s能改，这行为啥不生效? 一直是删除整行
+               # ctrl /和ctrl _一样
+        bind "\C-u" undo # 撤销, 好用
+        # bind "\ed" undo # 撤销, 好用
+        # bind "\e\d"  同上
 
     # string
         bind -s "\C-t" "tt \C-j"  # python ~/d/tmp.py  # t for try
-        bind -s '\C-u' 'echo "hi" \n'
         bind -s "\C-b" "echo '待用' \n"
         bind -s "\C-H" "echo '我是ctrl H，被tmux占用' \n"
         bind -s "\C-g" "echo '待用' \n"
@@ -276,8 +279,6 @@ bind '\C- ' delete-word
     #  <alt>+b <esc>+b <Meta>+b   M-b \eb
     #  e: 表示escap吧
 
-    bind "\ed" undo # 撤销, 好用
-        # bind "\e\d"  同上
     bind -s '\e\C-?' 'echo "wf  bind, hi" \n'  # ASCII DEL  == ^?
 
 # `-m' option

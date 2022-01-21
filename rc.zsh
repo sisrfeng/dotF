@@ -145,7 +145,7 @@ fpath=(~/.local/bin $fpath)
 fpath=(~/dotF/zsh_conf/zfunc_in_fpath_leo $fpath)  # zfunc_in_fpath_leo用于存放自动补全命令  要在compinit之前.
 autoload -U compinit # -U : suppress alias expansion for functions
 
-compinit -d ~/.cache/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
+compinit -d XDG_CACHE_HOME/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
 # 不会自动帮你新建文件夹
 
 setopt autocd

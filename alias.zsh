@@ -10,11 +10,11 @@ alias ci='conda install -y'
 # conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
 cda(){
     conda activate $1
-    echo $1 > ~/.cache/conda_name
+    echo $1 > XDG_CACHE_HOME/conda_name
 }
 alias c_ac='conda activate'
-alias c_de='conda deactivate &&  t ~/.cache/conda_name'
-    # 结合tmux send-keys  'conda activate `cat ~/.cache/conda_name`' Enter
+alias c_de='conda deactivate &&  t XDG_CACHE_HOME/conda_name'
+    # 结合tmux send-keys  'conda activate `cat XDG_CACHE_HOME/conda_name`' Enter
 
 
 # https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
@@ -699,7 +699,7 @@ alias snp='~/dotF/wf_snippet.py'
 # S socket-path:  Specify a full alternative path to the server socket.
 # If -S is specified, the default socket directory is not  used and any -L flag is ignored
 alias tmux='\tmux \
-            -S ~/.cache/socket_file_for_tmux_svr  \
+            -S XDG_CACHE_HOME/socket_file_for_tmux_svr  \
             -f ~/dotF/cfg/tmux/tmux.conf'
 
 tm() {
