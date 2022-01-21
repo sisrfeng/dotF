@@ -127,14 +127,6 @@ shopt -s  expand_aliases
     alias pip3='\pip3 -qq'
     alias cp='cp -r'
 
-export  XDG_CACHE_HOME="$HOME/d/.cache"
-mkdir -p $XDG_CACHE_HOME
-mkdir ~/.ssh
-ln -s ~/dotF/condarc ~/
-ln -sf ~/dotF/zshenv ~/.zshenv
-ln -sf ~/dotF/zprofile ~/.zprofile
-rm -rf ~/.SpaceVim.d ~/.Spacevim
-
 yes |(mv ~/.tmux ~/.tmux_bk)
 yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
 yes |(cp ~/dotF/local_template_zshrc.zsh ~/.zshrc )
@@ -148,7 +140,7 @@ curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --c
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 
-yes | (cp -rf .muttrc ~ ;cp -rf .msmtprc ~ ; touch $.msmtp.log)
+yes | (cp -rf .muttrc $HOME ;cp -rf .msmtprc $HOME ; touch $.msmtp.log)
 chsh -s `which zsh`
 
 
@@ -182,6 +174,15 @@ pip uninstall pynvim  \n'
                                                       # 已经下载好了
                                                       # todo: 配置kite
                                                       # 改到这里? ~/.local/share/nvim/site/pack/coc/start
+
+export  XDG_CACHE_HOME="$HOME/d/.cache"
+mkdir -p $XDG_CACHE_HOME
+mkdir ~/.ssh
+rm -f ~/.condarc
+ln -s  ~/dotF/conda.yml ~/.condarc
+ln -sf ~/dotF/zshenv    ~/.zshenv
+ln -sf ~/dotF/zprofile  ~/.zprofile
+rm -rf ~/.SpaceVim.d    ~/.Spacevim
 
 # tmux插件
     TP="$HOME/.tmux_wf/plugins/tpm"

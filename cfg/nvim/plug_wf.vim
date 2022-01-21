@@ -63,6 +63,7 @@ nmap ga <Plug>(EasyAlign)
         \
         \                          '?': { 'pattern': '?' },
         \                          ':': { 'pattern': ":" },
+        \                          '~': { 'pattern': '\~/__危险_万一多出空格_把HOME目录删了就麻烦了_别这么设' },
         \                          '\': { 'pattern': '\\$' },
         \
         \                          '>': { 'pattern': '>>\|=>\|>' },

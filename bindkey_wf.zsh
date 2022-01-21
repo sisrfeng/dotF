@@ -156,12 +156,12 @@ function peco-find-file() {
         # BUFFER (scalar):   The entire contents of the edit buffer.
         # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-BUFFER
         BUFFER=$(find . \
-        -path "/d/docker" -prune -o  \
+        -path "/d/docker" -prune -o       \
         -path "$HOME/d/docker" -prune -o  \
-        -path "$HOME/d/.t" -prune -o       \
-        -path "$HOME/t" -prune -o       \
-        -path "$XDG_CACHE_HOME" -prune -o       \
-        -path "./.t" -prune -o       \
+        -path "$HOME/d/.t" -prune -o      \
+        -path "$HOME/t" -prune -o         \
+        -path "$XDG_CACHE_HOME" -prune -o \
+        -path "./.t" -prune -o            \
         -name "*$1*"  | peco --query "$BUFFER" )
         # 别用系统的根目录下的peco，太老，用dotF下的
         CURSOR=$#BUFFER
@@ -170,16 +170,16 @@ function peco-find-file() {
         # echo '(没进去搜的目录, 仍会输出一行 )'
     else
         BUFFER=$(find . \
-        -path "/d/docker" -prune -o  \
+        -path "/d/docker" -prune -o       \
         -path "$HOME/d/docker" -prune -o  \
-        -path "$HOME/d" -prune -o       \
-        -path "$XDG_CACHE_HOME" -prune -o       \
-        -path "./d" -prune -o       \
-        -path "$HOME/d/.t" -prune -o       \
-        -path "$HOME/t" -prune -o       \
-        -path "./.t" -prune -o       \
-        -path "/proc" -prune -o      \
-        -path "/dev" -prune -o      \
+        -path "$HOME/d" -prune -o         \
+        -path "$XDG_CACHE_HOME" -prune -o \
+        -path "./d" -prune -o             \
+        -path "$HOME/d/.t" -prune -o      \
+        -path "$HOME/t" -prune -o         \
+        -path "./.t" -prune -o            \
+        -path "/proc" -prune -o           \
+        -path "/dev" -prune -o            \
         -name "*$1*"  | peco --query "$BUFFER" )
         # 别用系统的根目录下的peco，太老，用dotF下的
         CURSOR=$#BUFFER

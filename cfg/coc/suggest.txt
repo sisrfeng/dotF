@@ -1,3 +1,0 @@
-XDG|XDG_CACHE_HOME|buffer
-XDG|XDG_CACHE_HOME|around
-bin|bindkey|around
