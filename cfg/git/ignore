@@ -11,7 +11,10 @@
 # In other words, a leading slash is not relevant if there is already a middle slash in the pattern.
 
 __pycache__
+**/__pycache__
+
 *.pyc
+**/*.pyc
 
 # zsh
 zcompdump

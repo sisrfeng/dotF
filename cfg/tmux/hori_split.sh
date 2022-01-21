@@ -15,7 +15,10 @@ if [[ -f ~/.cache/conda_name ]]; then
     tmux send-keys  'clear' Enter
 fi
 
+# clear  # 不能这样, 因为是在tmux里调用shell, 会在tmux的copy mode里显示
 
+
+# ----------------------------------
 #                                             # Enter加不加引号都行
 # tmux send-keys  "clear && figlet Welcome" 'Enter'
 
