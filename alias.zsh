@@ -10,11 +10,11 @@ alias ci='conda install -y'
 # conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
 cda(){
     conda activate $1
-    echo $1 > XDG_CACHE_HOME/conda_name
+    echo $1 > $XDG_CACHE_HOME/conda_name
 }
 alias c_ac='conda activate'
-alias c_de='conda deactivate &&  t XDG_CACHE_HOME/conda_name'
-    # 结合tmux send-keys  'conda activate `cat XDG_CACHE_HOME/conda_name`' Enter
+alias c_de='conda deactivate &&  t $XDG_CACHE_HOME/conda_name'
+    # 结合tmux send-keys  'conda activate `cat $XDG_CACHE_HOME/conda_name`' Enter
 
 
 # https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
@@ -412,71 +412,56 @@ alias cm='whence -ca'
 
 #==============================ls相关===================================
 # todo 现在exa和ls混用, 最好统一一下
-alias ls='\ls -hrt --color=always'
-# alias ls='ls | awk "{print $4,$5,$6,$7, $3}"'
-alias la='\ls -ACF1GhFtr --color=always --classify'
-alias lc='lt -c'
-alias lla='\ls -gGhtrFA --color=always'
-alias lr='ls -gGhtF --color=always'
-alias lt='ll -tr'
-alias lx='\ls -l'
-alias l.='\ls -d1 .* --color=always --classify'
-# list lean
-alias ll='\ls -1htr --color=always --classify | head -30'
-# list full:
+    alias ls='\ls -hrt --color=always'
+        # alias ls='ls | awk "{print $4,$5,$6,$7, $3}"'
+    alias la='\ls -ACF1GhFtr --color=always --classify'
+    alias lc='lt -c'
+    alias lla='\ls -gGhtrFA --color=always'
+    alias lr='ls -gGhtF --color=always'
+    alias lt='ll -tr'
+    alias lx='\ls -l'
+    alias l.='\ls -d1 .* --color=always --classify | ba'
+    # list lean
+    alias ll='\ls -1htr --color=always --classify | head -30'
 
-# lf(){
-#     # --classify:   append indicator (one of */=>@|) to entries
-#     #-g  -l时不显示用户名
-#     \ls -g -htrF \
-#         --no-group \
-#         --color=always --classify $* \
-#         | cut -c 14- \
-#         | sed 's/月  /月/' \
-#         | sed 's/月 /月_/' \
-#         | bat
-#         # | ag ':'
-#         # | ag ':' --colour=always \
-#     tmp=$((`\ls -l | wc -l`-1))
-#     echo "列了所有：${tmp}"
-# }
-lf(){
-    exa                  \
-        --long           \
-        --all            \
-        --classify       \
-        --colour=always  \
-        --header         \
-        --no-user        \
-        --no-permissions \
-        --sort=time      \
-        --time-style=iso $1 | le
+    l(){
+        exa                    \
+        --long                 \
+        --classify             \
+        --colour=always        \
+        --header               \
+        --no-user              \
+        --no-permissions       \
+        --sort=time            \
+        --time-style=iso  $1 | \
+        tail -25
         # --group-directories-first    # 不好，
 
-    tmp=$((`\ls -l | wc -l`-1))
-    echo "共：${tmp}"
-}
+        tmp=$((`\ls -l | wc -l`-1))
+        if [   $tmp     -lt      25 ];  then
+            echo "--------------"
+        else
+            echo "--------文件数：25/${tmp}---------"
+        fi
+    }
 
-l(){
-    exa \
-    --long \
-    --classify \
-    --colour=always \
-    --header  \
-    --no-user  \
-    --no-permissions  \
-    --sort=time  \
-    --time-style=iso  $1 | \
-    tail -25
-    # --group-directories-first    # 不好，
+    lf(){
+        exa                  \
+            --long           \
+            --all            \
+            --classify       \
+            --colour=always  \
+            --header         \
+            --no-user        \
+            --no-permissions \
+            --sort=time      \
+            --time-style=iso $1 | le
+            # --group-directories-first    # 不好，
 
-    tmp=$((`\ls -l | wc -l`-1))
-	if [   $tmp     -lt      25 ];  then
-		echo "--------------"
-	else
-        echo "--------文件数：25/${tmp}---------"
-	fi
-}
+        tmp=$((`\ls -l | wc -l`-1))
+        echo "共：${tmp}"
+    }
+
 
 # [[===========================================================================被替代了,先放这儿
 # alias l=leo_func_ls
@@ -699,7 +684,7 @@ alias snp='~/dotF/wf_snippet.py'
 # S socket-path:  Specify a full alternative path to the server socket.
 # If -S is specified, the default socket directory is not  used and any -L flag is ignored
 alias tmux='\tmux \
-            -S XDG_CACHE_HOME/socket_file_for_tmux_svr  \
+            -S $XDG_CACHE_HOME/tmux_socket  \
             -f ~/dotF/cfg/tmux/tmux.conf'
 
 tm() {
@@ -820,10 +805,6 @@ alias in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
 
 alias x='git'
 
-# 一样:
-alias o='\chezmoi --config ~/.config/chezmoi/wf_omd.toml'
-alias omd='\chezmoi --config ~/.config/chezmoi/wf_omd.toml'
-alias chezmoi='\chezmoi --config ~/.config/chezmoi/wf_omd.toml'
 
 # get github
 gg(){
@@ -1264,18 +1245,18 @@ alias apt-get='apt'
 # basename $PWD  # 更通用
 
 # sh -c "$(curl -fsLS git.io/chezmoi)" 意思：
-# -f :Fail silently (no output at all) on HTTP error
-# -s :Silent mode
-# -S : Show error even when -s is used
-# -L : follow redirects
+    # -f :Fail silently (no output at all) on HTTP error
+    # -s :Silent mode
+    # -S : Show error even when -s is used
+    # -L : follow redirects
 
 alias wg='axel'
 alias wget='echo "using axel. 要是遇到别人写wget -O-，知道它是重定向到stdout就好。 axel的参数和wget不同" ; axel'
 alias wgname='wget -c -O "wf_need_to_change_name"'
 
- # sh -c "$(wget -q -O- git.io/chezmoi)"
- # -O: 指定输出文件名
- # -O-：  输出到stdout
+    # sh -c "$(wget -q -O- git.io/chezmoi)"
+    # -O: 指定输出文件名
+    # -O-：  输出到stdout
 
 
 # >_>_>===================================================================begin

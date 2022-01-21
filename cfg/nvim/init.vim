@@ -28,7 +28,7 @@
 
     " When resourcing vimrc always use autocmd-nested  因为autocmd执行时 会又遇到autocmd
     " ++nested 在老版本中是nested
-    autocmd BufWritePost *dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw
+    autocmd BufWritePost *dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw!
 
     " 4. Go back to the default group, named "end"
     augroup end
@@ -89,11 +89,11 @@ set iskeyword+=-
 
         let s:current_timer = -1
 
-        func Highlight_Search_off(timerId)
+        func! Highlight_Search_off(timerId)
             set hlsearch!
         endfunc
 
-        func ResetTimer()
+        func! ResetTimer()
             if s:current_timer > -1
                 call timer_stop(s:current_timer)
             endif
@@ -243,7 +243,7 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
     " https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
 " 空格 tab
     " T:tab, tab to space
-    func T2S()
+    func! T2S()
         " vscode 有个插件：takumii.tabspace  " 不过应该用不着了
         set expandtab tabstop=4
         " [range]retab 百分号% 表示全文
@@ -255,7 +255,7 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
         " autocmd对neovim-vscode无效？
 
     " Two to Four
-    func T2F()
+    func! T2F()
         echom "  2个空格 变成tab"
         set noexpandtab tabstop=2
         " [range]retab 百分号% 表示全文
@@ -272,7 +272,7 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 
 
 " 保存文件时删除多余空格
-func <SID>TrailingWhiteSpace()
+func! <SID>TrailingWhiteSpace()
         let l = line(".")
         let c = col(".")
         %s/\s\+$//e
@@ -386,8 +386,13 @@ endif
 
 " todo: vscode中会复制到 前后空格  " a变成i估计就行了
 nnoremap vp viwp
+nnoremap vw viw
+    " 想选到单词末尾, 用ve
+" 看哪个好用
+    nnoremap vP Vip
+    nnoremap <leader>v Vip
 " 类似于Y D C等，到行末
-nnoremap P v$<left>p
+    nnoremap P v$<left>p
 
 
 " todo: `omap`代替下面的有点重复的各种operator的map
@@ -556,7 +561,7 @@ inoremap ( (
 set completeopt=noinsert,menuone
 
 
-func Wfprint_n()
+func! Wfprint_n()
     if &filetype == 'python'
         " todo 加叹号
         " normal! 表示不允许mapping
@@ -576,7 +581,7 @@ func Wfprint_n()
     endif
 endfunc
 
-func Wfprint_v()
+func! Wfprint_v()
     if &filetype == 'python'
         " todo
         " visual 是退出ex mode，进入normal mode, 不是在visual mode 执行
@@ -644,7 +649,7 @@ noremap <F5> <ESC>oimport pudb<ESC>opu.db
 inoremap <F5> <ESC>oimport pudb<ESC>opu.db
 
 " 定义函数AutoHead，自动插入文件头
-func AutoHead()
+func! AutoHead()
     if &filetype == 'sh'
         call setline(1, "\#!/bin/zsh")
     elseif &filetype == 'python'
@@ -802,11 +807,11 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
 " set cmdheight=2
 
-" 代码折叠
-" set foldmethod=indent  " 初步尝试, 缩进最好
-" set foldmethod
-" 初步尝试, 缩进最好
-" set foldlevel=99
+set foldmethod=indent  " 初步尝试, 缩进最好
+set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
+set foldlevel=99
+
+
 
 
 " 自动判断编码时，依次尝试以下编码：
@@ -942,33 +947,9 @@ nnoremap ko O
 " set scrolloff=7
 " end=====================================================================<_<_<
 "
-"
-func _put_your_comment_here()
 
 
-    echo fnamemodify(expand('<sfile>:p'), ':h').'/main.vim'
-    得到 ~/.Spacevim/main.vim
-    https://stackoverflow.com/questions/4976776/how-to-get-path-to-the-current-vimscript-being-executed/18734557
 
-    " 没啥用吧
-    " >_>_>===================================================================begin
-
-    auto jump to end of select
-    这是在vscode里 会到下一行？
-    vnoremap <silent> y y`]
-    vnoremap <silent> p p`]
-    nnoremap <silent> p p`]
-
-    select block
-    nnoremap <leader>v V`}
-
-    " end=====================================================================<_<_<
-
-
-endfunc
-
-
-"
 
 " 滚动scrolling of the viewport
 " c-d本来是翻页，光标会动
@@ -977,7 +958,7 @@ nnoremap <C-u> 8<C-y>
 
 " autocmd BufRead *  execute ":call Conceal_strang_chr()"
 " 需要时手动执行吧
-func Conceal_strang_chr()
+func! Conceal_strang_chr()
     " syn match name_you_like  /[^[:print:]]/ conceal cchar=  " 空格会被自动删掉
     syn match name_you_like  /[^[:print:]]/ conceal cchar=%
     set conceallevel=2
@@ -990,7 +971,7 @@ set isprint=@,161-255  " 默认值
 " set isprint=1-255  " 设了屏幕会很乱  " Stack Overflow有个傻逼回答，别信
 
 " autocmd BufRead *.txt  execute ":call Conceal_strang_chr_3()"
-func Conceal_strang_chr_3()
+func! Conceal_strang_chr_3()
     " set isprint=1-255  " 设了屏幕会很乱
     set isprint+=9  " 设了屏幕会很乱
     " syn match name_you_like  /[^[:print:]]/ conceal cchar=%
@@ -998,7 +979,7 @@ func Conceal_strang_chr_3()
     " set concealcursor=vcni
 endfunc
 
-func VimPlugConds(arg1, ...)
+func! VimPlugConds(arg1, ...)
     " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
     " https://github.com/junegunn/vim-plug/wiki/tips
     " leo改过

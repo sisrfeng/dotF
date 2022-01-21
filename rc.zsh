@@ -145,7 +145,7 @@ fpath=(~/.local/bin $fpath)
 fpath=(~/dotF/zsh_conf/zfunc_in_fpath_leo $fpath)  # zfunc_in_fpath_leo用于存放自动补全命令  要在compinit之前.
 autoload -U compinit # -U : suppress alias expansion for functions
 
-compinit -d XDG_CACHE_HOME/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
+compinit -d $XDG_CACHE_HOME/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
 # 不会自动帮你新建文件夹
 
 setopt autocd
@@ -317,7 +317,7 @@ else # set DISPLAY  under tmux
     if [[ -v "$TMUX" ]]; then
         session_name=`tmux display-message -p "#S"`
         # DIS_file='~/d/.DISPLAY_for_tmux'  别用~代表$HOME ,  $HOME 要在双引号里
-        DIS_file="XDG_CACHE_HOME/.DISPLAY_for_tmux_$session_name"
+        DIS_file="$XDG_CACHE_HOME/.DISPLAY_for_tmux_$session_name"
         if [[ -f $DIS_file ]]; then  # 读
             export DISPLAY=`cat ${DIS_file}`
         else

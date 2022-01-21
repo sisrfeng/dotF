@@ -147,7 +147,7 @@ set wrap    " vscode里, 要在setting.json设置warp
 nnoremap ce A<space><space><Esc>o/<Esc><Esc>:call nerdcommenter#Comment("n", "Comment")<CR>kJA<BS>
     " 有缩进时，有时会把开头的注释符号删掉，别完美主义吧
 
-autocmd VimEnter * set autochdir | echom '设置了autochdir'
+autocmd VimEnter * set autochdir | pwd | echom '设置了autochdir'
 
 " 要敲一次pwd触发?
     " Note: When this option is on some plugins may not work.

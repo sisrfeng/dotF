@@ -1,3 +1,5 @@
 {
-  "dependencies": {}
+  "dependencies": {
+    "coc-vimlsp": ">=0.12.5"
+  }
 }

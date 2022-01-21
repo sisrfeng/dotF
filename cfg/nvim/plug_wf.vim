@@ -17,7 +17,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/vim-easy-align'
 
-Plug 'neoclide/coc.nvim', VimPlugConds(!exists('g:vscode'), {'branch': 'release'})
 
 " 装了没啥变化，neovim本身就可以实现：多个窗口编辑同一个文件时，只要一个窗口保存了，
 " 跳到另一个窗口，会看到变化
@@ -34,9 +33,13 @@ if !exists('g:vscode')
     " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
         autocmd StdinReadPre * let s:std_in=1
         autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+        " move (rename) / delete file, 代替netrw
+        nnoremap <c-t> :NERDTreeFind<CR>
     Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
     " 把coc装的东西从我的dotfile改到其他位置, 不然弄脏目录
-    " Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        " :CocInstall coc-vimlsp
+        " 好用!  补全时的LS表示language server在提供支持
 endif
 Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { 'as': 'easymotion_ori', 'on': [] } : {'as': 'easymotion_ori'}
 Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {'as': 'easymotion_vsc'}             : { 'as': 'easymotion_vsc', 'on': [] }

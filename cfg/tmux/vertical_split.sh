@@ -10,8 +10,8 @@
 
 tmux split-window -h -p 50  -c '#{pane_current_path}'
                    # -p percent,
-if [[ -f XDG_CACHE_HOME/conda_name ]]; then
-    tmux send-keys  'conda activate `cat XDG_CACHE_HOME/conda_name`' Enter
+if [[ -f $XDG_CACHE_HOME/conda_name ]]; then
+    tmux send-keys  'conda activate `cat $XDG_CACHE_HOME/conda_name`' Enter
     tmux send-keys  'clear' Enter
 fi
 
