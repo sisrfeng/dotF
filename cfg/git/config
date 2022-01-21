@@ -3,7 +3,7 @@
   name = sisrfeng
 [credential]
   # 记住密码
-  helper = store
+	helper = store
 [core]
     pager = delta
 	excludesFile = $HOME/dotF/cfg/git/user_global_gitignore
@@ -50,6 +50,16 @@
     conflictstyle = diff3
     ; 多加了 ||||||| marker and the original text before the ======= marker
 
+; debug  来这里
 [diff]
-    colorMoved = default
+	colorMoved = zebra
 
+; 先搞清楚再放进来:
+; [pull]
+;     rebase = true
+; [fetch]
+;     prune = true
+[pull]
+	rebase = true
+[fetch]
+	prune = true

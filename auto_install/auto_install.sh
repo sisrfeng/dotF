@@ -86,6 +86,20 @@ alias ai='sudo apt install -y -qq'
     locale-gen zh_CN.UTF-8
     rm -f /etc/localtime &&  ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime  #改 Linux 系统的时区
 
+    # ponysay cowsay
+        # sudo add-apt-repository --yes ppa:vincent-c/ponysay
+        # sudo apt-get update
+        # sudo apt-get install fortune cowsay
+        # sudo apt-get install ponysay
+        # sudo snap install ponysay
+
+    # 别改系统默认python啊，不然apt都会出问题
+        ## sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+        ## sudo update-alternatives --config python3
+
+
+yes | (ai python3-pip)
+\apt autoremove -y -q
 
 # 不需要sudo
 # >_>_>===================================================================begin
@@ -139,38 +153,11 @@ chsh -s `which zsh`
 
 
 
-export ZPLUG_HOME=$HOME/dotF/zplug
-export ZPLUG_LOADFILE=$HOME/dotF/zplug/zplug_loadfile.sh
+export ZPLUG_HOME=$HOME/.zplug
 git clone https://github.com/zplug/zplug $ZPLUG_HOME
+source $ZPLUG_HOME/init.zsh
 
 
-mkdir -p ~/.config/nvim/pack/kite/start/kite
-git clone https://github.com/kiteco/vim-plugin.git ~/.config/nvim/pack/kite/start/kite/
-
-
-
-
-git config --global pull.rebase true
-git config --global fetch.prune true
-git config --global diff.colorMoved zebra
-
-
-# `没跑过`
-echo "这些没跑过"
-# sudo apt-get install fortune cowsay
-# sudo add-apt-repository --yes ppa:vincent-c/ponysay
-# sudo apt-get update
-# sudo apt-get install ponysay
-# sudo snap install ponysay
-echo "这些没跑过-----------------------------end"
-
-# 别改系统默认python啊，不然apt都会出问题
-# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-# sudo update-alternatives --config python3
-
-
-yes | (ai python3-pip)
-\apt autoremove -y -q
 
 yes | (unset ALL_PROXY ; pip install --upgrade pip  ; pip install pysocks)
 pip install -r pip_useful_tool.txt
@@ -181,36 +168,29 @@ echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n
 pip install -r pip_useful_tool.txt  \n
 pip uninstall pynvim  \n'
 
-git config --global credential.helper store
 
-# 别用等号对齐! zsh的空格是有意义的!
-# zplug的环境变量都在这里指定了
-export ZPLUG_HOME=$HOME/.zplug
-git clone https://github.com/zplug/zplug $ZPLUG_HOME
+# 自动补全, 二选一
+    # coc
+        mkdir -p ~/.local/share/nvim/site/pack/coc/start
+        cd ~/.local/share/nvim/site/pack/coc/start
+        git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
 
-# coc
-    mkdir -p ~/.local/share/nvim/site/pack/coc/start
-    cd ~/.local/share/nvim/site/pack/coc/start
-    git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
+    # git clone https://github.com/kiteco/vim-plugin.git ~/.config/nvim/pack/kite/start/kite/
+                                                      # 已经下载好了
+                                                      # todo: 配置kite
+                                                      # 改到这里? ~/.local/share/nvim/site/pack/coc/start
 
+# tmux插件
+    TP="$HOME/.tmux_wf/plugins/tpm"
+    if  [[ ! -d $TP ]] ; then
+        echo '在装tpm'
+        mkdir -p $TP
+        git clone https://github.com/tmux-plugins/tpm $TP
+        $TP/bin/install_plugins
+    else
+        echo '之前装了tpm'
+    fi
 
-echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n
-pip install -r pip_useful_tool.txt  \n
-pip uninstall pynvim  \n'
-
-pip install -r pip_useful_tool.txt
-pip uninstall pynvim  # 不删会报错
-
-# export TP="$HOME/.wf_tmux/plugins"  没必要export. 不是本shell的子shell又用不了..
-TP="$HOME/.tmux_wf/plugins/tpm"
-if  [[ ! -d $TP ]] ; then
-    echo '在装tpm'
-    mkdir -p $TP
-    git clone https://github.com/tmux-plugins/tpm $TP
-    $TP/bin/install_plugins
-else
-    echo '之前装了tpm'
-fi
-
+# 进入zsh玩耍了
 zsh
 
