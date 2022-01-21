@@ -75,6 +75,13 @@
                 " already present.  When your .vimrc file is sourced twice, the autocommands
                 " will appear twice.  To avoid this, define your autocommands in a group, so
                 " that you can easily clear them:
+                "
+        autocmd BufWritePost *dotF/cfg/nvim/** source %   | echom "更新了"."init.vim系列 "| redraw
+        代替了:
+                                                                                        " 点号拼接字符串
+        " autocmd Reload BufWritePost $MYVIMRC    ++nested   source $MYVIMRC | echom "更新了"."init.vim "| redraw
+        " autocmd Reload BufWritePost $no_vscode  ++nested   source $MYVIMRC | echom '根据环境变量，改了no_vscode.vim, 加载了init.vim' | redraw
+        " autocmd Reload BufWritePost $has_vscode  ++nested  source $MYVIMRC | echom '(改了has_vscode.vim, 更新init.vim)'  | redraw
 
 
 

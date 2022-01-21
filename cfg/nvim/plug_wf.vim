@@ -63,7 +63,7 @@ nmap ga <Plug>(EasyAlign)
         \
         \                          '?': { 'pattern': '?' },
         \                          ':': { 'pattern': ":" },
-        \                          '\': { 'pattern': '\' },
+        \                          '\': { 'pattern': '\\$' },
         \
         \                          '>': { 'pattern': '>>\|=>\|>' },
         \                          '/': {
@@ -146,7 +146,8 @@ Plug 'machakann/vim-sandwich'
 
 Plug 'scrooloose/nerdcommenter'
 
-Plug 'https://github.com/airblade/vim-rooter'
+
+" Plug 'https://github.com/airblade/vim-rooter'
     " 如果这个插件有问题, 就试下面的( 但leaderF似乎没了vim-rooter就不能自动跳转pwd)
     " todo: leaderF每个命令前都要敲一下 :pwd
         " autocmd VimEnter * set autochdir
@@ -154,7 +155,8 @@ Plug 'https://github.com/airblade/vim-rooter'
             " 在vscode里会报错, 放到no_vscode.vim
         " vscode里: 可以手动敲 :lcd
                     " 或者这个?:    autocmd BufEnter * silent! lcd %:p:h
-
+autocmd VimEnter * set autochdir
+" 这又可以了,反倒是rooter不行
 
 
         Plug  'Yggdroot/LeaderF'

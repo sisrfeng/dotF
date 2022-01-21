@@ -2,7 +2,6 @@
 set guitablabel=\[%N\]\ %t\ %M
 " set guitablabel=%t
 
-
 " function GuiTabLabel()
 "     let label = ''
 "     let bufnrlist = tabpagebuflist(v:lnum)

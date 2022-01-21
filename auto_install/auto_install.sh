@@ -93,7 +93,10 @@ alias ai='sudo apt install -y -qq'
         # sudo apt-get install ponysay
         # sudo snap install ponysay
 
-    # 别改系统默认python啊，不然apt都会出问题
+    # 修改默认python
+        rm /usr/bin/python
+        ln -s /usr/bin/python3.? /usr/bin/python
+    # 别改系统默认python3的版本啊，不然apt都会出问题
         ## sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
         ## sudo update-alternatives --config python3
 
@@ -127,7 +130,7 @@ shopt -s  expand_aliases
 export  XDG_CACHE_HOME="$HOME/d/.cache"
 mkdir -p $XDG_CACHE_HOME
 mkdir ~/.ssh
-ln -s ~/dotF/cfg/.condarc ~/
+ln -s ~/dotF/condarc ~/
 ln -sf ~/dotF/zshenv ~/.zshenv
 ln -sf ~/dotF/zprofile ~/.zprofile
 rm -rf ~/.SpaceVim.d ~/.Spacevim
@@ -146,11 +149,7 @@ curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --c
 
 
 yes | (cp -rf .muttrc ~ ;cp -rf .msmtprc ~ ; touch $.msmtp.log)
-# 修改默认python
-rm /usr/bin/python
-ln -s /usr/bin/python3.? /usr/bin/python
 chsh -s `which zsh`
-
 
 
 export ZPLUG_HOME=$HOME/.zplug
@@ -176,6 +175,10 @@ pip uninstall pynvim  \n'
         git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
 
     # git clone https://github.com/kiteco/vim-plugin.git ~/.config/nvim/pack/kite/start/kite/
+    # 目前 还存在于这些目录
+        # ~/.local/share/kite
+        # ~/.config/systemd/user
+
                                                       # 已经下载好了
                                                       # todo: 配置kite
                                                       # 改到这里? ~/.local/share/nvim/site/pack/coc/start

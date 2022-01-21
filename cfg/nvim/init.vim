@@ -28,10 +28,7 @@
 
     " When resourcing vimrc always use autocmd-nested  因为autocmd执行时 会又遇到autocmd
     " ++nested 在老版本中是nested
-                                                                                    " 点号拼接字符串
-    autocmd Reload BufWritePost $MYVIMRC    ++nested   source $MYVIMRC | echom "更新了"."init.vim "| redraw
-    autocmd Reload BufWritePost $no_vscode  ++nested   source $MYVIMRC | echom '根据环境变量，改了no_vscode.vim, 加载了init.vim' | redraw
-    autocmd Reload BufWritePost $has_vscode  ++nested  source $MYVIMRC | echom '(改了has_vscode.vim, 更新init.vim)'  | redraw
+    autocmd BufWritePost *dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw
 
     " 4. Go back to the default group, named "end"
     augroup end
@@ -1078,4 +1075,5 @@ if exists('g:vscode')
     " https://github.com/asvetliakov/vscode-neovim/issues/520
 else
     source $no_vscode
+
 endif
