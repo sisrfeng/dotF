@@ -179,6 +179,7 @@ export  XDG_CACHE_HOME="$HOME/d/.cache"
 mkdir -p $XDG_CACHE_HOME
 mkdir ~/.ssh
 rm -f ~/.condarc
+# todo: 考虑gnu stow 管理link?
 ln -s  ~/dotF/conda.yml ~/.condarc
 ln -sf ~/dotF/zshenv    ~/.zshenv
 ln -sf ~/dotF/zprofile  ~/.zprofile
