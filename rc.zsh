@@ -26,20 +26,36 @@ export PTPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython
 export PTIPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython # ptipython
 export PYTHONSTARTUP=$HOME/dotF/py_startup.py
 
-# 在~/.config/bat/config里设置所有选项
-# 别给theme名字加双引号
-export PAGER='bat'
+# 指定nvim等
+    export PAGER='bat'
+        # 在~/.config/bat/config里设置所有选项
+        # 别给theme名字加双引号
+    export MANPAGER='nvim +Man!'
+    # nvim的类似用法:nvim +'echom "hi"'
+                         # Man!    Display the current buffer contents as a manpage.
+        # Supports bold/underline/etc
+        # See https://stackoverflow.com/a/4233818/9782020
+        man_bold() {
+            eval "unbuffer man -P cat \"$@\" | $MANPAGER"
+        }
 
-export VISUAL=nvim  # less 敲v，先找VIUSAL指定的编辑器，没有再找EDITOR
-export EDITOR=nvim  # pudb 敲ctrl E能用EDITOR打开文件编辑
-# 不用加-u 指定init.vim 因为默认就在~/.config/下
+        # 但还是有bold underline. 不过没什么用, 先放着
+        # No bold/underline/etc
+        man_nobold() {
+            eval "command man \"$@\" | $MANPAGER"
+        }
 
-# bindkey -M vicmd v edit-command-line
-# 想用vscode编辑命令行，不行
-# if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
-#     export EDITOR=code
-#     export VISUAL=code
-# fi
+
+    export VISUAL=nvim  # less 敲v，先找VIUSAL指定的编辑器，没有再找EDITOR
+    export EDITOR=nvim  # pudb 敲ctrl E能用EDITOR打开文件编辑
+    # 不用加-u 指定init.vim 因为默认就在~/.config/下
+
+    # bindkey -M vicmd v edit-command-line
+    # 想用vscode编辑命令行，不行
+    # if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
+    #     export EDITOR=code
+    #     export VISUAL=code
+    # fi
 
 
 export LOGURU_FORMAT="{time} | <lvl>{message}</lvl>"
@@ -306,18 +322,21 @@ if grep -q WSL2 /proc/version ; then  # set DISPLAY to use X terminal in WSL
     # DISPLAY=$(route.exe print | grep 0.0.0.0 | head -1 | awk '{print $4}'):0.0
     export DISPLAY=$(grep nameserver /etc/resolv.conf | awk '{print $2}'):0.0
 
-
-else # set DISPLAY  under tmux
-
+else # set $DISPLAY  under tmux
     # 用于tmux重新连接_不过真的需要吗
 
     # if [[ -z "$TMUX" ]]; then
-    # -z： 变量为空，记作zero？
-    # -v更好？  -v: variable is set
-    if [[ -v "$TMUX" ]]; then
+                # -z： 变量为空，记作zero？
+                # -v更好？  -v: variable is set
+    if [[ -z "$TMUX" ]]; then
+        # 前面设了alias tm
+        # tm
+        # 敲tm, 导致vim进terminal后 弹出
+        echo '非wsl. $TMUX为空'
+    else
         session_name=`tmux display-message -p "#S"`
-        # DIS_file='~/d/.DISPLAY_for_tmux'  别用~代表$HOME ,  $HOME 要在双引号里
         DIS_file="$XDG_CACHE_HOME/.DISPLAY_for_tmux_$session_name"
+               # DIS_file='~/d/.DISPLAY_for_tmux'  别用~, 用$HOME, 而且不能在单引号里
         if [[ -f $DIS_file ]]; then  # 读
             export DISPLAY=`cat ${DIS_file}`
         else
@@ -326,9 +345,10 @@ else # set DISPLAY  under tmux
     fi
 fi
 
+
 if [[ -z  $DISPLAY ]]; then
-   echo "DISPLAY isn't set.   it's no use setting it manually? 非也"
-   export DISPLAY=localhost:11.0
+   # echo "DISPLAY isn't set.   it's no use setting it manually? 非也"
+   # export DISPLAY=localhost:11.0
    echo 'DISPLAY是：'
    echo $DISPLAY
 fi

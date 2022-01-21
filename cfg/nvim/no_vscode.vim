@@ -73,7 +73,7 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
     nnoremap <c-w>-  <c-w>s
     nnoremap gd g<C-]>
         " <C-]>只能在本文件内跳转
-        " nnoremap gd :KiteGotoDefinition<CR>
+
 
 if &diff
     " 反应变慢，不好
@@ -84,7 +84,9 @@ if &diff
 
 
 
-set  number relativenumber
+" set  number relativenumber
+" set  number norelativenumber
+set  nonumber norelativenumber
 func HideNumber()
     if(&relativenumber == &number)
         " 叹号或者加inv：表示toggle

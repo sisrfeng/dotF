@@ -478,12 +478,14 @@ nnoremap d} da}
 
 " inoremap cb '''<Esc>Go'''<Esc><C-o>i
 " change a block  " 百分号 能自动跳到配对的符号
-onoremap b %ib
+" onoremap b %ib
 " nnoremap cb %cib
 " nnoremap vb %vib
 " nnoremap yb %yib
 
-nnoremap db %dab
+" db:  往回删
+nnoremap dB %dab
+
 
 
 " nnoremap cb O'''<Esc>Go'''<Esc>
@@ -492,7 +494,15 @@ nnoremap db %dab
 "====https://github.com/ahonn/dotfiles/tree/master/vim/vscode================start
 nnoremap < <<
 nnoremap > >>
+"缩进后自动选中，方便再次操作
 vnoremap < <gv
+vnoremap > >gv
+    " 状态栏提示 3 lines <ed 1 tim
+    "            3 lines >ed 1 tim
+    " >ed is just short for "shifted"
+        "不行:
+        " vnoremap < <<gv
+        " vnoremap > >>gv
 
 
 noremap K r<CR><UP>
@@ -844,11 +854,8 @@ autocmd TabLeave * let g:last_active_tab = tabpagenr()  " tabpagenr(): 换取当
 
 
 
-"缩进后自动选中，方便再次操作
-vnoremap < <gv
-vnoremap > >gv
 
-map Y y$
+nnoremap Y y$
 
 " 复制选中区到系统剪切板中
 vnoremap <leader>y "+y
@@ -922,8 +929,8 @@ set updatetime=300
 
 
 
-" 用法:  put =Vim_out('你的命令')
-funct Vim_out(my_cmd)
+" 用法: 比如  put =Vim_out('help func')
+funct! Vim_out(my_cmd)
 " https://unix.stackexchange.com/a/8296/457327
     redir =>my_output
     " a 表示argument
@@ -934,9 +941,13 @@ endfunc
 " 用法:  put =Vim_out('你的命令')
 
 " <C-:> 不行，cat后`ctrl :`   显示的是<C-[>，和真的<C-[> 已经esc同体？
+
 " unmap <C-[>
 nnoremap  <c-'>     :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
 nnoremap  <Leader>: :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
+
+nnoremap <c-p> :echo 'to be uesd'<CR>
+nnoremap <c-n> :echo 'ctrl-n to be uesd'<CR>
 
 nnoremap ko O
 
@@ -1056,5 +1067,6 @@ if exists('g:vscode')
     " https://github.com/asvetliakov/vscode-neovim/issues/520
 else
     source $no_vscode
-
 endif
+
+

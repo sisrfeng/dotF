@@ -167,13 +167,8 @@ pip uninstall pynvim  \n'
         git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
 
     # git clone https://github.com/kiteco/vim-plugin.git ~/.config/nvim/pack/kite/start/kite/
-    # 目前 还存在于这些目录
-        # ~/.local/share/kite
-        # ~/.config/systemd/user
+        # 别用了: 请问有没有人知道kite这个是什么软件？ - 胆大路野的回答 - 知乎  https://www.zhihu.com/question/325925351/answer/2199205110
 
-                                                      # 已经下载好了
-                                                      # todo: 配置kite
-                                                      # 改到这里? ~/.local/share/nvim/site/pack/coc/start
 
 export  XDG_CACHE_HOME="$HOME/d/.cache"
 mkdir -p $XDG_CACHE_HOME

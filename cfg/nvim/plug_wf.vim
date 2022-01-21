@@ -163,13 +163,15 @@ autocmd VimEnter * set autochdir
 " 这又可以了,反倒是rooter不行
 
 
-        Plug  'Yggdroot/LeaderF'
+Plug 'ctrlpvim/ctrlp.vim'
+" ctrlp的star数更多. 二者中留下顺手的一个
+Plug  'Yggdroot/LeaderF'
         " >>>---------------------------------------------------------------------LeaderF
         " don't show the help in normal mode
-        let g:Lf_HideHelp = 1
-        let g:Lf_UseCache = 0
+        let g:Lf_HideHelp = 0
+        let g:Lf_UseCache = 1
         let g:Lf_UseVersionControlTool = 0
-        let g:Lf_IgnoreCurrentBufferName = 1
+        let g:Lf_IgnoreCurrentBufferName = 0
 
 
         " popup mode
