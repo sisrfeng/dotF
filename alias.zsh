@@ -804,6 +804,7 @@ alias in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
 
 
 alias x='git'
+alias lg='lazygit'
 
 
 # get github
@@ -1024,7 +1025,7 @@ f(){
         # fi
 
         # find 的路径，用$HOME, 别用~,  用双引号括起来
-        echo '当前目录存在的 被-prune的路径：'
+        # echo '当前目录存在的 被-prune的路径：'
         find . \
             -path "$HOME/d/docker" -prune -o \
             -path "/d/docker" -prune -o      \
@@ -1043,7 +1044,7 @@ f(){
 
         #在$HOME下这样才行 -path "./测试目录" -prune -o
     fi
-    echo 'find命令太复杂了... todo:  https://docstore.mik.ua/orelly/unix3/upt/ch09_09.htm'
+    # echo 'find命令太复杂了... todo:  https://docstore.mik.ua/orelly/unix3/upt/ch09_09.htm'
 
 }
 

@@ -14,7 +14,6 @@
 
 
 " 让配置变更立即生效
-    " >_>_>===================================================================begin
     " 1.  `:augroup {name}`
     " 	Define the autocmd group name for the  following ":autocmd"
     augroup Reload
@@ -28,11 +27,12 @@
 
     " When resourcing vimrc always use autocmd-nested  因为autocmd执行时 会又遇到autocmd
     " ++nested 在老版本中是nested
-    autocmd BufWritePost *dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw!
+    " todo: ~/dotF/cfg/nvim/*.vim会match~/dotF/cfg/nvim/notes/*.vim.
+    " 现在只好把notes下的文件改成其他后缀名
+    autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw!
 
     " 4. Go back to the default group, named "end"
     augroup end
-    " end=====================================================================<_<_<
 
 
 let mapleader =" "
@@ -124,6 +124,8 @@ set iskeyword+=-
     " echom "文件类型是"
     " echom &filetype
     " echom "文件类型输出结束"
+
+    au BufNewFile,BufRead *.Vnote  setf vim
 
     " ms: mark as searh, 回头敲's跳回来
     " https://stackoverflow.com/a/3760486/14972148
@@ -560,10 +562,15 @@ set pastetoggle=<F9>
 
 
 
-noremap <Leader>y "*y
-noremap <Leader>Y "+y
-" noremap <Leader>p "*p
-" noremap <Leader>P "+p
+" 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
+    noremap <Leader>y "*y
+    noremap <Leader>Y "+y
+    " noremap <Leader>p "*p
+    " noremap <Leader>P "+p
+" todo:
+    " nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
+    " nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
+    " https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
 
 " 有个自动补全插件 导致(变成  选中候选，只能这样map
 inoremap ( (
@@ -946,7 +953,7 @@ endfunc
 nnoremap  <c-'>     :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
 nnoremap  <Leader>: :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
 
-nnoremap <c-p> :echo 'to be uesd'<CR>
+" nnoremap <c-p> :echo 'to be uesd'<CR>
 nnoremap <c-n> :echo 'ctrl-n to be uesd'<CR>
 
 nnoremap ko O
@@ -1045,7 +1052,7 @@ map <leader>h :tabprev<cr>
 map <leader>l :tabnext<cr>
 
 " cnoreabbrev
-" map 对vscode也有效
+" cmap 对vscode也有效
         cnoreabbrev <expr> map   getcmdtype() == ":" && getcmdline() == 'map'          ? 'verbose map'                       :   'map'
         cnoreabbrev <expr> imap  getcmdtype() == ":" && getcmdline() == 'imap'         ? 'verbose imap'                      :   'imap'
         cnoreabbrev <expr> cmap  getcmdtype() == ":" && getcmdline() == 'cmap'         ? 'verbose cmap'                      :   'cmap'
@@ -1055,6 +1062,9 @@ map <leader>l :tabnext<cr>
         cnoreabbrev <expr> mdf   getcmdtype() == ":" && getcmdline() == 'mdf'          ? 'cd ~/dotF/'                        :   'mdf'
         cnoreabbrev <expr> dot   getcmdtype() == ":" && getcmdline() == 'dot'          ? 'cd ~/dotF/'                        :   'dot'
         cnoreabbrev <expr> ~/    getcmdtype() == ":" && getcmdline() == '~/'           ? 'cd ~/'                             :   '~/'
+
+cnoremap <Up> <c-p>
+cnoremap <Down> <c-n>
 
 
 if exists('g:vscode')

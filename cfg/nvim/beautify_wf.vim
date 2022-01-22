@@ -23,7 +23,7 @@ hi CursorLine guibg=#e3efe3
 " 古老：For terminal Vim, with colors, we're most interested in the cterm
 set termguicolors  " true (24-bit) colours. 下面改颜色只用改 guibg guifg
 " 放文件前部分不行
-hi Search guibg=#afafef guifg=#00aeae  
+hi Search guibg=#afafef guifg=#00aeae
 
 " let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1  " 被下面的代替了
 " mobaxterm里insert mode还是方块。vscode里是正常的
@@ -37,10 +37,10 @@ set guicursor=n-v-c:block,
 syntax enable
 
 
-highlight OperatorSandwichBuns guifg='#aa91a0' gui=underline 
-highlight OperatorSandwichChange guifg='#edc41f' gui=underline 
-highlight OperatorSandwichAdd guibg='#b1fa87' gui=none 
-highlight OperatorSandwichDelete guibg='#cf5963' gui=none 
+highlight OperatorSandwichBuns guifg='#aa91a0' gui=underline
+highlight OperatorSandwichChange guifg='#edc41f' gui=underline
+highlight OperatorSandwichAdd guibg='#b1fa87' gui=none
+highlight OperatorSandwichDelete guibg='#cf5963' gui=none
 
 
 " 防止tmux下vim的背景色显示异常
@@ -70,7 +70,7 @@ hi StatusLineNC   gui=bold guibg=#e0f0f0 guifg=#0099a0
 set textwidth=100
 
 
-highlight Search guibg='#dffefa' gui=none 
+highlight Search guibg='#dffefa' gui=none
 
 
 " hi User0 guifg=#ffffff  guibg=#094afe

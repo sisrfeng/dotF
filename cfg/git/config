@@ -6,9 +6,11 @@
 	helper = store
 [core]
     pager = delta
-	excludesFile = $HOME/dotF/cfg/git/user_global_gitignore
-    # 这样可以正确输出中文文件名
 	quotepath = false
+	; excludesfile = /home/wf/dotF/cfg/git/wf_ignore
+    ; excludesfile = $HOME/dotF/cfg/git/wf_ignore  ; $HOME不行
+    excludesfile = ~/dotF/cfg/git/wf_ignore
+        # 这样可以正确输出中文文件名
 [alias]
 	br = branch
 	ci = commit

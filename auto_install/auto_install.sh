@@ -178,6 +178,7 @@ rm -f ~/.condarc
 ln -s  ~/dotF/conda.yml ~/.condarc
 ln -sf ~/dotF/zshenv    ~/.zshenv
 ln -sf ~/dotF/zprofile  ~/.zprofile
+ln -sf ~/dotF/cfg/ssh_cfg.yml ~/.ssh/config
 rm -rf ~/.SpaceVim.d    ~/.Spacevim
 
 # tmux插件

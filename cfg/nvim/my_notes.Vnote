@@ -1,3 +1,7 @@
+asdfasdf
+
+hi
+
 这个文件没被source， 仅作为采坑笔记
 
         " https://github.com/vim/vim/issues/6793
@@ -5,6 +9,8 @@
         " 这3行结果貌似一样, expand和fnamemodify只有细微区别？
         " let $no_vscode = expand('%:h') . "/no_vscode.vim"
         " let $no_vscode = fnamemodify('%',':h') . "/no_vscode.vim"
+
+
 
 
 - expand/扩展/识别 文件名

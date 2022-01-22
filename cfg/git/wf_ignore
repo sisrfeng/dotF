@@ -10,6 +10,8 @@
 # doc/frotz and /doc/frotz have the same effect in any .gitignore file.
 # In other words, a leading slash is not relevant if there is already a middle slash in the pattern.
 
+
+
 __pycache__
 **/__pycache__
 
@@ -24,9 +26,16 @@ zcompdump.zwc
 *~
 *.swp
 **/*.swp
+*.swo
+**/*.swo
+*.swn
+**/*.swn
 
 *.cache
 **/*.cache
+
+*.pyc
+**/*.pyc
 
 # Ctags
 tags

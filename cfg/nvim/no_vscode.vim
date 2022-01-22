@@ -70,6 +70,11 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
     " nnoremap M
 
     nnoremap <c-\> <c-w>v
+        " <C-\><C-N> can be used to go to  Normal mode
+        " from any other mode.  (包括terminal-mode)
+        " This can be used to make sure Vim is in
+        " Normal mode, without causing a beep like <Esc> would.  However, this does not
+        " work in Ex mode.  When used after a command that takes an argument, such as
     nnoremap <c-w>-  <c-w>s
     nnoremap gd g<C-]>
         " <C-]>只能在本文件内跳转

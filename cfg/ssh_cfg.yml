@@ -1,0 +1,5 @@
+# https://github.com/neovim/neovim/issues/7054
+# clipboard: error invoking xclip:   Waiting for selection
+
+ForwardX11 yes
+ForwardX11Trusted yes
