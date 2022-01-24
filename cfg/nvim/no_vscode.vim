@@ -3,7 +3,9 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
 
 " abbrev 和map的区别，就像ahk里 hotkey和hotstring
 " 触发： space, Escape, or Enter.
-    abbrev nore noremap
+    inoreabbrev nno nnoremap
+    inoreabbrev cno cnoremap
+    inoreabbrev vno vnoremap
     inoreabbrev ali alias
     inoreabbrev mpa map
     inoreabbrev ali alias
@@ -18,22 +20,25 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
 
 
 " cnoreabbrev
-    cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           :   'e'
-    cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/bindkey_wf.zsh'     :   'zbk'
-    cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/.zshrc'                  :   'bd'
-    cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           :   'e'
-    cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/d/tmp.py'                :   'et'
-    cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tabedit ~/dotF/cfg/tmux/tmux.conf' :   'tc'
-    cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tabedit ~/dotF/cfg/nvim/init.vim'  :   'in'
-    cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/rc.zsh'             :   's'
-    cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/alias.zsh'          :   'al'
+  cnoreabbrev <expr> pl    getcmdtype() == ":" && getcmdline() == 'pl'           ? 'tabedit ~/dotF/cfg/nvim/plug_wf.viml'       :   'pl'
+  cnoreabbrev <expr> bt    getcmdtype() == ":" && getcmdline() == 'bt'           ? 'tabedit ~/dotF/cfg/nvim/beautify_wf.vim'    :   'bt'
+  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
+  cnoreabbrev <expr> cc    getcmdtype() == ":" && getcmdline() == 'cc'           ? 'CocConfig'                         : 'cc'
+  cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/bindkey_wf.zsh'     : 'zbk'
+  cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/.zshrc'                  : 'bd'
+  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
+  cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/d/tmp.py'                : 'et'
+  cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tabedit ~/dotF/cfg/tmux/tmux.conf' : 'tc'
+  cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tabedit ~/dotF/cfg/nvim/init.vim'  : 'in'
+  cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/rc.zsh'             : 's'
+  cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/alias.zsh'          : 'al'
 
-    cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       :   'pi'
-    cnoreabbrev <expr> ctr   getcmdtype() == ":" && getcmdline() == 'tab help ctr' ? 'CTRL'                              :   'ctr'
-"   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件
-    cnoreabbrev <expr> cm    getcmdtype() == ":" && getcmdline() == 'cm'           ? 'tab help'                          :   'cm'
-    cnoreabbrev <expr> h     getcmdtype() == ":" && getcmdline() == 'h'            ? 'tab help'                          :   'h'
-    "
+  cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       : 'pi'
+  "   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件
+  cnoreabbrev <expr> cm    getcmdtype() == ":" && getcmdline() == 'cm'           ? 'tab help'                          : 'cm'
+  cnoreabbrev <expr> h     getcmdtype() == ":" && getcmdline() == 'h'            ? 'tab help'                          : 'h'
+  cnoreabbrev <expr> ctr   getcmdtype() == ":" && getcmdline() == 'tab help ctr' ? 'CTRL'                              : 'ctr'
+
 
 " noremap
     cnoremap <C-a> <Home>
@@ -89,9 +94,10 @@ if &diff
 
 
 
-" set  number relativenumber
-" set  number norelativenumber
 set  nonumber norelativenumber
+    " 不好:
+    " set  number relativenumber
+    " set  number norelativenumber
 func HideNumber()
     if(&relativenumber == &number)
         " 叹号或者加inv：表示toggle
@@ -101,11 +107,7 @@ func HideNumber()
     else
         set relativenumber!
     endif
-
-    " :se[t] {option}?  Show value of {option}.
-    " set number?
-
-    endfunc
+endfunc
 nnoremap <Leader>n :call HideNumber()<CR>
 
 set wrap    " vscode里, 要在setting.json设置warp
@@ -154,12 +156,36 @@ set wrap    " vscode里, 要在setting.json设置warp
 nnoremap ce A<space><space><Esc>o/<Esc><Esc>:call nerdcommenter#Comment("n", "Comment")<CR>kJA<BS>
     " 有缩进时，有时会把开头的注释符号删掉，别完美主义吧
 
-autocmd VimEnter * set autochdir | pwd | echom '设置了autochdir'
+" 代替autochdir>_>_>===================================================================begin
+    " Switch to the directory of the current file unless it breaks something.
+    function! s:autopath_()
+        let can_autochdir = (!exists("v:vim_did_enter") || v:vim_did_enter) " Don't mess with vim on startup.
+        " let can_autochdir = can_autochdir && david#init#find_ft_match(['help', 'dirvish', 'qf']) < 0 " Not useful for some filetypes
+        let can_autochdir = can_autochdir && filereadable(expand("%")) " Only change to real files.
+                                            " filereadable()
+                                                    " The result is a Number, which is |TRUE| when a file with the
+                                                    " name {file} exists, and can be read.  If {file} doesn't exist,
+                                                    " or is a directory, the result is |FALSE|.
 
-" 要敲一次pwd触发?
-    " Note: When this option is on some plugins may not work.
-    " todo: debug / buggy
+        if can_autochdir
+            silent! cd %:p:h
+        endif
+    endf
 
-    " 要是放到vscode里会报错:
-    " vscode里, 可以手动敲 :lcd
+    augroup wfGroup
+        autocmd!
+
+        " Could use BufEnter to be more like autochdir, but then we have constant changing pwd.
+        " Use <S-space> to reload the buffer if you want to cd.
+        autocmd BufReadPost * call s:autopath_()
+    augroup END
+
+
+    " autocmd VimEnter * set autochdir | pwd | echom '设置了autochdir'
+    " 要敲一次pwd触发?
+        " Note: When this option is on some plugins may not work.
+        " todo: debug / buggy
+
+        " 要是放到vscode里会报错:
+        " vscode里, 可以手动敲 :lcd
 

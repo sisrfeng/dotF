@@ -30,24 +30,30 @@ export PYTHONSTARTUP=$HOME/dotF/py_startup.py
     export PAGER='bat'
         # 在~/.config/bat/config里设置所有选项
         # 别给theme名字加双引号
-    export MANPAGER='nvim +Man!'
-    # nvim的类似用法:nvim +'echom "hi"'
-                         # Man!    Display the current buffer contents as a manpage.
-        # Supports bold/underline/etc
-        # See https://stackoverflow.com/a/4233818/9782020
-        man_bold() {
-            eval "unbuffer man -P cat \"$@\" | $MANPAGER"
-        }
-
-        # 但还是有bold underline. 不过没什么用, 先放着
-        # No bold/underline/etc
-        man_nobold() {
-            eval "command man \"$@\" | $MANPAGER"
-        }
-
+    export PAGER='nvimpager'  # 设了会导致delta(git diff)的高亮没了. 要用PAGER=bat git diff
+                # 光标移动不及nvim +Man!好
+    export PAGER='nvim +Man!'
+        # export MANPAGER='nvim +Man!'
+        # # nvim的类似用法:nvim +'echom "hi"'
+        #                      # Man!    Display the current buffer contents as a manpage.
+        #     # Supports bold/underline/etc
+        #     # See https://stackoverflow.com/a/4233818/9782020
+        #     man_bold() {
+        #         eval "unbuffer man -P cat \"$@\" | $MANPAGER"
+        #     }
+        #
+        #     # 但还是有bold underline. 不过没什么用, 先放着
+        #     # No bold/underline/etc
+        #     man_nobold() {
+        #         eval "command man \"$@\" | $MANPAGER"
+        #     }
+        #
 
     export VISUAL=nvim  # less 敲v，先找VIUSAL指定的编辑器，没有再找EDITOR
     export EDITOR=nvim  # pudb 敲ctrl E能用EDITOR打开文件编辑
+            # If any application wants to invoke a line editor, it can use EDITOR.
+            # If any application wants to invoke a visual editor, it can use VISUAL.
+            # If any application wants to invoke a pager, it can use PAGER.
     # 不用加-u 指定init.vim 因为默认就在~/.config/下
 
     # bindkey -M vicmd v edit-command-line
@@ -194,6 +200,7 @@ export PS_PERSONALITY=linux  # Without this setting, ps follows the useless and 
 
 # use double quotes
 # zplug "modules/prompt", from:prezto
+# zplug "soimort/translate-shell"  #  不行
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 zplug "srijanshetty/zsh-pip-completion" # 能补全pip包的名字，但没生效
 zplug "zsh-users/zsh-completions"
@@ -241,6 +248,59 @@ zplug load     # source plugins and add commands to $PATH
 # ==================================zsh插件管理：zplug=================================]]
 
 
+# 关于run-help
+# >_>_>===================================================================begin
+        # 如果zsh设置了`alias run-help=man才需要：
+        # unalias run-help 2> /dev/null  和下面这行一样？
+        # unalias run-help &> /dev/null
+
+        # -U  | suppress usual alias expansion for functions, recommended for the use of
+        # functions supplied with the zsh distribution  \
+            # for functions precompiled with the zcompile builtin command \
+                # the flag `-U must be provided` when the `.zwc file is created`
+        autoload -Uz run-help   # -z  | mark function for zsh-style autoloading
+        autoload -Uz run-help-ip  # 暂时用不着，不过开始开着吧
+        run-help-sudo(){
+        if [ $# -eq 0 ]; then
+            man sudo
+        else
+            man $1
+        fi
+        }
+
+        # autoload -Uz run-help-git
+        run-help-git(){
+        if [ $# -eq 0 ]; then
+            man git
+            echo 'hi, leo. Just manpage .'
+        else
+            local al
+            if al=$(git config --get "alias.$1"); then
+                1=${al%% *}
+            fi
+            man git-$1
+            echo 'hi, leo. Above is help for subcommand'
+        fi
+        }
+
+        run-help-ssh() {
+            emulate -LR zsh
+            local -a args
+            # Delete the "-l username" option
+            zparseopts -D -E -a args l:
+            # Delete other options, leaving: host command
+            args=(${@:#-*})
+            if [[ ${#args} -lt 2 ]]; then
+                man ssh
+            else
+                run-help $args[2]
+            fi
+        }
+
+        # 之前只能跳到zshbuiltins，是应为没设置 HELPDIR
+        [ -d /usr/share/zsh/help ] && HELPDIR=/usr/share/zsh/help
+        [ -d /usr/local/share/zsh/help ] && HELPDIR=/usr/local/share/zsh/help
+
 # 放在插件管理后面，避免被别人的配置覆盖
 
 # 不能用\换行
@@ -260,14 +320,12 @@ export LESS='--incsearch --ignore-case --status-column --LONG-PROMPT --RAW-CONTR
     # --HILITE-UNREAD:  highlight first unread line after forward movement
 
     # https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
-source $HOME/dotF/color_less_wf.zsh
 
+
+source $HOME/dotF/color_less_wf.zsh
 source $HOME/dotF/color_highlight_style_wf.zsh
 source $HOME/dotF/completion_color_config_敲tab补全.zsh  #  不只是颜色, 但为了想改颜色时容易找，这么命名。
 source $HOME/dotF/color_ls_wf.zsh
-
-
-source $HOME/dotF/bindkey_wf.zsh
 
 
 source $HOME/dotF/history_config_wf.zsh
@@ -275,7 +333,7 @@ source $HOME/dotF/history_config_wf.zsh
 # source /home/wf/dotF/per-dir-history.zsh
 
 source $HOME/dotF/alias.zsh   # 里面有：chpwd_functions=(${chpwd_functions[@]} "list_all_after_cd")
-bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
+source $HOME/dotF/bindkey_wf.zsh
 
 autoload -Uz chpwd_recent_dirs  cdr add-zsh-hook  # -U: suppress alias expansion for functions
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -473,6 +531,7 @@ export PATH="$HOME/dotF/bin_wf:$PATH:/snap/bin"
         # ${wf_var+:$PATH}
     export MANPATH="${brew_wf}/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="${brew_wf}/share/info:${INFOPATH:-}"  # 最后的减号是啥?zsh的文档太难懂了...
+    export HOMEBREW_BAT=1
 
 export BROWSER=w3m
 

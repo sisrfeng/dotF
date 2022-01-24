@@ -192,6 +192,12 @@ rm -rf ~/.SpaceVim.d    ~/.Spacevim
         echo '之前装了tpm'
     fi
 
+# 解决这里的问题: https://github.com/microsoft/python-type-stubs/pull/72
+    # conda activate MY_env_
+    # CV2_PATH=`python -c 'import cv2, os; print(os.path.dirname(cv2.__file__))'`
+    # URL='https://raw.githubusercontent.com/bschnurr/python-type-stubs/add-opencv/cv2/__init__.pyi'
+    # curl -sSL $URL -o ${CV2_PATH}/cv2.pyi
+
 # 进入zsh玩耍了
 zsh
 

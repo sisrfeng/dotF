@@ -1,0 +1,62 @@
+{
+	"suggest.detailMaxLength": 60,
+	"suggest.noselect": true,
+	"suggest.enablePreselect": false,
+	"suggest.triggerAfterInsertEnter": true,
+	"suggest.autoTrigger": "always",
+	"suggest.timeout": 5000,
+	"suggest.enablePreview": true,
+	"suggest.floatEnable": true,
+	"suggest.detailField": "preview",
+	"suggest.snippetIndicator": "",
+	"suggest.triggerCompletionWait": 100,
+	"suggest.echodocSupport": true,
+	"suggest.completionItemKindLabels": {
+		"class"         : "类",
+		"color"         : "色",
+		"constant"      : "常量",
+		"default"       : "默认",
+		"enum"          : "枚举",
+		"enumMember"    : "枚举mem",
+		"event"         : "EvenT",
+		"field"         : "FielD",
+		"file"          : "FilE",
+		"folder"        : "FoldeR",
+		"function"      : "FunctioN",
+		"interface"     : "InterfacE",
+		"keyword"       : "KeyworD",
+		"method"        : "MethoD",
+		"module"        : "ModulE",
+		"operator"      : "OperatoR",
+		"property"      : "PropertY",
+		"reference"     : "ReferencE",
+		"snippet"       : "SnippeT",
+		"struct"        : "StrucT",
+		"text"          : "TexT",
+		"typeParameter" : "TypeParameteR",
+		"unit"          : "UniT",
+		"value"         : "取值"
+	},
+	"python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.typeCheckingMode": "basic",
+    // 设为strict, 好像要声明int float等type
+    // 这样定义变量就会报错: FP = FP1 + FP2
+    "python.analysis.diagnosticMode":  "openFilesOnly",
+	"python.analysis.autoImportCompletions":  true,
+
+    "python.linting.enabled": true,  // 改了没动静
+    "python.linting.flake8Enabled": true,  // 改了没动静
+    "python.linting.lintOnSave": true,
+    "python.linting.pylintEnabled": false,
+	"python.linting.maxNumberOfProblems": 8,
+	// "python.linting.flake8Args": ["--ignore=E303,E402,E401,E202"],
+    "python.linting.flake8Path": "/home/linuxbrew/.linuxbrew/bin/flake8",
+	// 详见全局设置: /home/wf/.config/flake8
+	// 有时上述文件不生效,要在project所在目录放一个tox.ini, 内容同上也可
+    // "python.linting.flake8CategorySeverity.E":
+    // "
+
+	// pyright还不成熟, 问题很多?
+    "pyright.enable": true,  // 它要是关了, flake8也用不了
+    "pyright.disableDiagnostics": true  // 禁用pyright的检查, 用flake8的?
+}

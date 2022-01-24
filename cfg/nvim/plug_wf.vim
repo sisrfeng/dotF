@@ -1,22 +1,29 @@
 Plug 'junegunn/vim-plug'
     " 为了能用:help plug-options
 
+Plug 'kana/vim-fakeclip'
 Plug 'voldikss/vim-translator'
-    " todo mobaxterm 2080ti上不行
 
-    " <Leader>t 翻译光标下的文本，在命令行回显
-    nnoremap  <Leader>a <Plug>Translate
+    " 翻译光标下的文本，在命令行回显
+    nnoremap  gdd <Plug>Translate
     vnoremap <silent> <Leader>a <Plug>TranslateV
     " h被占了
     " <Leader>h 翻译光标下的文本，在窗口中显示   h：here
-    nnoremap <silent> <Leader>a <Plug>TranslateW
-    vnoremap <silent> <Leader>a <Plug>TranslateWV
+    " nnoremap <silent> <Leader>a <Plug>TranslateW
+    " vnoremap <silent> <Leader>a <Plug>TranslateWV
     " Leader h被 set hlsearch！占用了
+    "
+    let g:translator_target_lang=['youdao']
+    let g:translator_window_type='preview'
+
+    " todo: 换用:
+    " https://github.com/echuraev/translate-shell.vim
+
 
 Plug 'sheerun/vim-polyglot'
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/vim-easy-align'
-
+Plug 'lifepillar/vim-solarized8'
 
 " 装了没啥变化，neovim本身就可以实现：多个窗口编辑同一个文件时，只要一个窗口保存了，
 " 跳到另一个窗口，会看到变化
@@ -30,6 +37,7 @@ Plug 'junegunn/vim-easy-align'
 if !exists('g:vscode')
     Plug 'plasticboy/vim-markdown'
     Plug 'preservim/nerdtree'
+    Plug 'APZelos/blamer.nvim'
     " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
         autocmd StdinReadPre * let s:std_in=1
         autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
@@ -40,6 +48,10 @@ if !exists('g:vscode')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
         " :CocInstall coc-vimlsp
         " 好用!  补全时的LS表示language server在提供支持
+
+        " 没有这行 可能导致coc-pyright无法使用
+        autocmd FileType python let b:coc_root_patterns = ['.git', 'pyrightconfig.json']
+            " user's home directory would never considered as workspace folder.
 endif
 Plug 'easymotion/vim-easymotion',  has('g:vscode') ? { 'as': 'easymotion_ori', 'on': [] } : {'as': 'easymotion_ori'}
 Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {'as': 'easymotion_vsc'}             : { 'as': 'easymotion_vsc', 'on': [] }
@@ -163,38 +175,40 @@ autocmd VimEnter * set autochdir
 " 这又可以了,反倒是rooter不行
 
 
-Plug 'ctrlpvim/ctrlp.vim'
 " ctrlp的star数更多. 二者中留下顺手的一个
+Plug 'ctrlpvim/ctrlp.vim'
+    let g:ctrlp_match_window = 'bottom,order:btt,min:80,max:80,results:10'
+    let g:ctrlp_switch_buffer = 'ET'
 Plug  'Yggdroot/LeaderF'
         " >>>---------------------------------------------------------------------LeaderF
         " don't show the help in normal mode
-        let g:Lf_HideHelp = 0
+        let g:Lf_HideHelp = 1
         let g:Lf_UseCache = 1
         let g:Lf_UseVersionControlTool = 0
         let g:Lf_IgnoreCurrentBufferName = 0
 
-
+        let g:Lf_WindowPosition = 'fullScreen'
         " popup mode
-        let g:Lf_WindowPosition = 'popup'
-        let g:Lf_PreviewInPopup = 1
-        let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-        let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+        " let g:Lf_WindowPosition = 'popup'
+        " let g:Lf_PreviewInPopup = 1
+        " let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+        " let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
-        " let g:Lf_ShortcutF = "<leader>o"
         " 和zsh下按ctrl f 作用一致
         let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符
         " mru: most recently used file
         " C-u: 删掉cmdline的字符。主要对visual mode有用？很多插件都这么设
-            nnoremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+            " m: most recenly
+            nnoremap <leader>m :<C-U>tab   <C-R>=printf("Leaderf! mru %s", "")<CR><CR>
         " search a line in current buffer.  " 有点vscode下的感觉
-            nnoremap <leader>/ :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+            nnoremap <leader>/ :<C-U>tab   <C-R>=printf("Leaderf line %s", "")<CR><CR>
         " <cword> is replaced with the word under the cursor (like |star|)
             " nnoremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
             " 删掉了叹号
             "  LeaderfFunction! 叹号版本直接打开 normal 模式，并且定位到对应位置
-            nnoremap <C-B> :<C-U><C-R>=printf("Leaderf rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+            nnoremap <C-B>     :<C-U>tab   <C-R>=printf("Leaderf rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
             " 不确定是否靠谱  " 代替在zsh中用rg
-            nnoremap <leader>f :<C-U><C-R>=printf("Leaderf rg -g '!*.zsh_history' -g '!*.lesshst' -g '!/data1/weifeng_liu/.large_trash' ")<CR><CR>
+            nnoremap <leader>f :<C-U>tab   <C-R>=printf("Leaderf rg -g '!*.zsh_history' -g '!*.lesshst' -g '!/data1/weifeng_liu/.large_trash' ")<CR><CR>
             " 这个不起作用，不能ctrl+shift？
             " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
             " nnoremap <C-S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR><CR>
@@ -221,3 +235,6 @@ noremap <leader>b :ToggleBool<CR>
 Plug 'mbbill/undotree'
 " On top of all language packs from vim repository. syntax支持
 Plug 'sheerun/vim-polyglot'
+
+
+

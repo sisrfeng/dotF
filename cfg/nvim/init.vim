@@ -55,12 +55,19 @@ nnoremap gf :tabedit <cfile><CR>
 
 " block模式
     " 记忆：c for block
-    " c发音:ke
+    "
+
     nnoremap <c-c> <c-v>
-    " 变成^  作用是 显示ASCII码 （以^H等方式显示一些控制字符）
     cnoremap <c-c> <c-v>
-    " vscod里不生效：
+        " 变成^  （以^H等方式显示一些控制字符）
     inoremap <c-c> <c-v>
+        " i_CTRL-C	Quit insert mode,
+        "
+        "             not check for  abbreviations.
+        "             Does not trigger the |InsertLeave| autocommand  event.
+            " iunmap <c-v>
+            "   加了这行,导致i_ctrl_c不能成为i_ctrl-v
+            " recussive unmap?
 
     " 加了几行，还是粘贴
     " inoremap <c-v> <c-v>
@@ -70,6 +77,10 @@ nnoremap gf :tabedit <cfile><CR>
     " 加了这两行，还是删除到行首
     " cnoremap <c-q> <c-v>
     " inoremap <c-q> <c-v>
+    "
+
+
+" focus on comment or not
 
 
 
@@ -179,23 +190,7 @@ let g:selecmode="mouse"
     " map <C-Left>
     " map <C-Right>
 
-"  和系统粘贴板 "+ 打通
-    set clipboard+=unnamedplus  " vim外也可以粘贴vim的registry了
-    inoremap <C-V> "+p
-    inoremap <C-P> <Esc>pa
-
-    " echo 'wls有bug， 别设unnamedplus'
-    " update: xsel换成xcliip, 貌似可以在wsl下用unnamedplus了
-        " if hostname() == 'redmi14-leo' && !exists('g:vscode')
-        "     " set clipboard=""  " 默认就是这样
-        "
-        "     " 备用方案:
-        "     " wsl下:
-        "     " https://github.com/equalsraf/win32yank/release
-        "     " https://gist.github.com/MinSomai/c732fc66e36534feb5a8fb9e0a3c8fb2
-        " endif
-
-
+source ~/dotF/cfg/nvim/clipboard_regis.vim
 
 
 " :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
@@ -296,13 +291,12 @@ nnoremap df ggdG
 nnoremap <F4> :UndotreeToggle<CR>
 let g:undotree_SetFocusWhenToggle = 1
 if has('persistent_undo')
-    let target_path = expand('~/.undodir')
-    " let target_path = expand('~/.undo_dir_nvim_wf')
-    if !isdirectory(target_path)
-        call mkdir(target_path, "p", 0700) " create the directory and any parent directories
+    let path_undo = expand('$XDG_CACHE_HOME/.undo_nvim')
+    if !isdirectory(path_undo)
+        call mkdir(path_undo, "p", 0700) " create the directory and any parent directories
     endif
 
-    let &undodir=target_path
+    let &undodir=path_undo
     set undofile
     endif
 
@@ -327,6 +321,9 @@ if has('persistent_undo')
 " todo
 " https://github.com/pechorin/any-jump.vim
 
+
+let g:ft_man_folding_enable=1
+let g:man_hardwrap=1
 
 
 if has('win32')
@@ -826,7 +823,10 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
 set foldmethod=indent  " 初步尝试, 缩进最好
 set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
-set foldlevel=99
+set foldlevel=2
+    " zero will close all folds.
+    " Higher numbers will close fewer folds.
+
 
 
 
@@ -1032,7 +1032,8 @@ func! VimPlugConds(arg1, ...)
                     autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
                 Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
             endif
-        call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
+        " call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
+        call plug#end()
           " 如果多次出现, 会让registered的插件可以plugclean, (被视为invalid plugins)
             " update &runtimepath and initialize plugin system
             " Automatically executes
@@ -1044,9 +1045,6 @@ func! VimPlugConds(arg1, ...)
                 \|   PlugInstall --sync | q
                 \| endif
 
-source ~/dotF/cfg/nvim/status_line_wf.vim
-source ~/dotF/cfg/nvim/tabline.vim
-    " 或者叫tabline? tab statusline tab栏 tab status
 
 map <leader>h :tabprev<cr>
 map <leader>l :tabnext<cr>
@@ -1062,6 +1060,11 @@ map <leader>l :tabnext<cr>
         cnoreabbrev <expr> mdf   getcmdtype() == ":" && getcmdline() == 'mdf'          ? 'cd ~/dotF/'                        :   'mdf'
         cnoreabbrev <expr> dot   getcmdtype() == ":" && getcmdline() == 'dot'          ? 'cd ~/dotF/'                        :   'dot'
         cnoreabbrev <expr> ~/    getcmdtype() == ":" && getcmdline() == '~/'           ? 'cd ~/'                             :   '~/'
+        cnoreabbrev <expr> man   getcmdtype() == ":" && getcmdline() == 'man'          ? 'tab Man '                        :   'man'
+
+        " todo: 把:h xxx自动替换成:tab help xxx
+        " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
+
 
 cnoremap <Up> <c-p>
 cnoremap <Down> <c-n>
@@ -1078,5 +1081,4 @@ if exists('g:vscode')
 else
     source $no_vscode
 endif
-
 

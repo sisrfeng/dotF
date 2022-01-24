@@ -13,7 +13,7 @@
         # 这样可以正确输出中文文件名
 [alias]
 	br = branch
-	ci = commit
+	cm = commit
 	st = status
 	co = checkout
 	ck = checkout

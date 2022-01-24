@@ -1,10 +1,35 @@
 " [[---------------------------------------Theme Settings    主题设置
-source ~/dotF/cfg/nvim/lucius.vim
+" source  ~/.local/share/nvim/plugged/vim-solarized8/colors/solarized8.vim
+" set background=light
+"
+" if !exists('g:vscode')
+"     autocmd vimenter * ++nested colorscheme solarized8 | hi CursorLine guibg=#e3efe3 |  hi Cursor guibg=#ffff7c
+" endif
+"
+source ~/dotF/cfg/nvim/paperlike_wf.vim
+
+
 set background=light
 
 if !exists('g:vscode')
     colorscheme lucius
     LuciusLight
+    hi Normal guibg=NONE
+    hi Menu   guibg=#abefcd  guifg=#123456
+    highlight Pmenu guibg=#ede6d3
+
+    " 背景米白色
+    hi Comment guifg=#fdf6e3 | let g:hidden = 1
+            func! Comment_01()
+                if g:hidden == 1
+                    hi Comment guifg=#225800
+                    let g:hidden = 0
+                else
+                    hi Comment guifg=#fdf6e3
+                    let g:hidden = 1
+                endif
+            endfunc
+    nnoremap <leader>c :call Comment_01()<CR>
 endif
 
 " if &diff
@@ -74,7 +99,7 @@ highlight Search guibg='#dffefa' gui=none
 
 
 " hi User0 guifg=#ffffff  guibg=#094afe
-hi User0 guifg=#000000  guibg=#00ffff
+hi User0 guifg=#000000  guibg=#000a99
 " hi User1 guifg=#ffdad8  guibg=#880c0e
 " hi User2 guifg=#000000  guibg=#F4905C
 " hi User3 guifg=#292b00  guibg=#f4f597
@@ -84,3 +109,5 @@ hi User0 guifg=#000000  guibg=#00ffff
 " hi User8 guifg=#ffffff  guibg=#5b7fbb
 " hi User9 guifg=#ffffff  guibg=#810085
 
+source ~/dotF/cfg/nvim/tab_status_lines.vim
+    " 或者叫tabline? tab statusline tab栏 tab status

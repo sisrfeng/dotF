@@ -3,6 +3,7 @@
 
 # zsh bindkey
 alias zbk='e ~/dotF/bindkey_wf.zsh ; zsh'
+alias pl='flake8'  # python linting
 
 alias con='conda'
 alias ci='conda install -y'
@@ -40,8 +41,10 @@ alias fzf='~/dotF/fuzzyF/bin/fzf --height 40% --layout=reverse --border'
 alias cfg='~/dotF/cfg/'
 
 export CHTSH_CONF='~/dotF/cfg/cht.sh.conf'
-alias ch='cht.sh --shell'
+# alias ch='echo "搜Stack Overflow还行, tldr别用它" ; cht.sh --shell'
+alias ch='echo "tldr找不到的话, 直接上Stack Overflow吧", 不管别人怎么夸这个cheatsheet, 但目前没屁用!!!!!!!!!!!!!'
 
+# todo: bat换成nvimpager?  单页能显示完的就还是用bat?
 # cheat website
 chw(){
     # curl --silent "cheat.sh/$*""\?T" | bat
@@ -49,8 +52,9 @@ chw(){
     tmp="cheat.sh/$*"
     curl --silent $tmp\?T | bat
     }
+alias chw='echo "tldr找不到的话, 直接上Stack Overflow吧'
 
-alias nvtop='/home/wf/nvtop_wf_built/usr/local/bin/nvtop'
+alias nvtop='/home/wf/d/fancy_repo_follow_up/nvtop_wf_built/usr/local/bin/nvtop'
 
 aps(){
     apt search $1 | peco
@@ -191,7 +195,7 @@ mt(){
     $2,           \
     " ",          \
     $3            \
-    }'  | bat   # 这里不能用双引号代替单引号
+    }'  | $PAGER   # 这里不能用双引号代替单引号
     # date --date="${UglyTime}"  +"%Y年%m月%d日 %X"` | \
     # PrettyTime=`date --date="${UglyTime}"  +"%Y年%-m月%-d日 %X"
     # \grep : --color=always
@@ -308,7 +312,7 @@ cfc(){
 
 alias ca='cat'
 alias ba='bat'
-alias w=bat
+alias w=$PAGER
 
 # bat read git output
 bgit(){git $* | bat}
@@ -341,25 +345,33 @@ r(){
         # --iglob=!"./.zsh_history" \
 
     # 可以自动补全，因为没用pipe？
-     \rg --pretty \
-         -g '!*.zsh_history' \
-         -g '!*.lesshst' \
-         -g '!*.vscode-server' \
-         -g '!/d' \
-         -g '!~/d' \
+     # \rg --pretty \  # 用nvim打开 ,没有彩色, 干脆不要--pretty了
+     \rg                                       \
+         -g '!*.zsh_history'                   \
+         -g '!*.lesshst'                       \
+         -g '!*.vscode-server'                 \
+         -g '!.LfCache'                        \
+         -g '!/d'                              \
+         -g '!~/d'                             \
          -g '!/data1/weifeng_liu/.large_trash' \
-         -g '!~/.t' \
-         --hidden \
-         --before-context 1 \
-         --after-context 1  \
+         -g '!~/.t'                            \
+         --hidden                              \
+         --before-context 1                    \
+         --after-context 1                     \
          --smart-case "$*" > ~/.t/rg_result.log
                       # regex来匹配：.表示任意一个字符
     if [[ `cat ~/.t/rg_result.log | wc -l` > 0 ]] ; then
         # bat代替less？ 不行  --quit-if-one-screen \
         # less无法搜中文
         # 尝试most？less的改进版
-        less   --pattern="$*" \
-                +gg \
+                # 失败的方法:
+                # 会有乱码 nvim -c "/$*"  \
+                # nvimpager 打开? 光标不好使
+                # cat ~/.t/rg_result.log | $PAGER
+        # less   --pattern="$*" \
+            # Man!  Display the current buffer contents as a manpage.
+        # nvim +10  打开文件 并到第10行,  为什么
+        nvim -c "Man!" -c "/$*" \
                 ~/.t/rg_result.log
                 # +G 跳到最后
                 # +某字母  打开时 执行vim式的操作
@@ -404,10 +416,6 @@ alias rl='readlink -f'
 alias j='ln -s --interactive --verbose --logical'
 #logical: dereference TARGETs that are symbolic links
 
-# cm for command
-# 代替where which type
-# -v for verbose, 不过好像没用
-alias cm='whence -ca'
 
 
 #==============================ls相关===================================
@@ -649,7 +657,7 @@ cl(){
 
 
 # gpustat and grep wf
-alias g='echo "gpu序号记得减1";  gpustat  --show-user --no-header  | cut --delimiter="," -f2 | bat  --number --language=py3 '
+alias g='echo "gpu序号记得减1";  gpustat  --show-user --no-header  | cut --delimiter="," -f2 | bat  --number --language=py3'
 alias gw='g --your-name wf '
 alias gwf='g --your-name wf '
 
@@ -803,7 +811,7 @@ alias al='e ~/dotF/alias.zsh; zsh'
 alias in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
 
 
-alias x='git'
+alias x='PAGER=bat git'
 alias lg='lazygit'
 
 
@@ -1257,77 +1265,40 @@ alias wgname='wget -c -O "wf_need_to_change_name"'
 
     # sh -c "$(wget -q -O- git.io/chezmoi)"
     # -O: 指定输出文件名
-    # -O-：  输出到stdout
 
-
-# >_>_>===================================================================begin
-# 关于run-help
-# 如果zsh设置了`alias run-help=man才需要：
-# unalias run-help 2> /dev/null  和下面这行一样？
-# unalias run-help &> /dev/null
-
-# -U  | suppress usual alias expansion for functions, recommended for the use of
-   # functions supplied with the zsh distribution  \
-    # for functions precompiled with the zcompile builtin command \
-        # the flag `-U must be provided` when the `.zwc file is created`
-autoload -Uz run-help   # -z  | mark function for zsh-style autoloading
-autoload -Uz run-help-ip  # 暂时用不着，不过开始开着吧
-run-help-sudo(){
-if [ $# -eq 0 ]; then
-    man sudo
-else
-    man $1
-fi
-}
-
-# autoload -Uz run-help-git
-run-help-git(){
-if [ $# -eq 0 ]; then
-    man git
-    echo 'hi, leo. Just manpage .'
-else
-    local al
-    if al=$(git config --get "alias.$1"); then
-        1=${al%% *}
-    fi
-    man git-$1
-    echo 'hi, leo. Above is help for subcommand'
-fi
-}
-
-run-help-ssh() {
-    emulate -LR zsh
-    local -a args
-    # Delete the "-l username" option
-    zparseopts -D -E -a args l:
-    # Delete other options, leaving: host command
-    args=(${@:#-*})
-    if [[ ${#args} -lt 2 ]]; then
-        man ssh
-    else
-        run-help $args[2]
-    fi
-}
-
-# 之前只能跳到zshbuiltins，是应为没设置 HELPDIR
-[ -d /usr/share/zsh/help ] && HELPDIR=/usr/share/zsh/help
-[ -d /usr/local/share/zsh/help ] && HELPDIR=/usr/local/share/zsh/help
 
 alias help=run-help
 alias hp=run-help
-bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
+alias _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
+            # alias tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
+            # 在各种client中,它最好看, 但要是找不到, 会一直找
+            # brew install tldr, 得到的格式用vim打开很乱
 
-# # 敲`zsh 某.sh`时，这里的东西全都不起作用. 覆盖built-in命令也不怕翻车
-# 博客也有教覆盖的：https://www.tecmint.com/create-and-use-bash-aliases-in-linux/
-# alias r='~/.local/bin/tldr'  # pip安装的，比apt安装的显示好些 但不翻墙就有时连不上网。。。。。翻了也用不了....
+            # pip安装的，比apt安装的显示好些 但不翻墙就有时连不上网。。。。。翻了也用不了....
 h(){
-    ( whence -ca $1 ; echo '' ; tldr $1 ) | less --quit-if-one-screen
     # todo https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion-Flags
     # parameter expansion
-    VAR="$(tldr $1)" # 赋值时千万别写空格！！
-    if [[ ${VAR} == *"This page doesn't exist yet"* ]]
-    then
-        PAGER=less run-help $1
+    # 结合brew和npm安装的tldr的优点, 跑2次tldr
+    # if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 2> /dev/null` == *"This page doesn't exist yet"* ]];  then
+    echo '这具体是:'
+    whence -ca $1
+        # 这可以退休了:
+            alias cm='whence -ca'
+            # cm for command
+            # 代替where which type
+            # -v for verbose, 不过好像没用
+    echo ' '
+    echo "$1 的用法:"
+    if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
+        # 要是tldr找不到, 才run-help
+        run-help $1
+    else
+        _tldr $1 > ~/.t/tldr_tmp.zsh
+        nvim ~/.t/tldr_tmp.zsh
+                # 不好的方案
+                    # _tldr $1 | nvim  # nvim会抽风
+                    # nvim   `_tldr $1`  # 不行, ``返回的是-1, 而非stdout内容
+                    # bat ~/.t/.tldr_tmp.zsh  # 粘贴不方便
     fi
     # echo 'zsh的man不全？试试这个'
     # echo 'w3m man.cx/你的命令'  # 更新：run-help就可以找到zsh的built-in
@@ -1336,7 +1307,8 @@ h(){
     # man可以指定pager,  less这个pager可以指定打开的位置
     # man --pager="less --pattern 'keyboard definition'" zshcontrib
 }
+
 # 在zshrc里设置了代理，这里不用设
 alias goo='googler'
-alias bi='brew install'
+alias bi='brew  install --quiet'
 

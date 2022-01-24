@@ -2,13 +2,13 @@
 # if they depend on the $PATH.
 # Your $PATH and any other important ENV variable should be set in .zshenv.
 
-export  XDG_CACHE_HOME="$HOME/d/.cache"
 
 # github.com/rafi/.config
 # 注意 这是为bash配置的, 可能和zsh不同?
 
 # what defaults values should be used if the environment vars are empty or not set.
 # So there is no need to set the values unless you want to change the default ones
+# 非也! 设了可以避免$XDG啥啥啥 为空
 
 # user-specific
     # XDG_CONFIG_HOME
@@ -30,13 +30,14 @@ export  XDG_CACHE_HOME="$HOME/d/.cache"
         # Should default to $HOME/.local/state
 
 
-        # export XDG_CONFIG_HOME="$HOME/.config"
-        # export  XDG_CACHE_HOME="$HOME/.cache"
-        # export   XDG_DATA_HOME="$HOME/.local/share"
-        #
-        # [ -d "$XDG_CONFIG_HOME" ] || mkdir -m 0750 "$XDG_CONFIG_HOME"
-        # [ -d "$XDG_CACHE_HOME" ]  || mkdir -m 0750 "$XDG_CACHE_HOME"
-        # [ -d "$XDG_DATA_HOME" ]   || mkdir -m 0750 "$XDG_DATA_HOME"
+export XDG_CONFIG_HOME="$HOME/.config"
+# export  XDG_CACHE_HOME="$HOME/.cache"
+export  XDG_CACHE_HOME="$HOME/d/.cache_wf"
+export   XDG_DATA_HOME="$HOME/.local/share"
+
+[ -d "$XDG_CONFIG_HOME" ] || mkdir -m 0750 "$XDG_CONFIG_HOME"
+[ -d "$XDG_CACHE_HOME" ]  || mkdir -m 0750 "$XDG_CACHE_HOME"
+[ -d "$XDG_DATA_HOME" ]   || mkdir -m 0750 "$XDG_DATA_HOME"
 
 # 先别管这些, 最底下export了PATH
 
