@@ -306,7 +306,7 @@ bind '\C- ' delete-word
 # f: forward-word
 
 bind -s '\ei' 'echo "待用" \n'
-bind -s '\ep' 'echo "待用" \n'
+bind -s '\ep' '~/p \n'  # p for project. 当前常用的project
 
 
 # todo

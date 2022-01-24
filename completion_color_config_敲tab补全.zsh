@@ -116,7 +116,8 @@ zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion::complete:*' use-cache on
 # todo  为什么试了几次， 还是没东西写进这文件？
 # zstyle ':completion::complete:*' cache-path "$HOME/.completion_cache_wf.zsh"
-zstyle ':completion:*' cache-path "$HOME/.completion_cache_wf.zsh"
+# zstyle ':completion:*' cache-path "$HOME/.completion_cache_wf.zsh"
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh_completion_wf.zsh"
 
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
 

@@ -24,7 +24,7 @@ logger.info(str(vars(args)))
 
 import os
 def find_gpus(num_of_cards_needed=6):
-    os.system('nvidia-smi -q -d Memory |grep -A4 GPU|grep Free >~/.tmp_free_gpus')
+    os.system('nvidia-smi -q -d Memory |grep -A4 GPU|grep Free >~/.t/free_gpus_useless')
     # If there is no ~ in the path, return the path unchanged
     with open(os.path.expanduser ('~/.tmp_free_gpus'), 'r') as lines_txt:
         frees = lines_txt.readlines()
