@@ -360,7 +360,11 @@ r(){
          --after-context 1                     \
          --smart-case "$*" > ~/.t/rg_result.log
                       # regex来匹配：.表示任意一个字符
-    if [[ `cat ~/.t/rg_result.log | wc -l` > 0 ]] ; then
+    # if [[ `cat ~/.t/rg_result.log | wc -l` > 0 ]] ; then
+    if [[ $(cat ~/.t/rg_result.log | wc -l) > 0 ]] ; then
+        # The backticks (`...`) is the legacy syntax required by only the very oldest of non-POSIX-compatible bourne-shells
+        # and $(...) is POSIX and more preferred
+
         # bat代替less？ 不行  --quit-if-one-screen \
         # less无法搜中文
         # 尝试most？less的改进版
@@ -445,8 +449,12 @@ alias j='ln -s --interactive --verbose --logical'
         tail -25
         # --group-directories-first    # 不好，
 
-        tmp=$((`\ls -l | wc -l`-1))
-        if [   $tmp     -lt      25 ];  then
+        tmp=$((  $(   \ls -l | wc -l  ) -1  ))   # 圆括号内的空格可以随便加吧
+            # https://www.csse.uwa.edu.au/programming/linux/zsh-doc/zsh_10.html
+                # (( val = 2 + 1 ))
+                # is equivalent to
+                # let "val = 2 + 1"
+        if [ $tmp   -lt   25 ];  then
             echo "--------------"
         else
             echo "--------文件数：25/${tmp}---------"
@@ -466,7 +474,7 @@ alias j='ln -s --interactive --verbose --logical'
             --time-style=iso $1 | le
             # --group-directories-first    # 不好，
 
-        tmp=$((`\ls -l | wc -l`-1))
+        tmp=$((  $( \ls -l | wc -l ) -  1  ))  #  圆括号内的空格可以随便加吧
         echo "共：${tmp}"
     }
 
@@ -517,11 +525,11 @@ ls_after_cd() {
         tail -8
 
     # \ls -gGhtrFB --color=always --classify $* | cut -c 14- | tail -5
-    tmp=$((`\ls -l | wc -l`-1-8)) #文件总数: `\ls -l | wc -l`-1
+    tmp=$((  `\ls -l | wc -l` - 1 - 8   )) #文件总数: `\ls -l | wc -l`-1
     if [ $tmp -lt 0 ]; then
         echo "------no more files--------"
     else
-        echo "--------未显示文件数：$tmp---------"
+        echo "--------剩余文件数：$tmp---------"
     fi
 }
 date_leo(){
@@ -596,7 +604,7 @@ t() {
     for my_file in $*
     do
         ori=`basename ${my_file}`
-        trash=`basename ${my_file}`_`date  +"%m月%d日%H:%M:%S"`
+        trash=`basename ${my_file}`_$(date  +"%m月%d日%H:%M:%S")
         mv ${my_file} ~/.t/${trash} && echo "${ori}扔到了~/.t"
     done
 }
@@ -650,7 +658,7 @@ md(){
 }
 
 cl(){
-    echo $((`\ls -l | wc -l`-1))
+    echo $(( `\ls -l | wc -l` - 1 ))
     }
 
 
