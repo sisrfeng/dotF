@@ -498,8 +498,8 @@ if [ -d "$HOME/bin" ]; then
 fi
 #
 # 之前把PATH拼错成PAHT了
-# export PATH="$HOME/dotF/nvim-linux64/bin:$HOME/dotF/bin_wf:$PATH:/snap/bin"
-export PATH="$HOME/dotF/bin_wf:$PATH:/snap/bin"
+# export PATH="$HOME/dotF/nvim-linux64/bin:$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
+export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
 # 找nvim时, 优先找dotF里面的,别用/bin等系统目录
 # 这个就不必了:alias nvim='~/dotF/nvim-linux64/bin/nvim'
 #
