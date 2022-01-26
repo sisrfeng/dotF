@@ -1,0 +1,76 @@
+
+这样定义一个pattern下的style
+         (特定情况 下的 set option)
+
+zstyle  pattern style string
+                     (strings as the value)
+
+        If the -e option is given:
+        zstyle -e pattern style string
+            the strings will be concatenated (separated by spaces) and
+            the resulting string will be evaluated (in the same way as it is done by the  eval builtin command)
+                when the style is looked up.
+            In this case the parameter 'reply' must be assigned to set the strings returned after the evaluation.
+            Before evaluating the value, reply is unset,
+            if it is still unset after the evaluation, the style is treated as if it were not set.
+
+> zstyle                                                                                                                             (main_wf |+8)
+会这样输出结果:
+    style:
+            <pattern>            value
+
+
+    auto-description
+            :completion:*:options           %d
+    force-list
+    #  同一个style 在不同pattern下的value可以不同  (不同情况 有不同设置)
+            :completion:*:*:default        always
+            :completion:*:*:*:*:processes  always
+
+    cache-path
+            :completion:*                   /home/wf/d/.cache_wf/zsh_completion_wf.zsh
+    widgets
+            zle-isearch-exit 1:vim-mode-isearch-exit
+            zle-line-init 0:user:zle-line-init 1:vim-mode-line-init
+            zle-line-finish 0:user:zle-line-finish 1:vim-mode-cursor-finish-hook
+
+
+
+
+# pattern例子: (单引号包裹着)
+#           ':completion:   *    :     *     :    *    :     *    :processes'  command  'ps $USER --format=user,pid,start_time,stat,command'
+# zstyle     ':中国      :  广东  :    深圳   :   南山  :
+https://thevaluable.dev/zsh-completion-guide-examples/    <tag> 
+# zstyle    ':completion:<widget>:<completer>:<command>:<argument>:<tag>'
+                        # completion widget or external function or
+                                                # command: ls cd等
+                                                #        <argument> - It’s not available for many styles.
+                                                                #        Apply the style to  the nth option or the nth argument.
+                                                                        # 常见tags:
+                                                                        #           “files”
+                                                                        #           “domains”
+                                                                                     commands:  external commands
+                                                                        #           “users”`用户自定义？
+                                                                        #           “options”
+                                                                        #           zsh options?
+                                                                        # tag : a type of match, information displayed during completion
+                                                                          a
+# ':completion:*' 就是一个pattern. 星号能通配冒号
+
+
+ patterns
+
+
+
+##    彩色补全菜单
+# ----删掉好像没变化
+        # eval $(dircolors -b)
+        # export ZLSCOLORS="${LS_COLORS}"
+
+            # echo $LS_COLORS    得到：
+                # :ex=00:no=0:*.csv=00:*.txt=0:fi=47;30:di=30:tw=34;4:ow=34;4:ln=34;4:or=01;05;31:
+                # *.md=30;47:*.py=47;33:*.vim=34:*.json=36;47:*.swp=00;44;37:*.c=1;33:*.C=1;33:*.h=1;33:*.jpg=1;32:*.jpeg=1;32
+
+                # 来自https://github.com/trapd00r/LS_COLORS
+                # ZLSCOLORS 内容比 LS_COLORS多很多
+

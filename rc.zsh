@@ -203,7 +203,9 @@ export PS_PERSONALITY=linux  # Without this setting, ps follows the useless and 
 # zplug "soimort/translate-shell"  #  不行
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 zplug "srijanshetty/zsh-pip-completion" # 能补全pip包的名字，但没生效
-zplug "zsh-users/zsh-completions"
+# 这两个插件有点像: 先试着自己配, 参考他们的内容
+    # zplug "zsh-users/zsh-completions"
+    # zplug "marlonrichert/zsh-autocomplete"
 
 # 避免冲突，顺序： zsh-autosuggestions > zsh-syntax-highlighting > zsh-vim-mode
 zplug "zsh-users/zsh-autosuggestions"  # 弹出之前敲过的命令
@@ -324,7 +326,7 @@ export LESS='--incsearch --ignore-case --status-column --LONG-PROMPT --RAW-CONTR
 
 source $HOME/dotF/color_less_wf.zsh
 source $HOME/dotF/color_highlight_style_wf.zsh
-source $HOME/dotF/completion_color_config_敲tab补全.zsh  #  不只是颜色, 但为了想改颜色时容易找，这么命名。
+source $HOME/dotF/comp_敲tab补全.zsh  #  设置颜色 候选等
 source $HOME/dotF/color_ls_wf.zsh
 
 

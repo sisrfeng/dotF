@@ -19,13 +19,15 @@ if !exists('g:vscode')
     highlight Pmenu guibg=#ede6d3
 
     " 背景米白色
-    hi Comment guifg=#fdf6e3 | let g:hidden = 1
+    let g:rice_white_wf='#fdf6e3'
+    hi Comment guifg=rice_white | let g:hidden = 1
             func! Comment_01()
                 if g:hidden == 1
-                    hi Comment guifg=#225800
+                    " hi Comment guifg=#654900 gui=reverse
+                    hi Comment guifg=background guibg=#ede6d3
                     let g:hidden = 0
                 else
-                    hi Comment guifg=#fdf6e3
+                    hi Comment guifg=#fdf6e3 guibg=none
                     let g:hidden = 1
                 endif
             endfunc
@@ -40,15 +42,30 @@ endif
 
 autocmd BufWritePost * if &diff == 1 | diffupdate | endif
 
+nnoremap s :set cursorcolumn?<CR>
+hi cursorcolumn guibg=rice_white_wf guifg=#00a253
+
+
+hi ErrorMsg guifg=#835000
+
+
+highlight Folded guibg=rice_white_wf guifg=#ada693
+" highlight FoldColumn guibg=darkgrey guifg=white
+
 set cursorline
-" 很浅的绿色
-hi CursorLine guibg=#e3efe3
-" hi Cursor guibg=#0000cc  " 似乎被mobaxterm控制着
+hi CursorLine gui=bold guifg=none guibg=none
+
+    " hi CursorLine guibg=rice_white_wf gui=undercurl
+    " syn match underscore "_"
+    " hi underscore gui=reverse
+hi Visual  guifg=rice_white_wf guibg=#dde6d3 gui=bold
+
 
 " 古老：For terminal Vim, with colors, we're most interested in the cterm
 set termguicolors  " true (24-bit) colours. 下面改颜色只用改 guibg guifg
 " 放文件前部分不行
-hi Search guibg=#afafef guifg=#00aeae
+" hi Search guibg=#afafef guifg=#00aeae
+hi Search guifg=black guibg=#edefd3
 
 " let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1  " 被下面的代替了
 " mobaxterm里insert mode还是方块。vscode里是正常的
@@ -95,7 +112,6 @@ hi StatusLineNC   gui=bold guibg=#e0f0f0 guifg=#0099a0
 set textwidth=100
 
 
-highlight Search guibg='#dffefa' gui=none
 
 
 " hi User0 guifg=#ffffff  guibg=#094afe

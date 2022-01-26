@@ -119,13 +119,27 @@ git_rm_sub(){
 # alias git='LANG=en_GB git' # 不行
 
 zi(){
+    # on the words between the [[ and ]];
+        # not performed:
+            # Word splitting
+            # filename expansion
+        # performed.
+            # tilde expansion,
+            # parameter and variable expansion,
+            # arithmetic expansion,
+            # command substitution,
+            # process substitution,
+            # quote removal
+
+
+        # [[ -a FILE_NAME ]], the "! -a" asks if the file does not exist.
+            # https://www.cnblogs.com/itxdm/p/If_in_the_script_determine_the_details.html
+            # https://zhuanlan.zhihu.com/p/361667506
+
+        # test 等价于 [ 你的条件 ],
+        # 这个更先进： [[ 你的条件 ]]
+
     # https://unix.stackexchange.com/questions/161905/adding-unzipped-files-to-a-zipped-folder
-
-    # [[ -a FILE_NAME ]], the "! -a" asks if the file does not exist.
-    # https://www.cnblogs.com/itxdm/p/If_in_the_script_determine_the_details.html
-    # https://zhuanlan.zhihu.com/p/361667506
-
-    # test 等价于 [ 你的条件 ], 这个更先进： [[ 你的条件 ]]
     if [[ -f ~/tmp_at_home.zip ]]; then
     # if [[ -f '~/zip_folder/' ]]; then   # 用引号包住文件路径，就成了string， -f判断的是file。这里才要加引号(包住的是$加上变量）： if [ "$testv" = '!' ]; then
         t ~/tmp_at_home.zip
@@ -533,7 +547,7 @@ ls_after_cd() {
     fi
 }
 date_leo(){
-    print "    时间_> "`date  +"%d日%H:%M:%S"`"  "
+    print "    时间>_> "`date  +"%d日%H:%M:%S"`"  "
     print " "
 }
 
@@ -588,6 +602,7 @@ alias e='nvim'
 alias ed='nvim -d'
 # if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
 if [[ -z "$TMUX" ]];then
+    # -z string :  true if length of string is zero.
     alias e='code'
     alias ed='code -d'
 fi
@@ -850,6 +865,14 @@ yy(){
     echo "\n--------------------------------add commit push三连-----------------------------------------------"
     git add --verbose  --all .
     if [[ "$1" != "" ]]  # if [[ "$1" == "" ]] 容易出bug？一般都不这么写
+        # string = pattern
+        # string == pattern
+        #        true if string matches pattern.  The two forms are exactly equivalent.  The `=' form is the traditional shell
+        #        syntax (and hence the only one generally used with the test and [ builtins); the `==' form provides  compati‐
+        #        bility with other sorts of computer language.
+        #
+        # string != pattern
+        #        true if string does not match pattern.
     then
         # 不加--all时，如过github有些文件，而本地删掉了，则github上不想要的文件 还在
         git commit --all --message "$1"
@@ -1104,22 +1127,24 @@ alias http-serve='python3 -m http.server'
 
 # check ip
 cip(){
-curl --show-error --silent cip.cc 2> ~/.t/curl_cip.cc.out
-OUT=`cat ~/.t/curl_cip.cc.out`
-# string contain substring? shell处理字符串切片
-    # string='My string';
-    # if [[ $string =~ "My" ]]; then
-    #     echo "It's there!"
-    # fi
-if [[ $OUT == *"Recv failure"* ]];then
-    echo "curl cip.cc 的结果 >_> $OUT"
-    unset ALL_PROXY &&  echo "\n代理挂了，切回无代理"
-    INDEX=0
-else
+    curl --show-error --silent cip.cc 2> ~/.t/curl_cip.cc.out
+                                      # redirects/重定向
+                                     # "2"必须紧贴着它:  ">",  不能有空格
+    OUT=`cat ~/.t/curl_cip.cc.out`
+    # string contain substring? shell处理字符串切片
+        # string='My string';
+        # if [[ $string =~ "My" ]]; then
+        #     echo "It's there!"
+        # fi
+    if [[ $OUT == *"Recv failure"* ]];then
+        echo "curl cip.cc 的结果 >_> $OUT"
+        unset ALL_PROXY &&  echo "\n代理挂了，切回无代理"
+        INDEX=0
+    else
 
-fi
-# source ./apt_source.sh
-# source ./apt_source.sh
+    fi
+    # source ./apt_source.sh
+    # source ./apt_source.sh
 
 }
 
@@ -1211,10 +1236,12 @@ alias -s txz='tar -xJf'  # 同上
 # 会导致执行不了?
 # alias -s make='vim'
 
-alias -s md=bat
-alias -s log=bat
-alias -s txt=bat
-alias -s html=bat
+# 只看不改的文件:
+    alias -s md=bat
+    alias -s log=bat
+    alias -s txt=bat
+    alias -s html=bat
+    alias -s csv=vim
 
 alias -s yaml=vim
 alias -s yml=vim
@@ -1279,10 +1306,17 @@ alias help=run-help
 alias hp=run-help
 alias _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
             # alias tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
+
             # 在各种client中,它最好看, 但要是找不到, 会一直找
             # brew install tldr, 得到的格式用vim打开很乱
 
-            # pip安装的，比apt安装的显示好些 但不翻墙就有时连不上网。。。。。翻了也用不了....
+            # pip安装的，比apt安装的显示好些 但不翻墙就有时连不上网。。。。。翻了也用不了....  #
+            # 有时挺好用, 比brew装的快. 但既无法配合nvim(格式乱), 又会在找不到时一直找.
+alias cm='whence -ca'
+    # 这可以退休了?  直接用h()
+    # cm for command
+    # 代替where which type
+    # -v for verbose, 不过好像没用
 h(){
     # todo https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion-Flags
     # parameter expansion
@@ -1290,17 +1324,13 @@ h(){
     # if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 2> /dev/null` == *"This page doesn't exist yet"* ]];  then
     echo '这具体是:'
     whence -ca $1
-        # 这可以退休了:
-            alias cm='whence -ca'
-            # cm for command
-            # 代替where which type
-            # -v for verbose, 不过好像没用
     echo ' '
     echo "$1 的用法:"
     if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
         # 要是tldr找不到, 才run-help
         run-help $1
     else
+        # _tldr $1 > ~/.t/tldr_tmp.zsh
         _tldr $1 > ~/.t/tldr_tmp.zsh
         nvim ~/.t/tldr_tmp.zsh
                 # 不好的方案

@@ -1,5 +1,7 @@
 这个文件没被source， 仅作为采坑笔记
 
+新内容往下面放
+
         " https://github.com/vim/vim/issues/6793
         " Register % contains the name of the current file.
         " 这3行结果貌似一样, expand和fnamemodify只有细微区别？
@@ -177,3 +179,21 @@
 "
 " let s:beauty_path = fnamemodify($MYVIMRC, ":p:h") . "/beautify_wf.vim"    " 字符串concat，用点号
 " exe 'source ' . s:beauty_path      " 这样不行： source  . s:beauty_path
+
+set virtualedit=insert,block
+有了上面那行, 就不需要要了?  :
+
+" toggle virtualedit
+    let s:anywhere = 0
+    func! Cursor_anywhere_01()
+        if s:anywhere == 0
+            set virtualedit=all # 会导致光标跳转不舒服
+            let s:anywhere = 1
+        else
+            set virtualedit=
+            let s:anywhere = 0
+        endif
+    endfunc
+
+    nnoremap <Leader>aw :call Cursor_anywhere_01()<cr>
+    nnoremap <Leader>ji :call Cursor_anywhere_01()<cr>ji

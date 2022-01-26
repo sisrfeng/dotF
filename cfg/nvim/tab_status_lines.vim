@@ -115,7 +115,7 @@ set showtabline=2
 "
 set laststatus=2  "  always show statusline
 
-hi User1 guibg=#f0f6f0  guifg=#128456
+hi User1 guibg=#b0cfbf  guifg=#120456
 hi User2 guibg=#e0f6e3  guifg=#000000
 set statusline=
 " set statusline+=%1*\ %<%F\                                "File+path

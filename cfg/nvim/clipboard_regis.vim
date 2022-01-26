@@ -56,18 +56,18 @@
             " ATT: set g:clipboard before has('clipboard')
             "   https://github.com/neovim/neovim/issues/6029
             " ALT:DEV: https://neovim.io/doc/user/provider.html
-            " let g:clipboard = {
-            " \ 'name': 'wf_xclip',
-            " \ 'copy': {
-            " \   '+': 'xclip selection clipboard -silent -loop 2',
-            " \   '*': 'xclip -selection primary   -silent -loop 2',
-            " \  },
-            " \ 'paste': {
-            " \   '+': 'xclip -selection clipboard -out',
-            " \   '*': 'xclip -selection primary  -out',
-            " \ },
-            " \ 'cache_enabled': 1,
-            " \}
+            let g:clipboard = {
+            \ 'name': 'wf_xclip',
+            \ 'copy': {
+            \   '+': 'xclip selection clipboard -silent -loop 2',
+            \   '*': 'xclip -selection primary   -silent -loop 2',
+            \  },
+            \ 'paste': {
+            \   '+': 'xclip -selection clipboard -out',
+            \   '*': 'xclip -selection primary  -out',
+            \ },
+            \ 'cache_enabled': 1,
+            \}
             "
             " BAD: has('clipboard') needs to access provider => shows errmsg
             "   E.G. system w/o my 'xsel-remote' wrapper installed (ubuntu

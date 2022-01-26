@@ -74,7 +74,7 @@ nmap ga <Plug>(EasyAlign)
     " 空行分开的前面几个,是我自定义的
     " 小心对齐后 字符串里多出来的空格
     let g:easy_align_delimiters = {
-        \                          'r': { 'pattern': "whatever_wf_want" },
+        \                          'f': { 'pattern': "format" },
         \
         \                          '?': { 'pattern': '?' },
         \                          ':': { 'pattern': ":" },
@@ -175,24 +175,39 @@ autocmd VimEnter * set autochdir
 " 这又可以了,反倒是rooter不行
 
 
-" ctrlp的star数更多. 二者中留下顺手的一个
+set grepprg=r
+    " 在alias里定义了r
+    " set grepprg=grep\ -nH
+
+" 和leaderF比, ctrlp的star数更多. 但比较老, 但被skywind吐槽过. 貌似不能search file by content
 Plug 'ctrlpvim/ctrlp.vim'
     let g:ctrlp_match_window = 'bottom,order:btt,min:80,max:80,results:10'
     let g:ctrlp_switch_buffer = 'ET'
+
 Plug  'Yggdroot/LeaderF'
-        " >>>---------------------------------------------------------------------LeaderF
         " don't show the help in normal mode
         let g:Lf_HideHelp = 1
         let g:Lf_UseCache = 1
         let g:Lf_UseVersionControlTool = 0
         let g:Lf_IgnoreCurrentBufferName = 0
 
-        let g:Lf_WindowPosition = 'fullScreen'
+        " let g:Lf_WindowPosition = 'fullScreen'
         " popup mode
-        " let g:Lf_WindowPosition = 'popup'
-        " let g:Lf_PreviewInPopup = 1
-        " let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-        " let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+        let g:Lf_WindowPosition = 'popup'
+        let g:Lf_PreviewInPopup = 1
+        let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+        let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+
+        " 想改键位/map      可以参考:
+        " https://github.com/Yggdroot/LeaderF/issues/123
+        " 让esc和vim其他情况下一致. 但tab就废掉了
+        let g:Lf_CommandMap = {'<tab>':[ '<ESC>' ]}
+                " let g:Lf_NormalMap = {
+                "     \ "_":   [
+                "     \            ["<ESC>", ':exec g:Lf_py "fileExplManager.input()"<CR>'],
+                "     \            ["<tab>", ':exec g:Lf_py "fileExplManager.input()"<CR>'],
+                "     \        ],
+                "     \}
 
         " 和zsh下按ctrl f 作用一致
         let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符

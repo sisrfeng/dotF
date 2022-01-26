@@ -48,8 +48,7 @@ inoremap jj <esc>
 nnoremap <c-d> 15<c-d>
 nnoremap <c-u> 15<c-u>
 
-" z: zhe折叠
-nnoremap <leader>z :set fdm=indent<CR>
+
 nnoremap gf :tabedit <cfile><CR>
 
 
@@ -108,8 +107,8 @@ set iskeyword+=-
             if s:current_timer > -1
                 call timer_stop(s:current_timer)
             endif
-            " 第一个参数：按键多少秒后 自动取消
-            let s:current_timer = timer_start(1000, 'Highlight_Search_off')
+                                            " 第一个参数：按键多少ms后 自动取消
+            let s:current_timer = timer_start(3000, 'Highlight_Search_off')
         endfunc
 
 
@@ -166,8 +165,10 @@ set iskeyword+=-
             nnoremap ? msgg/\v^[^#";]*
         endif
 
-        " 记作global search
+        " 先mark再跳走
         nnoremap g/ msgg/
+            " 记作global search
+        nnoremap /  ms/
     " end=====================================================================<_<_<
 
 
@@ -638,10 +639,11 @@ vnoremap <C-S>      <C-C>:update<CR>
 
 
 " nnoremap <C-Z> u|  " CTRL-Z is Undo
-" 竖线前的空格，视为map后的一部分。上行等价于：
-nnoremap <C-Z> u
+" nnoremap <C-Z> u |  " CTRL-Z is Undo
+                " 竖线前的空格，视为map后的一部分。
+" z: 表示zsh
+nnoremap <C-Z> :tabedit term://zsh<cr>
 " CTRL-Z is Undo
-
 inoremap <C-Z> <C-O>u
 
 " inoremap <C-R> <C-O>u
@@ -821,12 +823,33 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
 " set cmdheight=2
 
-set foldmethod=indent  " 初步尝试, 缩进最好
-set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
-set foldlevel=2
-    " zero will close all folds.
-    " Higher numbers will close fewer folds.
+" 折叠
 
+    set foldmethod=indent  " 初步尝试, 缩进最好
+    set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
+    set foldlevel=1
+        " zero will close all folds.
+        " Higher numbers will close fewer folds.
+
+    set foldignore=#,;
+    set fdm=indent
+    let s:folded = 1
+
+    " toggle fold /  fdm
+        func! Fold_01()
+            if s:folded == 1
+                set nofoldenable
+                let s:folded = 0
+                normal! zR
+            else
+                set fdm=indent
+                normal! zM
+                let s:folded = 1
+            endif
+            set fdm?
+        endfunc
+        nnoremap <leader>z :call Fold_01()<cr>
+                    " z: zhe折叠
 
 
 
@@ -851,6 +874,7 @@ noremap <leader>1 1gt
 noremap <leader>2 2gt
 noremap <leader>3 3gt
 noremap <leader>4 4gt
+noremap <leader>5 5gt
 
 " Toggles between the active and last active tab "
 " The first tab is always 1 "
@@ -956,17 +980,14 @@ nnoremap  <Leader>: :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
 " nnoremap <c-p> :echo 'to be uesd'<CR>
 nnoremap <c-n> :echo 'ctrl-n to be uesd'<CR>
 
-nnoremap ko O
+" 避免在不想注释时, 多出注释
+nnoremap O O<backspace>
+" 设了这个会导致k在最后一行卡顿一下 nnoremap ko O
 
-" 垃圾别用
-" >_>_>===================================================================begin
+
 " 没啥用，文字容易跑走
-" 在上下移动光标时，光标的上方或下方至少会保留显示的行数
-" set scrolloff=7
-" end=====================================================================<_<_<
-"
-
-
+    " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
+    " set scrolloff=7
 
 
 " 滚动scrolling of the viewport
@@ -1046,8 +1067,6 @@ func! VimPlugConds(arg1, ...)
                 \| endif
 
 
-map <leader>h :tabprev<cr>
-map <leader>l :tabnext<cr>
 
 " cnoreabbrev
 " cmap 对vscode也有效
@@ -1060,15 +1079,58 @@ map <leader>l :tabnext<cr>
         cnoreabbrev <expr> mdf   getcmdtype() == ":" && getcmdline() == 'mdf'          ? 'cd ~/dotF/'                        :   'mdf'
         cnoreabbrev <expr> dot   getcmdtype() == ":" && getcmdline() == 'dot'          ? 'cd ~/dotF/'                        :   'dot'
         cnoreabbrev <expr> ~/    getcmdtype() == ":" && getcmdline() == '~/'           ? 'cd ~/'                             :   '~/'
-        cnoreabbrev <expr> man   getcmdtype() == ":" && getcmdline() == 'man'          ? 'tab Man '                        :   'man'
+        cnoreabbrev <expr> man   getcmdtype() == ":" && getcmdline() == 'man'          ? 'tab Man '                          :   'man'
+        " cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab edit term: // zsh|p i'               :   'te'
+        "                                                                                                      不行
+        cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tabedit term://zsh'               :   'te'
+        " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tabedit term://zsh'               :   't'
+        cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
+        cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
 
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
 
+autocmd TermOpen * startinsert
+    " 0到255
+    let g:terminal_color_4 = '442200'
+    let g:terminal_color_5 = 'black'
+    let g:terminal_color_255 = 'black'
+    " tnoremap <M-C-Y> <c-\><c-n><space>
+                                "" space好像不能传到termnial的父进程
+    tnoremap <M-C-Y> <c-\><c-n>
+
+nnoremap <leader>h :tabprev<cr>
+nnoremap <silent> <M-C-Y>h  :tabprev<cr>
+nnoremap <leader>l :tabnext<cr>
+nnoremap <silent> <M-C-Y>l  :tabnext<cr>
+
+nnoremap <c-l> /<c-r><c-w><cr>
+nnoremap <c-h> ?<c-r><c-w><cr>
+
+set virtualedit=insert,block
+" toggle virtualedit:  其实不用toggle? 一直按上面那行设就行? 先放着吧
+    let s:anywhere = 0
+    func! Cursor_anywhere_01()
+        if s:anywhere == 0
+            set virtualedit=insert,block
+            set virtualedit?
+            normal! o
+            " set virtualedit=all # 会导致光标跳转不舒服
+            let s:anywhere = 1
+        else
+            set virtualedit=
+            let s:anywhere = 0
+            set virtualedit?
+        endif
+    endfunc
+    nnoremap <Leader>aw :call Cursor_anywhere_01()<cr>
+    " insert mode 下map 空格, 很难用 反应迟钝
+    " inoremap <Leader>aw <esc>:call Cursor_anywhere_01()<cr>
 
 cnoremap <Up> <c-p>
 cnoremap <Down> <c-n>
-
+cnoremap <c-g> <c-r>"
+cnoremap <C-Right> <c-r><c-w>
 
 if exists('g:vscode')
     " cnoremap s/ s/\v

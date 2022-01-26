@@ -312,7 +312,10 @@ bind -s '\ep' '~/p \n'  # p for project. 当前常用的project
 # todo
 # DIRSTACKSIZE=15 # Setup dir stack
 # setopt autopushd  pushdminus pushdsilent pushdtohome pushdignoredups cdablevars
-bind -s '\eu' '..\n' # u for up  # 不行： bind -s '<atl>+u' '..\n'
+alias rcd='cd -P ..'  # 同上
+    # alias rcd='cd $(readlink -f $PWD)/ ; cd ..'  # readlink then cd ..
+    # 另外:pwd -P 结果不含soft link
+    bind -s '\eu' 'rcd \n' # u for up  # 不行： bind -s '<atl>+u' '..\n'
 
 # bind -s '\ek' '.. \n'  # 目录 前进一次
 
