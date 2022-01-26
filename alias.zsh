@@ -601,11 +601,17 @@ alias e='nvim'
 # edit diff
 alias ed='nvim -d'
 # if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
-if [[ -z "$TMUX" ]];then
-    # -z string :  true if length of string is zero.
+# if [[ -z "$TMUX" ]];then
+      # -z string :  true if length of string is zero.
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
     alias e='code'
     alias ed='code -d'
 fi
+
+alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s}=e
+    # zsh默认用vim打开，导致无法执行？有其他bug？但是很多人都这么写
+                                    # 后缀名s表示seting,简洁,代替conf
+    # alias -s py=vim  # 要是想 让python被zsh自动补全,注释掉这行
 
 # ed是一个没啥用的系统bin
 alias vd='nvim -d'
@@ -1251,15 +1257,6 @@ cj(){
     jq -C "" $1 |le -R  # jq: json query？
 }
 alias -s json=cj
-
-if [[ -n "$TMUX" ]];  then
-    # zsh默认用vim打开，导致无法执行？有其他bug？但是很多人都这么写
-    alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s}=vim
-    # 后缀名s表示seting,简洁,代替conf
-    # alias -s py=vim  # 要是想 让python被zsh自动补全,注释掉这行
-else
-    alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s}=code
-fi
 
 alias ai='sudo apt install'
 alias apt='sudo apt'

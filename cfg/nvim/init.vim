@@ -824,15 +824,14 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 " set cmdheight=2
 
 " 折叠
-
+" 其实敲zi就行...不用自己写函数
     set foldmethod=indent  " 初步尝试, 缩进最好
+    " set fdm=indent
     set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
     set foldlevel=1
         " zero will close all folds.
         " Higher numbers will close fewer folds.
-
-    set foldignore=#,;
-    set fdm=indent
+    set foldignore=#,;"
     let s:folded = 1
 
     " toggle fold /  fdm
@@ -842,11 +841,11 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
                 let s:folded = 0
                 normal! zR
             else
-                set fdm=indent
+                set foldenable
                 normal! zM
                 let s:folded = 1
             endif
-            set fdm?
+            set foldenable?
         endfunc
         nnoremap <leader>z :call Fold_01()<cr>
                     " z: zhe折叠
@@ -1106,6 +1105,14 @@ nnoremap <silent> <M-C-Y>l  :tabnext<cr>
 
 nnoremap <c-l> /<c-r><c-w><cr>
 nnoremap <c-h> ?<c-r><c-w><cr>
+
+" m: middle
+" nnoremap mm zz
+" 保护小指, 逗号刚好在中指的位置  go to middle
+nnoremap ,, zz
+nnoremap , z
+nnoremap ,m zM
+nnoremap ,r zR
 
 set virtualedit=insert,block
 " toggle virtualedit:  其实不用toggle? 一直按上面那行设就行? 先放着吧

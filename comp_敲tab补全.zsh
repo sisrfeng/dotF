@@ -21,16 +21,19 @@ zmodload zsh/complist
 
 
 zstyle ':completion:*' completer           \
-                                _complete
+                                _complete  \
                                 _prefix    \
                                 _match     \
-                                _approximate
-                                # _correct  \
+                                _approximate \
+                                _correct  \
                                 # _extension :别用了,  _main_complete:208: command not found: _extension, 没找到solution
-                                # 放前面的优先:
-
-    # _correct:  main completer
-    # Ctrl+x  h:  默认 调用这个completer: _complete_help
+                                # 放前面的优先
+    # 有一次 _complete后没加 \ , 不报错, 但后面的_prefix等不生效, 因为_prefix等 是shell function, 可以在命令行里直接输入
+    # zstyle ':completion:*' completer           \
+    #                                 _complete
+    #                                 _prefix
+        # _correct:  main completer
+        # Ctrl+x  h:  默认 调用这个completer: _complete_help
 
 zstyle ':completion:*'          use-cache        on
 zstyle ':completion:*'          cache-path       "$XDG_CACHE_HOME"

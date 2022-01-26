@@ -249,8 +249,9 @@ zle -N peco-history
 
         # ctrl alt h或者zsh-vi-mode下shift h
         # bindkey '^[^h' run-help  小写导致  ctrl alt h不行
-        bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
-
+        # bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
+        bindkey '^[^H' h  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
+                    #  h() 是我写的函数
     # string
         bind -s "\C-t" "tt \C-j"  # python ~/d/tmp.py  # t for try
         bind -s "\C-b" "echo '待用' \n"
