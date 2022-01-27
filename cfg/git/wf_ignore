@@ -10,6 +10,8 @@
 # doc/frotz and /doc/frotz have the same effect in any .gitignore file.
 # In other words, a leading slash is not relevant if there is already a middle slash in the pattern.
 
+**/.chpwd-recent-dirs
+**/.zcompdump*
 
 
 __pycache__
