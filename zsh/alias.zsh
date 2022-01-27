@@ -2,7 +2,7 @@
 # aliases 优先于  variables --> command substitutions --> special built-ins --> functions --> regular built-ins
 
 # zsh bindkey
-alias zbk='e ~/dotF/bindkey_wf.zsh ; zsh'
+alias zbk='e ~/dotF/zsh/bindkey_wf.zsh ; zsh'
 alias pl='flake8'  # python linting
 
 alias con='conda'
@@ -333,7 +333,7 @@ alias w=$PAGER
 # bat read git output
 bgit(){git $* | bat}
 
-# /home/wf/dotF/color_less_wf.zsh 里，export LESS='--quit-if-one-screen 一大串.....'
+# /home/wf/dotF/zsh/color_less_很少用了.zsh 里，export LESS='--quit-if-one-screen 一大串.....'
 alias le="less  --quit-if-one-screen"
 # alias le="less  "
 
@@ -836,7 +836,7 @@ alias s='e ~/dotF/rc.zsh ; zsh'
 # az: 安装an zhuang
 alias az='e ~/dotF/auto_install/auto_install.sh'
 # al: alias
-alias al='e ~/dotF/alias.zsh; zsh'
+alias al='e ~/dotF/zsh/alias.zsh; zsh'
 
 # i for init.vim
 alias in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
@@ -1326,8 +1326,8 @@ h(){
     echo ' '
     echo "$1 的用法:"
     if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
-        # 要是tldr找不到, 才run-help
         run-help $1
+            # 要是tldr找不到, 才run-help
     else
         # _tldr $1 > ~/.t/tldr_tmp.zsh
         _tldr $1 > ~/.t/tldr_tmp.zsh

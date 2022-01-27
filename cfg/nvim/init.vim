@@ -61,12 +61,17 @@ nnoremap gf :tabedit <cfile><CR>
         " 变成^  （以^H等方式显示一些控制字符）
     inoremap <c-c> <c-v>
         " i_CTRL-C	Quit insert mode,
-        "
         "             not check for  abbreviations.
         "             Does not trigger the |InsertLeave| autocommand  event.
             " iunmap <c-v>
             "   加了这行,导致i_ctrl_c不能成为i_ctrl-v
             " recussive unmap?
+
+        " *i_CTRL-V*
+        " *i_CTRL-Q*
+        " Insert next non-digit `literally`.
+        "      For special keys, the  terminal code is inserted.
+        "      The characters typed right after CTRL-V are not considered for  mapping.
 
     " 加了几行，还是粘贴
     " inoremap <c-v> <c-v>
@@ -218,7 +223,6 @@ nnoremap <M-F2> :  .,$subs  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
     vnoremap <Down> :<esc><C-I>
 
 
-noremap <BS> <left>
 nnoremap X <C-A>
     " normal模式：<C-X>  数字减1
     " shift在ctrl上，加1 vs 减一，刚好
@@ -299,7 +303,7 @@ if has('persistent_undo')
 
     let &undodir=path_undo
     set undofile
-    endif
+endif
 
 
 
@@ -545,30 +549,11 @@ set pastetoggle=<F9>
 
 
 " nnoremap  J j
-" c b means: comment block
-
-
-" pressing  Ctrl[   will usually get you the equivalent of pressing Esc.
-" *i_CTRL-V*
-" CTRL-V    Insert next non-digit `literally`.  For special keys, the
-"         terminal code is inserted.
-"         The characters typed right after CTRL-V are not considered for
-"         mapping.
-"
-" *i_CTRL-Q*
-" CTRL-Q        Same as CTRL-V.
 
 
 
-" 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
-    noremap <Leader>y "*y
-    noremap <Leader>Y "+y
-    " noremap <Leader>p "*p
-    " noremap <Leader>P "+p
-" todo:
-    " nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
-    " nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
-    " https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
+
+
 
 " 有个自动补全插件 导致(变成  选中候选，只能这样map
 inoremap ( (
@@ -823,15 +808,32 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
 " set cmdheight=2
 
+
+
+
 " 折叠
 " 其实敲zi就行...不用自己写函数
     set foldmethod=indent  " 初步尝试, 缩进最好
-    " set fdm=indent
-    set foldopen=block,hor,mark,percent,quickfix,search,tag,undo
-    set foldlevel=1
+        " set fdm=indent
+    set foldopen=block,
+                \hor,
+                \insert,
+                \jump,
+                \mark,
+                \percent,
+                \quickfix,
+                \search,
+                \tag,
+                \undo
+    set foldlevel=0
+        " 对于nested fold, level是fold的深度(嵌套次数)?
+        " 每次只往上fold到这个level?
+        "深度 大于这个数的fold才被隐藏
         " zero will close all folds.
         " Higher numbers will close fewer folds.
-    set foldignore=#,;"
+
+    set foldcolumn=auto
+    " set foldignore=#,;"
     let s:folded = 1
 
     " toggle fold /  fdm
@@ -842,6 +844,7 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
                 normal! zR
             else
                 set foldenable
+                set foldmethod=indent
                 normal! zM
                 let s:folded = 1
             endif
@@ -850,7 +853,37 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
         nnoremap <leader>z :call Fold_01()<cr>
                     " z: zhe折叠
 
+    autocmd FileType txt setlocal foldmethod=expr
+    autocmd FileType txt setlocal foldexpr=VimHelp_fold()
+        function! VimHelp_fold()
+            let thisline = getline(v:lnum)
+            if thisline =~? '\v^\s*$'
+                " \v 开头 any number of spaces 结尾
+                return '-1'
+                " use the fold level of a line before or after this line, ( 二者取min)
+            endif
 
+            if thisline =~ '^========.*$'
+                return 1
+            else
+                return indent(v:lnum) / &shiftwidth
+            endif
+        endfunction
+
+    nnoremap <backspace> zazz
+    " 折叠并让光标所在行 显示在屏幕中间
+    " gO			Show a filetype-specific, navigable "outline" of the
+    "
+    "             current buffer.  Currently works in |help| and |:Man| buffers.
+
+    " 失败:
+    " nnoremap <CR> za
+    " nnoremap <enter> za
+        " nnoremap gO :call Table_Of_Content()
+        " func! Table_Of_Content()
+        "     nunmap <enter>
+        "     normal! gO
+        " endfunc
 
 
 " 自动判断编码时，依次尝试以下编码：

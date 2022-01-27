@@ -1,5 +1,50 @@
 # https://github.com/neovim/neovim/issues/7054
 # clipboard: error invoking xclip:   Waiting for selection
-
 ForwardX11 yes
 ForwardX11Trusted yes
+
+# ubuntu 默认采用 用起来最爽但也最危险的设置
+
+# 有点confusing:
+# https://askubuntu.com/a/35518/1169461
+#
+# 理论上:
+# 1.
+# ssh -Y remotemachine  ( enable trusted X11 forwarding )
+# the remote machine is treated as a trusted client.
+# can open security problems.
+# 
+# 2.
+# ssh -X remotemachine  (enable untrusted X11 forwarding)
+# the remote machine is treated as an untrusted client, 所以会有安全机制, 就相对安全.
+# untrusted does not mean that machine is more dangerous than trusted machine, 
+# but means you are cautious
+#
+# 实际上:
+# Debian(ubuntu也是)-specific:
+# In the default configuration:
+#                             ForwardX11Trusted yes
+#                             不设防, 会覆盖 ForwardX11 的设置
+#  -X is equivalent to  -Y 
+#  Set the ForwardX11Trusted option to “no” to restore the upstream behaviour.
+#
+#
+# ForwardX11 yes
+#    # 默认是no.  用起来有安全风险, 要注意 (怎么注意?)
+#    
+#  # ssh -x  | disable X11 forwarding
+#
+# man里, 这个和-X对应, 而非-Y:
+#                  ForwardX11Trusted yes
+#    # Debian-specific:
+#     # 默认是yes
+#    #  less secure because, it removes X11 SECURITY extension controls/restrictions.
+#    #  because too many programs currently crash in this mode (有restrictions时)
+#                  ( because -X drops the forwarding after a timeout ? )
+#    # Set the ForwardX11Trusted option to “no” to restore the upstream behaviour.
+#
+#    You can override that config using ForwardX11Timeout for the -X option, though
+#    -Y doesn't.
+#
+#    only find:
+#    #   ConnectTimeout 0

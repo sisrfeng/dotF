@@ -61,8 +61,11 @@ hi CursorLine gui=bold guifg=none guibg=none
 hi Visual  guifg=rice_white_wf guibg=#dde6d3 gui=bold
 
 
-" 古老：For terminal Vim, with colors, we're most interested in the cterm
-set termguicolors  " true (24-bit) colours. 下面改颜色只用改 guibg guifg
+set termguicolors
+    " 从前：For terminal Vim, with colors, we're most interested in the cterm
+    " 现在可以在TUI下用gui的颜色: true (24-bit) colours.
+    " 下面改颜色只用改 guibg guif
+
 " 放文件前部分不行
 " hi Search guibg=#afafef guifg=#00aeae
 hi Search guifg=black guibg=#edefd3

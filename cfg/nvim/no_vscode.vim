@@ -24,14 +24,14 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
   cnoreabbrev <expr> bt    getcmdtype() == ":" && getcmdline() == 'bt'           ? 'tabedit ~/dotF/cfg/nvim/beautify_wf.vim'    :   'bt'
   cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
   cnoreabbrev <expr> cc    getcmdtype() == ":" && getcmdline() == 'cc'           ? 'CocConfig'                         : 'cc'
-  cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/bindkey_wf.zsh'     : 'zbk'
+  cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/zsh/bindkey_wf.zsh'     : 'zbk'
   cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/.zshrc'                  : 'bd'
   cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
   cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/d/tmp.py'                : 'et'
   cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tabedit ~/dotF/cfg/tmux/tmux.conf' : 'tc'
   cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tabedit ~/dotF/cfg/nvim/init.vim'  : 'in'
-  cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/rc.zsh'             : 's'
-  cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/alias.zsh'          : 'al'
+  cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/zsh/rc.zsh'             : 's'
+  cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/zsh/alias.zsh'          : 'al'
 
   cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       : 'pi'
   "   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件

@@ -1,5 +1,4 @@
 # 改了这文件，要新开zsh才生效
-#[[[--------------------------------less color-------------------------------------
 
 # termcap(被淘汰了) terminfo
 # ks                smkx      make the keypad send commands

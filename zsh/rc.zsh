@@ -177,10 +177,6 @@ setopt interactivecomments
 
 
 
-autoload -U promptinit # -U: suppress alias expansion for functions
-promptinit
-autoload -U colors && colors
-#Red, Blue, Green, Cyan, Yellow, Magenta, Black & White
 
 
 autoload -U select-word-style
@@ -324,18 +320,18 @@ export LESS='--incsearch --ignore-case --status-column --LONG-PROMPT --RAW-CONTR
     # https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
 
 
-source $HOME/dotF/color_less_wf.zsh
-source $HOME/dotF/color_highlight_style_wf.zsh
-source $HOME/dotF/comp_敲tab补全.zsh  #  设置颜色 候选等
-source $HOME/dotF/color_ls_wf.zsh
+source $HOME/dotF/zsh/color_less_很少用了.zsh
+source $HOME/dotF/zsh/color_syntax高亮.zsh
+source $HOME/dotF/zsh/tab补全_comp.zsh  #  设置颜色 候选等
+source $HOME/dotF/zsh/ls_color.zsh
 
 
-source $HOME/dotF/history_config_wf.zsh
+source $HOME/dotF/zsh/history_config_wf.zsh
 # todo: 检查一遍再source
 # source /home/wf/dotF/per-dir-history.zsh
 
-source $HOME/dotF/alias.zsh   # 里面有：chpwd_functions=(${chpwd_functions[@]} "list_all_after_cd")
-source $HOME/dotF/bindkey_wf.zsh
+source $HOME/dotF/zsh/alias.zsh   # 里面有：chpwd_functions=(${chpwd_functions[@]} "list_all_after_cd")
+source $HOME/dotF/zsh/bindkey_wf.zsh
 
 autoload -Uz chpwd_recent_dirs  cdr add-zsh-hook  # -U: suppress alias expansion for functions
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -376,6 +372,7 @@ add-zsh-hook chpwd chpwd_recent_dirs
 
 
 if grep -q WSL2 /proc/version ; then  # set DISPLAY to use X terminal in WSL
+    echo '进了wsl'
     # execute route.exe in the windows to determine its IP address
     export PATH="$PATH:/mnt/c/Windows/System32"  # many exe files here, such as curl.exe, route.exe
     # DISPLAY为空，也可以用tmux-yank, 因为是本地 而非远程？
@@ -392,7 +389,7 @@ else # set $DISPLAY  under tmux
         # 前面设了alias tm
         # tm
         # 敲tm, 导致vim进terminal后 弹出
-        echo '非wsl. $TMUX为空'
+        # echo '非wsl. $TMUX为空'
     else
         session_name=`tmux display-message -p "#S"`
         DIS_file="$XDG_CACHE_HOME/.DISPLAY_for_tmux_$session_name"
@@ -408,15 +405,13 @@ fi
 
 if [[ -z  $DISPLAY ]]; then
    # echo "DISPLAY isn't set.   it's no use setting it manually? 非也"
-   # export DISPLAY=localhost:11.0
-   # echo 'DISPLAY是：'
-   # echo $DISPLAY
+   export DISPLAY=localhost:11.0
+   echo '执行了:export DISPLAY=localhost:11.0 '
    # echo 'DISPLAY为空，windows terminal下也可以用tmux-yank. 但敲xlogo就会报错'
    # echo '在这点上, mobaxterm好些'
-
 fi
 
-
+echo "DISPLAY是: $DISPLAY"
 
 # pip zsh completion start
 function _pip_completion {
@@ -456,36 +451,42 @@ export PATH="$PATH:/usr/local/go/bin"
 # source "$HOME/dotF/fuzzyF/shell/key-bindings.zsh"
 # end=====================================================================<_<_<
 
+# prompt  ps1等
+    autoload -U promptinit    # -U: suppress alias expansion for functions
+    promptinit
+    autoload -U colors && colors
+        # 定义了fg  bg等环境变量
+        # Red, Blue, Green, Cyan, Yellow, Magenta, Black & White
 
-source ~/dotF/zsh-git-prompt/zshrc.sh
-换行=$'\n'
-上行=$'\e[1A'
-上行=$'\e[1B'
 
-autoload -U colors
-colors
-# https://void-shana.moe/linux/customize-your-zsh-prompt.html
-# 放文件开头时，颜色时有时无
-# https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html#Prompt-Expansion
-# export PS1="%{$fg[cyan]%}【82服务器】%~       %T_周%w号"${换行}">%{$reset_color%}"
-# 不加下面这行，改了conda环境时，才显示（环境名）
+    # https://void-shana.moe/linux/customize-your-zsh-prompt.html
 
-# PS1="${换行}%{${CONDA_PROMPT_MODIFIER}"
-PS1="%{${CONDA_PROMPT_MODIFIER}"
-PS1+="$fg[cyan]%}%~${换行}"
-# PS1="$fg[cyan]%}%~${换行}"
-PS1+="%{$reset_color%}"
-PS1+=">"
-export PS1
+    换行=$'\n'
+    上行=$'\e[1A'
+    上行=$'\e[1B'
 
-function precmd {
-    export RPS1='$(git_super_status)'
-}
 
-export PS2="%{$fg[cyan]%}%_>%{$reset_color%}"
-export RPS2="%{$fg[cyan]%} 换行后继续敲  %{$reset_color%}"
-# 别加$bg[white]:
-# export RPS2="%{$fg[cyan]$bg[white]%} 换行后继续敲  %{$reset_color%}"
+    PS1=
+        PS1+="%{${CONDA_PROMPT_MODIFIER}"
+                    # export PS1="%{$fg[cyan]%}【82服务器】%~       %T_周%w号"${换行}">%{$reset_color%}"
+                    # 放文件开头时，颜色时有时无
+                    # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html#Prompt-Expansion
+                    # 不加下面这行，改了conda环境时，才显示（环境名）?
+                        # PS1="${换行}%{${CONDA_PROMPT_MODIFIER}"
+        PS1+="$fg[cyan]%}%~${换行}"
+        PS1+="%{$reset_color%}"
+        PS1+=">"
+        export PS1
+
+    source ~/dotF/zsh/zsh-git-prompt/zshrc.sh
+        function precmd {
+            export RPS1='$(git_super_status)'
+        }
+
+    export PS2="%{$fg[cyan]%}%_>%{$reset_color%}"
+    export RPS2="%{$fg[cyan]%} 换行后继续敲  %{$reset_color%}"
+    # 别加$bg[white]:
+    # export RPS2="%{$fg[cyan]$bg[white]%} 换行后继续敲  %{$reset_color%}"
 
 export RANGER_LOAD_DEFAULT_RC=FALSE
 

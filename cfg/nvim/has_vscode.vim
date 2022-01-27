@@ -57,13 +57,13 @@
 
 " cnoreabbrev
     "   vscode里, 如果用edit而非split,里会把原文件的内容 粘贴到一个新文件
-        cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'vsplit ~/dotF/bindkey_wf.zsh'     :   'zbk'
+        cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'vsplit ~/dotF/zsh/bindkey_wf.zsh'     :   'zbk'
         cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'vsplit ~/.zshrc'                  :   'bd'
         cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'vsplit ~/d/tmp.py'                :   'et'
         cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'vsplit ~/dotF/cfg/tmux/tmux.conf' :   'tc'
         cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'vsplit ~/dotF/cfg/nvim/init.vim'  :   'in'
-        cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'vsplit ~/dotF/rc.zsh'             :   's'
-        cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'vsplit ~/dotF/alias.zsh'          :   'al'
+        cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'vsplit ~/dotF/zsh/rc.zsh'             :   's'
+        cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'vsplit ~/dotF/zsh/alias.zsh'          :   'al'
     "   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件
         cnoreabbrev <expr> cm    getcmdtype() == ":" && getcmdline() == 'cm'           ? 'tab help'                          :   'cm'
         cnoreabbrev <expr> h     getcmdtype() == ":" && getcmdline() == 'h'            ? 'tab help'                          :   'h'

@@ -4,6 +4,11 @@ Plug 'junegunn/vim-plug'
 Plug 'kana/vim-fakeclip'
 Plug 'voldikss/vim-translator'
 
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+
+Plug 'mkitt/tabline.vim'
+
     " 翻译光标下的文本，在命令行回显
     nnoremap  gdd <Plug>Translate
     vnoremap <silent> <Leader>a <Plug>TranslateV
@@ -198,16 +203,16 @@ Plug  'Yggdroot/LeaderF'
         let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
         let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
-        " 想改键位/map      可以参考:
-        " https://github.com/Yggdroot/LeaderF/issues/123
-        " 让esc和vim其他情况下一致. 但tab就废掉了
-        let g:Lf_CommandMap = {'<tab>':[ '<ESC>' ]}
-                " let g:Lf_NormalMap = {
-                "     \ "_":   [
-                "     \            ["<ESC>", ':exec g:Lf_py "fileExplManager.input()"<CR>'],
-                "     \            ["<tab>", ':exec g:Lf_py "fileExplManager.input()"<CR>'],
-                "     \        ],
-                "     \}
+        " 格式: '旧键位' : ['新键位1', 新键位2' ]
+            let g:Lf_CommandMap = {'<tab>':[ '<ESC>' ],
+                                \'<c-t>':[ '<cr>'  ]}   "insert模式下, enter在new tab打开
+
+            " 不行...还是要按t才能在new tab是打开
+            let g:Lf_NormalMap = {
+                \ "_":   [
+                \            ['<cr>', 't'],
+                \        ],
+                \}
 
         " 和zsh下按ctrl f 作用一致
         let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符

@@ -11,7 +11,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/d/fzf
 ~/d/fzf/install
 
 
-ln -sf ~/dotF/rc.zsh
+ln -sf ~/dotF/zsh/rc.zsh
 ln -sf ~/dotF/.pip/ ~/
 ln -sf ~/dotF/cfg/.condarc ~/
 ln -sf ~/dotF/ssh/config ~/.ssh/config

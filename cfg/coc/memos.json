@@ -2604,7 +2604,7 @@
     "INTERPRETERS_CACHE_v3_PipEnvService": [],
     "INTERPRETERS_CACHE_v3_WorkspaceVirtualEnvService": []
   },
-  "coc-python|/home/wf/dotF/zsh-git-prompt": {
+  "coc-python|/home/wf/dotF/zsh/zsh-git-prompt": {
     "INTERPRETERS_CACHE_v3_PipEnvService:5aae5b4061e1f2cfe798c26476e4936d": [],
     "INTERPRETERS_CACHE_v3_WorkspaceVirtualEnvService:5aae5b4061e1f2cfe798c26476e4936d": [],
     "autoSelectedWorkspacePythonInterpreter-/home/wf/dotF/zsh-git-prompt": {

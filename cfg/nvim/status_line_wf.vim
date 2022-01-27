@@ -1,6 +1,13 @@
 
 " todo
 set showtabline=2
+    " 1: only if there are at least two tab pages
+    " 2: always
+" 装了这个很简单的插件
+    " https://github.com/mkitt/tabline.vim
+    " Tab number
+    " Filename (basename only)
+    " [+] if the current buffer has been modified
 
 " Each status line item is of the form: ( All fields except the {item} are optional.)
 "       %-0{minwid}.{maxwid}{item}
