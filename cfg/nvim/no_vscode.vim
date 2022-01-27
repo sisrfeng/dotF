@@ -25,7 +25,7 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
   cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
   cnoreabbrev <expr> cc    getcmdtype() == ":" && getcmdline() == 'cc'           ? 'CocConfig'                         : 'cc'
   cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/zsh/bindkey_wf.zsh'     : 'zbk'
-  cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/.zshrc'                  : 'bd'
+  cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/local.zsh'                  : 'bd'
   cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
   cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/d/tmp.py'                : 'et'
   cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tabedit ~/dotF/cfg/tmux/tmux.conf' : 'tc'

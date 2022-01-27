@@ -142,9 +142,9 @@ zstyle ':completion:*:*:default'         force-list always
 ##kill 命令
         #compdef pkill=kill
         #compdef pkill=killall
-        zstyle ':completion:*:*:*:*:processes' command   'ps --user=$USER --format=user,command'
-                                                                                        # comm显示的信息太少
-                                                                                        # com一定要放在第二,不知道为啥
+                                                                                         ## comm显示的信息太少
+        zstyle ':completion:*:*:*:*:processes' command   'ps --user=$USER --format=user,pid,command'
+                                                                                        # 按tab后,第二竖列的是候选的补全内容
                 # zstyle ':completion:*:*:*:*:processes' command 'ps -au'
                 # zstyle ':completion:*:*:*:*:processes' command   'ps --user=$USER --format=user,command,stat,pid' # 后面的内容挡住command的完整信息了
                 # 复杂情况下, 还是htop的filter搜得准, tab补全能搜命令, 但搜不到命令的参数

@@ -132,14 +132,14 @@ let g:EasyMotion_smartcase = 1 " 敲小写，能匹配大写。反之不然
 
 " Line motions
 map <Leader>j <Plug>(easymotion-j)
+    " 用noremap不行, 不过后面是<Plug> 应该不会出问题
 map <Leader>k <Plug>(easymotion-k)
 
 " todo  debug buggy 出了问题来这里
 "s for search
 " 用了vim-sandwich的默认keymapping，sa代表sandwich add.  sd 代表sandwich delete
 " 干脆用大写的S算了，避免冲突
-nmap S <Plug>(easymotion-f)
-" 用nnoremap不行
+nmap s <Plug>(easymotion-f)
 
 
 " Need one more keystroke
@@ -180,7 +180,7 @@ autocmd VimEnter * set autochdir
 " 这又可以了,反倒是rooter不行
 
 
-set grepprg=r
+" set grepprg=r
     " 在alias里定义了r
     " set grepprg=grep\ -nH
 

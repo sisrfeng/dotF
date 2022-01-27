@@ -129,7 +129,7 @@ shopt -s  expand_aliases
 
 yes |(mv ~/.tmux ~/.tmux_bk)
 yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
-yes |(cp ~/dotF/zsh/local_template_zshrc.zsh ~/.zshrc )
+yes |(cp ~/dotF/zsh/local_template.zsh ~/local.zsh )
 
 # 使用中文的ubuntu会有什么坏处吗？ - 君子笑的回答 - 知乎https://www.zhihu.com/question/340272351/answer/799642709
 # 在.zshrc里, 已经export LANGUAGE  不用：

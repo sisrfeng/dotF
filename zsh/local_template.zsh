@@ -5,7 +5,7 @@ export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/cuda-10.2/lib64"
 
 
 
-source ~/dotF/rc.zsh
+source ~/dotF/zsh/rc.zsh
 
 # 没有x11时, 不启用复制功能
 # alias w='_w(){ less $1 ;};_w'

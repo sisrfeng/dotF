@@ -93,7 +93,7 @@ ht(){
 
 
 
-# 改了函数以后，敲source ~/.zshrc, 不生效。要新开zsh
+# 改了函数以后，敲source $ZDOTFILE/.zshrc, 不生效。要新开zsh
 
 # `env -i` 比“\”更强, 解决了2的缺点   https://stackoverflow.com/questions/6162903/why-do-backslashes-prevent-alias-expansion
 # 函数与别名：1 定义函数后， alias 原=函数名。好处：敲`\原` ，能使用原命令，坏处：`co 原` 后，要多敲`co 函数名`
@@ -711,7 +711,7 @@ alias et='e ~/d/tmp.py'
 # try tempt
 alias tt='python ~/d/tmp.py'
 # bd : 本地
-alias bd='e ~/.zshrc ; zsh'
+alias bd='e ~/local.zsh ; zsh'
 # alias jn='jupyter notebook'
 
 
@@ -831,7 +831,7 @@ alias matlab='matlab -nosplash -nodesktop'
 # alias sudo=''
 
 alias tc='e ~/dotF/cfg/tmux/tmux.conf'
-alias s='e ~/dotF/rc.zsh ; zsh'
+alias s='e ~/dotF/zsh/rc.zsh ; zsh'
 
 # az: 安装an zhuang
 alias az='e ~/dotF/auto_install/auto_install.sh'
@@ -981,19 +981,7 @@ docker start $1 ; docker exec -it $1 zsh
 alias peco='peco --rcfile $HOME/.config/peco/config.json'
 
 
-# stat:  BSD style, 比state的内容详细
-# state: standard sytle
-# format里面那一堆，不能有空格
-# psp: process status 送到peco
 
-# alias psp='ps --headers  --User "${1:-$LOGNAME}" --format=pid,start_time,cputime,stat,comm,command | peco'
-# zsh-syntax-highlighting 把他当作unknown token
-## 因为在alias中用了`| peco` ?  但`| head` 又没这问题
-psp(){
-    ps --headers  \
-    --User "${1:-$LOGNAME}" \
-    --format=pid,start_time,cputime,stat,comm,command | peco
-}
 
 # 我自己的回答
 # https://unix.stackexchange.com/a/680293/457327
@@ -1195,11 +1183,7 @@ alias pip='pip3'
 
 alias rm='nocorrect rm -Irv --preserve-root'
 
-
-# n:  new zsh
-# alias o='source ~/.zshrc'  # 有时source后，alias就算在文件中被删了，还在"
-# alias o='zsh' # 敲习惯了
-alias n='zsh'
+alias n='zsh'  # n:  new zsh
 
 
 alias to='htop --user=`whoami` --delay=30 --tree'  # system monitor

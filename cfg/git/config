@@ -1,3 +1,6 @@
+# whitespaces are mostly ignored. The # and ;
+# characters begin comments to the end of line, blank lines are ignored.
+
 [user]
   email = liuweifengemail@163.com
   name = sisrfeng
@@ -7,8 +10,8 @@
 [core]
     pager = delta
 	quotepath = false
-	; excludesfile = /home/wf/dotF/cfg/git/wf_ignore
-    ; excludesfile = $HOME/dotF/cfg/git/wf_ignore  ; $HOME不行
+	# excludesfile = /home/wf/dotF/cfg/git/wf_ignore
+    # excludesfile = $HOME/dotF/cfg/git/wf_ignore  # $HOME不行
     excludesfile = ~/dotF/cfg/git/wf_ignore
         # 这样可以正确输出中文文件名
 [alias]
@@ -24,7 +27,7 @@
 
 [color "status"]
   changed =  yellow 
-  ; 未git add的
+  # 未git add的
   untracked = magenta 
   added = green bold
 
@@ -35,33 +38,46 @@
     diffFilter = delta --color-only
 
 [delta]
-    ; Most delta options can be
-    ; given in a git config file,
-    ; using the usual 命令行 option namesr but without the initial '--'.
+    # Most delta options can be
+    # given in a git config file,
+    # using the usual 命令行 option namesr but without the initial '--'.
     navigate = true
     light = true
-    ; ul: underline
-    ; minus-style = red bold ul "#ffeeee"
+    # ul: underline
+    # minus-style = red bold ul "#ffeeee"
     minus-style = black  ul "#ffeeff"
 
 
 [merge]
-    ; The default is "merge",
-    ; which shows a <<<<<<< conflict marker, changes made by one side,
-    ; a ======= marker, changes made by the other side, and then a >>>>>>> marker
+    # The default is "merge",
+    # which shows a <<<<<<< conflict marker, changes made by one side,
+    # a ======= marker, changes made by the other side, and then a >>>>>>> marker
     conflictstyle = diff3
-    ; 多加了 ||||||| marker and the original text before the ======= marker
+    # 多加了 ||||||| marker and the original text before the ======= marker
 
-; debug  来这里
+# debug  来这里
 [diff]
 	colorMoved = zebra
 
-; 先搞清楚再放进来:
-; [pull]
-;     rebase = true
-; [fetch]
-;     prune = true
+# 先搞清楚再放进来:
+# [pull]
+#     rebase = true
+# [fetch]
+#     prune = true
 [pull]
 	rebase = true
 [fetch]
 	prune = true
+
+
+[http]
+# fatal: unable to access 'https://github.com/sisrfeng/dotF.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+# 危险的解决方法:
+# git config --global http.sslVerify false
+# git config --global http.postBuffer 1048576000
+    # 避免卡死:
+        lowSpeedLimit = 1000
+            #  If the HTTP transfer speed is less than 'http.lowSpeedLimit'
+            # for longer than 'http.lowSpeedTime' seconds, the transfer is aborted
+        lowSpeedTime = 60
+

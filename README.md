@@ -18,9 +18,9 @@
 ## All Other Content is Just for Backup
 1. 【已修复】ctrl R 一直是tmux的reload的快捷键，改了tmux.s还是不行，导致vim中用不了ctrl R
 2. Something strange:
- And in `~/.zshrc`, I write `source ~/dotF/zsh/rc.zsh` then `export PS1="@ "  `
+ And in `~/local.zsh`, I write `source ~/dotF/zsh/rc.zsh` then `export PS1="@ "  `
  In `~/dotF/zsh/rc.zsh`, there was already `export PS1=">>at_here>>"`
- Surprisingly,  `~/dotF/zsh/rc.zsh`, instead of `~/.zshrc` takes effect.
+ Surprisingly,  `~/dotF/zsh/rc.zsh`, instead of `~/local.zsh` takes effect.
  After removing `~/dotF/zsh/rc.zsh`, things go right.
 
 

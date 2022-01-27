@@ -47,7 +47,6 @@
 # 当py文件是ex以后, 它就不再是原来的颜色了
 #  todo:怎样忽略executable 与否?
 LS_COLORS=''
-# LS_COLORS=$LS_COLORS:'ex=hhhhh'     # 这样会在文件名前 加上hhhhm  (一个h被换成了m)
 LS_COLORS=$LS_COLORS:'ex=0'       # Executable file
 LS_COLORS=$LS_COLORS:'no=0'           # Normal text
 LS_COLORS=$LS_COLORS:'*.csv=00'

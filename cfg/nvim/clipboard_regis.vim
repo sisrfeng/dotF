@@ -39,18 +39,6 @@
        " Also see |getreg()| and |setreg()|
 
 
-            " let g:clipboard = {
-            "     \   'name': 'myClipboard',
-            "     \   'copy': {
-            "     \      '+': ['tmux', 'load-buffer', '-'],
-            "     \      '*': ['tmux', 'load-buffer', '-'],
-            "     \    },
-            "     \   'paste': {
-            "     \      '+': ['tmux', 'save-buffer', '-'],
-            "     \      '*': ['tmux', 'save-buffer', '-'],
-            "     \   },
-            "     \   'cache_enabled': 1,
-            "     \ }
 
         " 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
             " TRY use copy-always -- and keep yank-history by copyq(作者定义的某函数?)
@@ -60,17 +48,42 @@
             " ALT:DEV: https://neovim.io/doc/user/provider.html
 
             let g:clipboard = {
-            \ 'name': 'wf_xclip',
-            \ 'copy': {
-            \   '+': 'xclip -selection clipboard -silent -loop 2',
-            \   '*': 'xclip -selection primary   -silent -loop 2',
-            \  },
-            \ 'paste': {
-            \   '+': 'xclip -selection clipboard -out',
-            \   '*': 'xclip -selection primary  -out',
-            \ },
-            \ 'cache_enabled': 1,
-            \}
+                \   'name': 'myClipboard',
+                \   'copy': {
+                \      '+': ['/usr/binxclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+                \      '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
+                \    },
+                \   'paste': {
+                \      '+': ['/usr/binxclip', '-selection', 'clipboard', '-out'],
+                \      '*': ['/usr/binxclip', '-selection', 'primary', '-out'],
+                \   },
+                \   'cache_enabled': 1,
+                \ }
+
+            let g:clipboard = {
+                \   'name': 'myClipboard',
+                \   'copy': {
+                \      '+': ['tmux', 'load-buffer', '-'],
+                \      '*': ['tmux', 'load-buffer', '-'],
+                \    },
+                \   'paste': {
+                \      '+': ['tmux', 'save-buffer', '-'],
+                \      '*': ['tmux', 'save-buffer', '-'],
+                \   },
+                \   'cache_enabled': 1,
+                \ }
+            " let g:clipboard = {
+            " \ 'name': 'wf_xclip',
+            " \ 'copy': {
+            " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+            " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
+            " \  },
+            " \ 'paste': {
+            " \   '+': 'xclip -selection clipboard -out',
+            " \   '*': 'xclip -selection primary  -out',
+            " \ },
+            " \ 'cache_enabled': 1,
+            " \}
             " 这样不行
             "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
             "

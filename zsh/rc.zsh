@@ -25,6 +25,7 @@ export PYTHONPATH=
 export PTPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython
 export PTIPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython # ptipython
 export PYTHONSTARTUP=$HOME/dotF/py_startup.py
+# export ZDOTDIR="$HOME:$HOME/dotF/zsh"  # 不能有多个
 
 # 指定nvim等
     export PAGER='bat'
@@ -164,7 +165,7 @@ esac
 # path 和PATH同理。
 
 fpath=(~/.local/bin $fpath)
-fpath=(~/dotF/zsh_conf/zfunc_in_fpath_leo $fpath)  # zfunc_in_fpath_leo用于存放自动补全命令  要在compinit之前.
+fpath=(~/dotF/zsh/_zfunc $fpath)  # _zfunc用于存放自动补全命令  要在compinit之前.
 autoload -U compinit # -U : suppress alias expansion for functions
 
 compinit -d $XDG_CACHE_HOME/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
@@ -326,7 +327,7 @@ source $HOME/dotF/zsh/tab补全_comp.zsh  #  设置颜色 候选等
 source $HOME/dotF/zsh/ls_color.zsh
 
 
-source $HOME/dotF/zsh/history_config_wf.zsh
+source $HOME/dotF/zsh/hist_cfg.zsh
 # todo: 检查一遍再source
 # source /home/wf/dotF/per-dir-history.zsh
 
@@ -403,30 +404,20 @@ else # set $DISPLAY  under tmux
 fi
 
 
-if [[ -z  $DISPLAY ]]; then
-   # echo "DISPLAY isn't set.   it's no use setting it manually? 非也"
-   export DISPLAY=localhost:11.0
-   echo '执行了:export DISPLAY=localhost:11.0 '
-   # echo 'DISPLAY为空，windows terminal下也可以用tmux-yank. 但敲xlogo就会报错'
-   # echo '在这点上, mobaxterm好些'
-fi
-
-echo "DISPLAY是: $DISPLAY"
 
 # pip zsh completion start
-function _pip_completion {
-  local words cword
-  read -Ac words
-  read -cn cword
-  reply=( $( COMP_WORDS="$words[*]" \
-             COMP_CWORD=$(( cword-1 )) \
-             PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
-}
-# compctl -K _pip_completion /data/wf/anaconda3/envs/py38_torch18/bin/python3 -m pip
-compctl -K _pip_completion pip
-compctl -K _pip_completion pip3
+    function _pip_completion {
+    local words cword
+    read -Ac words
+    read -cn cword
+    reply=( $( COMP_WORDS="$words[*]" \
+                COMP_CWORD=$(( cword-1 )) \
+                PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null ))
+    }
+    # compctl -K _pip_completion /data/wf/anaconda3/envs/py38_torch18/bin/python3 -m pip
+    compctl -K _pip_completion pip
+    compctl -K _pip_completion pip3
 
-# pip zsh completion end
 
 
 export PATH="$PATH:/usr/local/go/bin"

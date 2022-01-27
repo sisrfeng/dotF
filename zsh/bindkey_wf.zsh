@@ -139,7 +139,7 @@ typeset -g -A key_wf
     bind -s "\C-o" "- \n"  # 和vim的体验一致
     bind -s "\eo" "~/omd_dotF \n"  #  alt负责路径切换
 
-function peco-find-file() {
+function find-file-peco() {
     local tac
     if which tac > /dev/null  # # 把送到stdout /bin/tac啥的 扔到"黑洞". 只作判断,用户不需要看到stdout
     then
@@ -190,48 +190,55 @@ function peco-find-file() {
         # echo '(没进去搜的目录, 仍会输出一行 )'
     fi
 }
-zle -N peco-find-file
+zle -N find-file-peco
 
-function peco-history() {
-    local tac
-    # GNU 'tail' can output any amount of data (some other versions of 'tail' cannot).
-    # It also has no '-r' option (print in reverse), since reversing a file is really a different job from printing the end of a file;
-    if which tac > /dev/null  # 把送到stdout /bin/tac啥的 扔到"黑洞". 只作判断,用户不需要看到stdout
-    then
-        tac="tac"
-    else
-        tac="tail -r"
-        # BSD 'tail' (the one with '-r') can only reverse files that are at most as large as its buffer, which is typically 32k.
-        # A more reliable and versatile way to reverse files is the GNU 'tac' command.
-    fi
-    # 别用系统的根目录下的peco，太老，用dotF下的
-    # -1000: 最近1000条历史
-    # tac后，最新的在最上
+function history-peco() {
     # cut -c 8-  去掉序号和空格
-    # 命令前加个\，避免多个alias打架了
-    # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
-    # history:  其实是 fc -l 的alias  fc记作find command history吧
 
-
-    BUFFER=$(history -i -2000 | eval $tac | cut -c 8- | peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $BUFFER")
+                       # -1000: 最近2000条历史         # 别用系统的根目录下的peco，太老，用dotF下的
+    BUFFER=$(history -i -2000 | eval tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $BUFFER")
+                                   # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
+                                    # 命令tac装不了的话, tail也凑合
+                                        # BSD 'tail' can only reverse files that are at most as large as its buffer, which is typically 32k.
+                                        # A more reliable and versatile way to reverse files is the GNU 'tac' command.
     BUFFER=${BUFFER:18}  # history加了-i，显示详细时间，回车后只取第19个字符开始的内容，（删掉时间)
+         # ${parameter:start:length}
     CURSOR=$#BUFFER
     # 这个表示 数后面的字符串长度 ：$#
     # BUFFER改成其他的，不行
     # CURSOR变成小写 就不行了
 
-     # 我没存peco的源码 “Yes, it is a single binary! You can put it anywhere you want"
+     # 我没存peco的源码  “it is a single binary! You can put it anywhere you want"
 }
-zle -N peco-history
+zle -N history-peco
 
+# 其实直接按k 敲命令 再tab也可以. 但如果多个python程序在跑, 就要看后面的参数
+process-peco() {
+    BUFFER=$(ps --headers  --user=$USER  --format=pid,start_time,cputime,stat,comm,command  | \peco --initial-filter="Regexp" --query "$BUFFER")
+    # pid最大为:4194304 (7位数字)
+    BUFFER="k ${BUFFER:0:6}"
+            # ${parameter:start:length}
+    CURSOR=$#BUFFER
+}
+    # 仅供复习
+    # alias psp='ps --headers  --User "${1:-$LOGNAME}" --format=pid,start_time,cputime,stat,comm,command | peco'
+        # stat:  BSD style, 比state的内容详细
+        # state: standard sytle
+        # format里面那一堆，不能有空格
+
+        # zsh-syntax-highlighting 把他当作unknown token
+        ## 因为在alias中用了`| peco` ?  但`| head` 又没这问题
+
+zle -N process-peco
 
 # ctrl作为前缀：
 # 1. `\C-x',
 # 2.  `^x '  别用, 方便搜索, 并且和vim更像
 
         # 按2下ctrl，相当于敲了ctrl c，因为有道翻译取词翻译时，应该要悄悄复制
-        bind '\C-F' peco-find-file
-        bind '\C-r' peco-history
+        bind '\C-F' find-file-peco
+        bind '\C-r' history-peco
+        bind '\C-b' process-peco  # b: background process
 
         bind '\C-S' quoted-insert
                         # self-insert  # 原样输入
@@ -248,7 +255,6 @@ zle -N peco-history
                     #  h() 是我写的函数
     # string
         bind -s "\C-t" "tt \C-j"  # python ~/d/tmp.py  # t for try
-        bind -s "\C-b" "echo '待用' \n"
         bind -s "\C-H" "echo '我是ctrl H，被tmux占用' \n"
         bind -s "\C-g" "echo '待用' \n"
 

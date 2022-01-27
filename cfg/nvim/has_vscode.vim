@@ -58,7 +58,7 @@
 " cnoreabbrev
     "   vscode里, 如果用edit而非split,里会把原文件的内容 粘贴到一个新文件
         cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'vsplit ~/dotF/zsh/bindkey_wf.zsh'     :   'zbk'
-        cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'vsplit ~/.zshrc'                  :   'bd'
+        cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'vsplit ~/local.zsh'                  :   'bd'
         cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'vsplit ~/d/tmp.py'                :   'et'
         cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'vsplit ~/dotF/cfg/tmux/tmux.conf' :   'tc'
         cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'vsplit ~/dotF/cfg/nvim/init.vim'  :   'in'
