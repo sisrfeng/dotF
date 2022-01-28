@@ -919,6 +919,9 @@ autocmd TabLeave * let g:last_active_tab = tabpagenr()  " tabpagenr(): 换取当
 
 
 nnoremap Y y$
+" 和yy,dd,cc一致
+nnoremap vv V
+nnoremap V v$
 
 " 复制选中区到系统剪切板中
 vnoremap <leader>y "+y

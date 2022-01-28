@@ -143,6 +143,7 @@ map <Leader>k <Plug>(easymotion-k)
 " 用了vim-sandwich的默认keymapping，sa代表sandwich add.  sd 代表sandwich delete
 " 干脆用大写的S算了，避免冲突
 nmap s <Plug>(easymotion-f)
+nmap S 0<Plug>(easymotion-f)
 
 
 " Need one more keystroke

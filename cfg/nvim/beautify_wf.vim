@@ -42,7 +42,8 @@ endif
 
 autocmd BufWritePost * if &diff == 1 | diffupdate | endif
 
-nnoremap s :set cursorcolumn?<CR>
+" nnoremap csc :set cursorcolumn?<CR>
+    " 手动敲吧
 hi cursorcolumn guibg=rice_white_wf guifg=#00a253
 
 

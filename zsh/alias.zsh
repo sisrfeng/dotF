@@ -535,13 +535,15 @@ ls_after_cd() {
         --group-directories-first  \
         --header  \
         --no-user  \
+        --no-filesize   \
         --no-permissions  \
         --sort=time  \
         --time-style=iso  | \
         tail -8
 
-    # \ls -gGhtrFB --color=always --classify $* | cut -c 14- | tail -5
-    tmp=$((  `\ls -l | wc -l` - 1 - 8   )) #文件总数: `\ls -l | wc -l`-1
+    tmp=$((  `\ls -l | wc -l` - 1 - 8   ))
+    #文件总数: `\ls -l | wc -l`-1
+
     if [ $tmp -lt 0 ]; then
         echo "------no more files--------"
     else
