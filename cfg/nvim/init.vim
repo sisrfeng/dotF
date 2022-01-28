@@ -657,7 +657,7 @@ func! AutoHead()
         " google Python风格规范: 不要在行尾加分号, 也不要用分号将两条命令放在同一行。
         " 但不会报错
 
-        " call append(2, 'from dotF.wf_snippet import *')
+        " call append(2, 'from dotF.snippetS import *')
         " call append(2, 'sys.path.append(wf_home)')
         " call append(2, 'wf_home = os.path.expanduser("~/")')
         call setline(1, 'import cv2 as cv,cv2')

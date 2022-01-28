@@ -1,3 +1,6 @@
+" 插件不放进dotF, 避免用submodule等复杂命令.
+" 如何应对内网, 离线安装? 到时再说
+
 Plug 'junegunn/vim-plug'
     " 为了能用:help plug-options
 
@@ -184,10 +187,10 @@ autocmd VimEnter * set autochdir
     " 在alias里定义了r
     " set grepprg=grep\ -nH
 
-" 和leaderF比, ctrlp的star数更多. 但比较老, 但被skywind吐槽过. 貌似不能search file by content
-Plug 'ctrlpvim/ctrlp.vim'
-    let g:ctrlp_match_window = 'bottom,order:btt,min:80,max:80,results:10'
-    let g:ctrlp_switch_buffer = 'ET'
+" " 和leaderF比, ctrlp的star数更多. 但比较老, 但被skywind吐槽过. 貌似不能search file by content
+" Plug 'ctrlpvim/ctrlp.vim'
+"     let g:ctrlp_match_window = 'bottom,order:btt,min:80,max:80,results:10'
+"     let g:ctrlp_switch_buffer = 'ET'
 
 Plug  'Yggdroot/LeaderF'
         " don't show the help in normal mode
@@ -213,6 +216,14 @@ Plug  'Yggdroot/LeaderF'
                 \            ['<cr>', 't'],
                 \        ],
                 \}
+
+        let g:Lf_RgConfig = [
+            \ "--max-columns=150",
+            \ "--type-add web:*.{html,css,js}*",
+            \ "--glob=!git/*",
+            \ "--glob=!**/coc/extensions/node_modules*",
+            \ "--hidden"
+            \ ]
 
         " 和zsh下按ctrl f 作用一致
         let g:Lf_ShortcutF = "<c-f>"  " 要想快点弹出窗口，按下f后，马上输出字符

@@ -610,7 +610,7 @@ if [[ "$TERM_PROGRAM" == "vscode" ]]; then
     alias ed='code -d'
 fi
 
-alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s}=e
+alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s,json}=e
     # zsh默认用vim打开，导致无法执行？有其他bug？但是很多人都这么写
                                     # 后缀名s表示seting,简洁,代替conf
     # alias -s py=vim  # 要是想 让python被zsh自动补全,注释掉这行
@@ -715,7 +715,7 @@ alias bd='e ~/local.zsh ; zsh'
 # alias jn='jupyter notebook'
 
 
-alias snp='~/dotF/wf_snippet.py'
+alias snp='~/dotF/snippetS'
 
 
 # Sometimes it is convenient to create separate tmux servers,
@@ -1199,8 +1199,8 @@ alias z='_z 2>&1'
 #  -z (同 --gzip, --gunzip, --ungzip)  通过 gzip 过滤归档
 # alias -s gz='wf_gz(){ tar -xzf $* ; t $* ; };wf_gz'
 
-alias disimg="~/dotF/imcat/imcat"
-alias imcat="~/dotF/imcat/imcat"
+alias disimg="imcat"
+alias imcat="imcat"
 alias -s png=imcat
 alias -s jpg=imcat
 alias -s jpeg=imcat

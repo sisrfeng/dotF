@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "coc-json": ">=1.4.1",
-    "coc-pyright": ">=1.1.210",
-    "coc-vimlsp": ">=0.12.5"
-  }
-}
