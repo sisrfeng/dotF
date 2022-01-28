@@ -264,7 +264,114 @@ Plug 'sisrfeng/toggle-bool'
 " leaderf里有这个keybind，我这里覆盖掉
 noremap <leader>b :ToggleBool<CR>
 
+" 貌似比gundo和mundo好
 Plug 'mbbill/undotree'
+    nnoremap <F4> :UndotreeToggle<CR>
+    let g:undotree_SetFocusWhenToggle = 1
+    if has('persistent_undo')
+        let path_undo = expand('$XDG_CACHE_HOME/.undo_nvim')
+        if !isdirectory(path_undo)
+            call mkdir(path_undo, "p", 0700) " create the directory and any parent directories
+        endif
+
+        let &undodir=path_undo
+        set undofile
+    endif
+
+    " 具体设置:
+        if !exists('g:undotree_WindowLayout')
+            let g:undotree_WindowLayout = 4
+        endif
+
+        " " e.g. using 'd' instead of 'days' to save some space.
+        if !exists('g:undotree_ShortIndicators')
+            let g:undotree_ShortIndicators = 1
+        endif
+
+        " undotree window width
+        if !exists('g:undotree_SplitWidth')
+            if g:undotree_ShortIndicators == 1
+                let g:undotree_SplitWidth = 24
+            else
+                let g:undotree_SplitWidth = 30
+            endif
+        endif
+
+        " diff window height
+        if !exists('g:undotree_DiffpanelHeight')
+            let g:undotree_DiffpanelHeight = 10
+        endif
+
+        " auto open diff window
+        if !exists('g:undotree_DiffAutoOpen')
+            let g:undotree_DiffAutoOpen = 1
+        endif
+
+        " if set, let undotree window get focus after being opened, otherwise
+        " focus will stay in current window.
+        if !exists('g:undotree_SetFocusWhenToggle')
+            let g:undotree_SetFocusWhenToggle = 1
+        endif
+
+        " tree node shape.
+        if !exists('g:undotree_TreeNodeShape')
+            let g:undotree_TreeNodeShape = ' '
+        endif
+
+        " tree vertical shape.
+        if !exists('g:undotree_TreeVertShape')
+            let g:undotree_TreeVertShape = '|'
+        endif
+
+        if !exists('g:undotree_DiffCommand')
+            let g:undotree_DiffCommand = "diff"
+        endif
+
+        " relative timestamp
+        if !exists('g:undotree_RelativeTimestamp')
+            let g:undotree_RelativeTimestamp = 1
+        endif
+
+        " Highlight changed text
+        if !exists('g:undotree_HighlightChangedText')
+            let g:undotree_HighlightChangedText = 1
+        endif
+
+        " Highlight changed text using signs in the gutter
+        if !exists('g:undotree_HighlightChangedWithSign')
+            let g:undotree_HighlightChangedWithSign = 1
+        endif
+
+        " Highlight linked syntax type.
+        " You may chose your favorite through ":hi" command
+        if !exists('g:undotree_HighlightSyntaxAdd')
+            let g:undotree_HighlightSyntaxAdd = "DiffAdd"
+        endif
+        if !exists('g:undotree_HighlightSyntaxChange')
+            let g:undotree_HighlightSyntaxChange = "DiffChange"
+        endif
+        if !exists('g:undotree_HighlightSyntaxDel')
+            let g:undotree_HighlightSyntaxDel = "DiffDelete"
+        endif
+
+        " Deprecates the old style configuration.
+        if exists('g:undotree_SplitLocation')
+            echo "g:undotree_SplitLocation is deprecated,
+                        \ please use g:undotree_WindowLayout instead."
+        endif
+
+        " Show help line
+        if !exists('g:undotree_HelpLine')
+            let g:undotree_HelpLine = 0
+        endif
+
+        " Show cursorline
+        if !exists('g:undotree_CursorLine')
+            let g:undotree_CursorLine = 1
+        endif
+
+
+
 " On top of all language packs from vim repository. syntax支持
 Plug 'sheerun/vim-polyglot'
 

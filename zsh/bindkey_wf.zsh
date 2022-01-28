@@ -154,7 +154,16 @@ function find-file-peco() {
     if [[ `pwd` == "$HOME/d" || `pwd` == "/d" ]]
     then
         # BUFFER (scalar):   The entire contents of the edit buffer.
-        # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-BUFFER
+            # LBUFFER 如果用LBUFFER=某某 , $RBUFFER不会变
+            # RBUFFER (scalar)
+            # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-BUFFER
+
+        # CURSOR (integer)
+            # The offset of the cursor, within the edit buffer.
+            # This is in the range 0 to $#BUFFER,
+            # and is by definition equal to $#LBUFFER.
+            # Attempts to move the cursor outside the buffer will result in the cursor being moved to the appropriate end of the buffer.
+
         BUFFER=$(find . \
         -path "/d/docker" -prune -o       \
         -path "$HOME/d/docker" -prune -o  \
@@ -163,7 +172,7 @@ function find-file-peco() {
         -path "$XDG_CACHE_HOME" -prune -o \
         -path "~/d/.4regret" -prune -o \
         -path "./.t" -prune -o            \
-        -name "*$1*"  | peco --query "$BUFFER" )
+        -name "*$1*"  | peco --query "$LBUFFER" )
         # 别用系统的根目录下的peco，太老，用dotF下的
         CURSOR=$#BUFFER
 
@@ -182,7 +191,7 @@ function find-file-peco() {
         -path "./.t" -prune -o            \
         -path "/proc" -prune -o           \
         -path "/dev" -prune -o            \
-        -name "*$1*"  | peco --query "$BUFFER" )
+        -name "*$1*"  | peco --query "$LBUFFER" )
         # 别用系统的根目录下的peco，太老，用dotF下的
         CURSOR=$#BUFFER
 
@@ -196,7 +205,7 @@ function history-peco() {
     # cut -c 8-  去掉序号和空格
 
                        # -1000: 最近2000条历史         # 别用系统的根目录下的peco，太老，用dotF下的
-    BUFFER=$(history -i -2000 | eval tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $BUFFER")
+    BUFFER=$(history -i -2000 | eval tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $LBUFFER")
                                    # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
                                     # 命令tac装不了的话, tail也凑合
                                         # BSD 'tail' can only reverse files that are at most as large as its buffer, which is typically 32k.
@@ -214,7 +223,7 @@ zle -N history-peco
 
 # 其实直接按k 敲命令 再tab也可以. 但如果多个python程序在跑, 就要看后面的参数
 process-peco() {
-    BUFFER=$(ps --headers  --user=$USER  --format=pid,start_time,cputime,stat,comm,command  | \peco --initial-filter="Regexp" --query "$BUFFER")
+    BUFFER=$(ps --headers  --user=$USER  --format=pid,start_time,cputime,stat,comm,command  | \peco --initial-filter="Regexp" --query "$LBUFFER")
     # pid最大为:4194304 (7位数字)
     BUFFER="k ${BUFFER:0:6}"
             # ${parameter:start:length}

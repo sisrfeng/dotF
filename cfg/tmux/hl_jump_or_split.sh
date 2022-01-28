@@ -1,6 +1,14 @@
+
+
+
 # to be continued
 # 改成tmux命令?
+# 类似vim的语法
 %if "#{==:#{window_panes}, 1}"
+    run-shell 'bash $HOME/dotF/cfg/tmux/hori_split.sh'
+%else
+%
+%endif
      # Sessions, window and panes are each numbered with a unique ID; session IDs are prefixed with a ‘$’, windows with a ‘@’, and panes with a ‘%’.  These
      # are unique and are unchanged for the life of the session, window or pane in the tmux server.  The pane ID is passed to the child process of the pane
      # in the TMUX_PANE environment variable.

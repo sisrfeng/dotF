@@ -293,18 +293,6 @@ nnoremap df ggdG
 
 
 
-nnoremap <F4> :UndotreeToggle<CR>
-let g:undotree_SetFocusWhenToggle = 1
-if has('persistent_undo')
-    let path_undo = expand('$XDG_CACHE_HOME/.undo_nvim')
-    if !isdirectory(path_undo)
-        call mkdir(path_undo, "p", 0700) " create the directory and any parent directories
-    endif
-
-    let &undodir=path_undo
-    set undofile
-endif
-
 
 
 " 同类:
@@ -850,8 +838,9 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
             endif
             set foldenable?
         endfunc
-        nnoremap <leader>z :call Fold_01()<cr>
+        nnoremap <leader>z :call Fold_01()<cr>zz
                     " z: zhe折叠
+                    " zz: 光标所在行 挪到屏幕中间
 
     autocmd FileType txt setlocal foldmethod=expr
     autocmd FileType txt setlocal foldexpr=VimHelp_fold()
@@ -1121,11 +1110,14 @@ func! VimPlugConds(arg1, ...)
         " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tabedit term://zsh'               :   't'
         cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
         cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
+        cnoreabbrev <expr> r    getcmdtype() == ":" && getcmdline() == 'r'           ? 'register'               :   'r'
 
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
 
-autocmd TermOpen * startinsert
+" autocmd TermOpen * startinsert
+" 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
+
     " 0到255
     let g:terminal_color_4 = '442200'
     let g:terminal_color_5 = 'black'

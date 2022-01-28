@@ -528,4 +528,4 @@ export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
     export HOMEBREW_BAT=1
 
 export BROWSER=w3m
-
+source ~/local.zsh
