@@ -176,10 +176,11 @@ mkdir ~/.ssh
 rm -f ~/.condarc
 # todo: 考虑gnu stow 管理link?
 ln -s  ~/dotF/conda.yml ~/.condarc
-ln -sf ~/dotF/zsh/zshenv    ~/.zshenv
-ln -sf ~/dotF/zsh/zprofile  ~/.zprofile
+ln -sf ~/dotF/zsh/zshenv.zsh    ~/.zshenv
 ln -sf ~/dotF/cfg/ssh_cfg.yml ~/.ssh/config
 rm -rf ~/.SpaceVim.d    ~/.Spacevim
+mkdir -p ~/coc
+ln -sf ~/coc ~/dotF/cfg/
 
 # tmux插件
     TP="$HOME/.tmux_wf/plugins/tpm"

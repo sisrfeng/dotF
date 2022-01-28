@@ -1139,9 +1139,7 @@ cip(){
     else
 
     fi
-    # source ./apt_source.sh
-    # source ./apt_source.sh
-
+    source ~/dotF/auto_install/apt_source.sh
 }
 
 # kill -15
