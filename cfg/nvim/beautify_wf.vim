@@ -16,7 +16,8 @@ if !exists('g:vscode')
     LuciusLight
     hi Normal guibg=NONE
     hi Menu   guibg=#abefcd  guifg=#123456
-    highlight Pmenu guibg=#ede6d3
+    hi Pmenu guibg=#ede6d3
+    hi SpecialKey guibg=red guifg=black  " unprintable的字符 例如  
 
     " 背景米白色
     let g:rice_white_wf='#fdf6e3'

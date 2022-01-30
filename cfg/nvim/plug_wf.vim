@@ -4,7 +4,8 @@
 Plug 'junegunn/vim-plug'
     " 为了能用:help plug-options
 
-Plug 'kana/vim-fakeclip'
+" todo :  试一下这个
+" Plug 'kana/vim-fakeclip'
 Plug 'voldikss/vim-translator'
 
 " Plug 'vim-airline/vim-airline'
@@ -29,6 +30,9 @@ Plug 'mkitt/tabline.vim'
 
 
 Plug 'sheerun/vim-polyglot'
+    " A collection of language packs for Vim.
+    " 其中用了: " https://github.com/ericpruitt/tmux.vim
+    " 有时有些小bug也正常, 毕竟不能所有环节都及时更新
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/vim-easy-align'
 Plug 'lifepillar/vim-solarized8'
@@ -66,6 +70,105 @@ Plug 'asvetliakov/vim-easymotion', has('g:vscode') ? {'as': 'easymotion_vsc'}   
                                                                 " 【an empty `on` or `for` option :
                                                                 "    not loaded by default depending on the condition.】
                                                                 "    but plugin is registered  防止PlugClean清掉
+    " 类似:
+            " todo
+            " https://github.com/pechorin/any-jump.vim
+
+            "  Plug 'tpope/vim-repeat'
+            "  Plug 'kkoomen/vim-doge'
+            "  Plug 'mattn/emmet-vim'
+            "  Plug 'junegunn/vim-easy-align'
+            "  Plug 'chaoren/vim-wordmotion'
+
+                " vim眼中的一个word
+                " 我的笔记 https://github.com/vim/vim/issues/576
+                " https://vi.stackexchange.com/a/36657/38936
+
+                    " 先了解几种常见character classes
+                        " Those also work for multibyte characters:
+                                " \k	keyword character (see 'iskeyword' option)
+                                " \K	like "\k", but excluding digits
+
+                                " \w	word character:			[0-9A-Za-z_]
+                                " \W	non-word character:		[^0-9A-Za-z_]	 (搜索时  可以匹配中文等non ascii字符)
+
+                    " word/WORD
+                    "         consist of a sequence of
+                    "                               1.  letters, digits and underscores,  【word的定义can be changed with the 'iskeyword' option.
+                    "                                                                        比如set iskeyword+=-后, 连字符就成为类别1的一员】
+                    "                               2.  other non-blank characters, (包括non-word character a中文单词一a a中文单词一a  这也是:中文单词一)
+                    "                                   (类别1的character 被中文等类别2的character隔开时, 中文不属于这个word, 但属于这个WORD
+                    "                                   类别2被类别1隔开, 同样道理)
+                    "                               word是狭义的单词, WORD是广义的单词
+                    "         separated with:
+                    "                       white space  (spaces,  tabs, <EOL>).
+                    "
+
+
+                        " An empty line  is also considered to be a word/WORD
+                        "
+                        " A sequence of folded lines is counted for:   one word of a single character.
+                        "
+                        " todo:
+                                " "w" and "W", "e" and "E" move to the start/end of the first word or WORD after a range of folded lines.
+                                "
+                                " "b" and "B" move to the start of the first word or  WORD before the fold.
+
+
+
+                    " 'iskeyword' 'isk'	string (default: @,48-57,_,192-255 )  128到255是extended  ascii, 大部分是西文字母, 我们用不上
+                    "                                      对应数字0到9
+                        "    local to buffer
+
+                        "    会影响命令 :K
+                                    " [count]K
+                                    "     Runs the program given by 'keywordprg' to lookup the
+                                    "     |word| (defined by 'iskeyword') under or right of the
+                                    "     cursor.
+                                    "
+                                    "     我现在:    keywordprg=:help
+
+                        "     Keywords are used in searching and recognizing with many commands:
+                        "           "w",
+                        "           "*",
+                        "           "[i",
+                        "           "\k" in a |pattern|.(搜\k能匹配中文)
+                        "
+                        "     Q:没明白 keyword如何定义word,  word不就是由word character [0-9A-Za-z] 组成的吗?
+                        "     A: 非也, set iskeyword+=- 以后, peco-find就是一个word,  但连字符不属于word character
+                        "
+                        "
+                        "     See  'isfname' for a description of the format of this option.
+                        "
+                                    " The format of this option is a list of parts, separated with commas.
+                                    " Each part can be a single character number or a range.  A range is two
+                                    " character numbers with '-' in between.  A character number can be a
+                                    " decimal number between 0 and 255 or the ASCII character itself (does
+                                    " not work for digits).  Example:
+                                    "     "_,-,128-140,#-43"	(include '_' and '-' and the range
+                                    "                 128 to 140 and '#' to 43)
+                        "     如果加了'@':
+                        "         characters above 255将会:
+                            "        check (其实是想表达fall back to ?) the "word"  character class
+                            "                   (当作"word"  character ?)
+                            "        也就是:any character  that is not white space or punctuation, )
+                            "     想把中文放进'iskeyword? 暂时不行: https://github.com/vim/vim/issues/576
+                            "
+
+                        "     This option also influences syntax highlighting,
+                        "            unless the syntax  uses |:syn-iskeyword|.
+
+                                    " It is recommended when writing syntax files, to use this command to
+                                    " set the correct value for the specific syntax language and not change
+                                    " the 'iskeyword' option.
+                                    "
+                                    "
+
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+
+
+
 
 " 要编译python+，难搞 放弃
 " 允许多人同时编辑一个文件。避免多处打开同一个文件
@@ -375,5 +478,7 @@ Plug 'mbbill/undotree'
 " On top of all language packs from vim repository. syntax支持
 Plug 'sheerun/vim-polyglot'
 
-
+Plug 'brooth/far.vim'
+Plug 'AndrewRadev/linediff.vim'
+Plug 'https://github.com/rickhowe/diffchar.vim'
 

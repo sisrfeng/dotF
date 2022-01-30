@@ -39,7 +39,7 @@ let mapleader =" "
 inoremap jj <esc>
 
  " 主要影响map
-    set timeoutlen=500
+    set timeoutlen=600
     " set notimeout
 
 " tty?
@@ -48,9 +48,34 @@ inoremap jj <esc>
 nnoremap <c-d> 15<c-d>
 nnoremap <c-u> 15<c-u>
 
-
+" 看哪个好用:
+nnoremap gj :tabedit <cfile><CR>
 nnoremap gf :tabedit <cfile><CR>
+nnoremap gh :tab help <C-R><C-W>
+" vim本来用K, K被我map了
+    " to be used:  " select mode 是为了讨好MS word患者, 没啥用
 
+            "                             *gV* *v_gV*
+            " gV			Avoid the automatic reselection of the Visual area
+            "             after a Select mode mapping or menu has finished.
+            "             Put this just before the end of the mapping or menu.
+            "             At least it should be after any operations on the
+            "             selection.
+            "
+            "                             *gh*
+            " gh			Start Select mode, charwise.  This is like "v",
+            "             but starts Select mode instead of Visual mode.
+            "             Mnemonic: "get highlighted".
+            "
+            "                             *gH*
+            " gH			Start Select mode, linewise.  This is like "V",
+            "             but starts Select mode instead of Visual mode.
+            "             Mnemonic: "get Highlighted".
+            "
+            "                             *g_CTRL-H*
+            " g CTRL-H		Start Select mode, blockwise.  This is like CTRL-V,
+            "             but starts Select mode instead of Visual mode.
+            "             Mnemonic: "get Highlighted".
 
 " block模式
     " 记忆：c for block
@@ -87,7 +112,7 @@ nnoremap gf :tabedit <cfile><CR>
 " focus on comment or not
 
 
-
+" 不加连字符, peco-find 就不是一个word, viw就被连字符打断
 set iskeyword+=-
 
 " About search
@@ -200,8 +225,8 @@ source ~/dotF/cfg/nvim/clipboard_regis.vim
 
 
 " :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
-nnoremap <F2> :    .,$subs  #\<\>##gc<Left><Left><Left><Left><Left><Left><C-R><C-W><Right><Right><Right><C-R><C-W>
-nnoremap <M-F2> :  .,$subs  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
+nnoremap <F2>   : .,$sub  #\<\>##gc<Left><Left><Left><Left><Left><Left><C-R><C-W><Right><Right><Right><C-R><C-W>
+nnoremap <M-F2> : .,$sub  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
     "       %       表示全文. Example: :%s/foo/bar/g.
     "       .       当前行
     "       $       表示结尾
@@ -290,29 +315,6 @@ nnoremap df ggdG
     " p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
 " inoremap yf <Esc>ggyG<C-O>
     " vscode里不行，vscode外也别试了, 保持一致
-
-
-
-
-
-" 同类:
-"  Plug 'tpope/vim-repeat'
-"  Plug 'chaoren/vim-wordmotion'
-"  Plug 'kkoomen/vim-doge'
-"  Plug 'mattn/emmet-vim'
-" Plug 'junegunn/vim-easy-align'
-
-" Any valid git URL is allowed
-" Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-
-" On-demand loading
-" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-" todo
-" https://github.com/pechorin/any-jump.vim
 
 
 let g:ft_man_folding_enable=1
@@ -756,19 +758,20 @@ set shortmess=filnxtToOF
 " - Set 'cmdheight' to 2 or higher.
 set cmdheight=2
 
-let s:noSwapSuck_file = fnamemodify($MYVIMRC, ":p:h")  . "/noswapsuck.vim"    " 字符串concat，用点号
-            " fnamemodify比expand的功能更强
-            " :echo @%                |" directory/name of file
-            " :echo expand('%:p')     |" full path
-            " :echo expand('%:p:h')   |" directory containing file ('head')
-            " :echo expand('%:t')     |" name of file ('tail')
-exe 'source ' . s:noSwapSuck_file
-         " 这样不行： source  . s:noSwapSuck_file
-" 取代了这些：
-    " set nobackup  取消备份。 视情况自己改
-    " set noswapfile  关闭交换文件
-
-
+" swap file
+    " let s:noSwapSuck_file = fnamemodify($MYVIMRC, ":p:h")  . "/noswapsuck.vim"    " 字符串concat，用点号
+    "             " fnamemodify比expand的功能更强
+    "                 " :echo @%                |" directory/name of file
+    "                 " :echo expand('%:p')     |" full path
+    "                 " :echo expand('%:p:h')   |" directory containing file ('head')
+    "                 " :echo expand('%:t')     |" name of file ('tail')
+    " exe 'source ' . s:noSwapSuck_file
+    "         " 这样不行： source  . s:noSwapSuck_file
+    " " 取代了这些：
+    "     " set nobackup  取消备份。 视情况自己改
+    "     " set noswapfile  关闭交换文件
+    "
+    "
 
 
 " 突出显示当前行
@@ -801,7 +804,8 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
 " 折叠
 " 其实敲zi就行...不用自己写函数
-    set foldmethod=indent  " 初步尝试, 缩进最好
+    " set foldmethod=indent  " 初步尝试, 缩进最好
+    set foldmethod=manual
         " set fdm=indent
     set foldopen=block,
                 \hor,
@@ -1111,6 +1115,7 @@ func! VimPlugConds(arg1, ...)
         cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
         cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
         cnoreabbrev <expr> r    getcmdtype() == ":" && getcmdline() == 'r'           ? 'register'               :   'r'
+        cnoreabbrev <expr> m    getcmdtype() == ":" && getcmdline() == 'm'           ? 'messages'               :   'm'
 
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'

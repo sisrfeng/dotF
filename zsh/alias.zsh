@@ -1286,14 +1286,18 @@ alias wgname='wget -c -O "wf_need_to_change_name"'
 
 alias help=run-help
 alias hp=run-help
+
 alias _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
-            # alias tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
+            # 网络不好时, 自己下载tldr.zip, 解压到~/.tldr/cache/ 可以删掉pages.某某语言,
+            # 只剩pages目录
+# alias _tldr='/home/linuxbrew/.linuxbrew/bin/tldr'
+            # 同样是下载tldr.zip   ~/.tldrc/tldr/ 一堆各种语言的pages
 
-            # 在各种client中,它最好看, 但要是找不到, 会一直找
-            # brew install tldr, 得到的格式用vim打开很乱
+        # alias tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
 
-            # pip安装的，比apt安装的显示好些 但不翻墙就有时连不上网。。。。。翻了也用不了....  #
-            # 有时挺好用, 比brew装的快. 但既无法配合nvim(格式乱), 又会在找不到时一直找.
+        # 在各种client中,它最好看, 但要是找不到, 会一直找
+        # brew install tldr, 得到的格式用vim打开很乱
+
 alias cm='whence -ca'
     # 这可以退休了?  直接用h()
     # cm for command

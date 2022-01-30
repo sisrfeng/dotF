@@ -1,5 +1,14 @@
 
 
+    # bind 'j' if-shell  "tmux xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \  # 会fail的command
+    bind 'j' if-shell  "tmux display-message -p | awk '{exit($5=0)}'" \
+                        "  display-message -p 'true le' "             \
+                        "  display-message -p 'false'   "
+
+           # if-shell   "shell-command"                               \
+                         # "shell-command成功时, 要执行的tmux command " \
+                         # "失败时执行的tmux 的command"
+
 
 # to be continued
 # 改成tmux命令?
