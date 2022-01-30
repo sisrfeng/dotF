@@ -127,9 +127,6 @@ shopt -s  expand_aliases
     alias pip3='\pip3 -qq'
     alias cp='cp -r'
 
-yes |(mv ~/.tmux ~/.tmux_bk)
-yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
-yes |(cp ~/dotF/zsh/local_template.zsh ~/local.zsh )
 
 # 使用中文的ubuntu会有什么坏处吗？ - 君子笑的回答 - 知乎https://www.zhihu.com/question/340272351/answer/799642709
 # 在.zshrc里, 已经export LANGUAGE  不用：
@@ -179,8 +176,13 @@ ln -s  ~/dotF/conda.yml ~/.condarc
 ln -sf ~/dotF/zsh/zshenv.zsh    ~/.zshenv
 ln -sf ~/dotF/cfg/ssh_cfg.yml ~/.ssh/config
 rm -rf ~/.SpaceVim.d    ~/.Spacevim
+
 mkdir -p ~/coc
+避免dotF目录被coc插件弄脏
 ln -sf ~/coc ~/dotF/cfg/
+yes |(mv ~/.tmux ~/.tmux_bk)
+yes |(mv ~/.config/ ~/.old_config ;  ln -s ~/dotF/cfg ~)
+yes |(cp ~/dotF/zsh/local_template.zsh ~/local.zsh )
 
 # tmux插件
     TP="$HOME/.tmux_wf/plugins/tpm"
