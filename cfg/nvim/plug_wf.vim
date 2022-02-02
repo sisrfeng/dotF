@@ -34,6 +34,10 @@ Plug 'sheerun/vim-polyglot'
     " 其中用了: " https://github.com/ericpruitt/tmux.vim
     " 有时有些小bug也正常, 毕竟不能所有环节都及时更新
 Plug 'andymass/vim-matchup'
+    " match-up can be used as a drop-in replacement for the classic plugin matchit.vim.
+    " 看官网的Options部分, 貌似和sandwich有些重复
+    " let g:matchup_matchparen_offscreen = {'method': 'popup'}  " 可能挡住底下一行代码
+    let g:matchup_matchparen_offscreen = {'method': 'status'}
 Plug 'junegunn/vim-easy-align'
 Plug 'lifepillar/vim-solarized8'
 
@@ -244,10 +248,9 @@ map <Leader>k <Plug>(easymotion-k)
 " todo  debug buggy 出了问题来这里
 "s for search
 " 用了vim-sandwich的默认keymapping，sa代表sandwich add.  sd 代表sandwich delete
-" 干脆用大写的S算了，避免冲突
+" 所以敲s后 要等一会
 nmap s <Plug>(easymotion-f)
 nmap S 0<Plug>(easymotion-f)
-
 
 " Need one more keystroke
 nmap f <Plug>(easymotion-f2)
@@ -269,7 +272,6 @@ Plug 'machakann/vim-sandwich'
 "  Plug 'tpope/vim-surround'
 "  Plug 'kana/vim-textobj-user'
 "  Plug 'sgur/vim-textobj-parameter'
-
 
 
 Plug 'scrooloose/nerdcommenter'

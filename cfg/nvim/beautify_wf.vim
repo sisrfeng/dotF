@@ -17,7 +17,7 @@ if !exists('g:vscode')
     hi Normal guibg=NONE
     hi Menu   guibg=#abefcd  guifg=#123456
     hi Pmenu guibg=#ede6d3
-    hi SpecialKey guibg=red guifg=black  " unprintable的字符 例如  
+    hi SpecialKey guibg=Yellow guifg=black  " unprintable的字符 例如  
 
     " 背景米白色
     let g:rice_white_wf='#fdf6e3'
@@ -54,7 +54,7 @@ hi ErrorMsg guifg=#835000
 highlight Folded guibg=rice_white_wf guifg=#ada693
 " highlight FoldColumn guibg=darkgrey guifg=white
 
-set cursorline
+set cursorline  " 突出显示当前行
 hi CursorLine gui=bold guifg=none guibg=none
 
     " hi CursorLine guibg=rice_white_wf gui=undercurl

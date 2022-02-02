@@ -3,7 +3,8 @@
 
 # zsh bindkey
 alias zbk='e ~/dotF/zsh/bindkey_wf.zsh ; zsh'
-alias pl='flake8'  # python linting
+alias ll='flake8'
+alias pl='e ~/dotF/cfg/nvim/plug_wf.vim'
 
 alias con='conda'
 alias ci='conda install -y'

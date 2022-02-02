@@ -17,14 +17,12 @@ from termcolor import cprint
 from rich import print
 #  print("[bold magenta] Hello  World [/bold magenta]" )
 
-'''
-cprint('Hello, World!', 'red', 'on_cyan')
-cprint("Attention!", 'red', attrs=['bold'], file=sys.stderr)
-
-for i in range(10):
-    cprint(i, 'magenta', end='分隔线 ')
-
-'''
+#  cprint('Hello, World!', 'red', 'on_cyan')
+#  cprint("Attention!", 'red', attrs=['bold'], file=sys.stderr)
+#
+#  for i in range(10):
+#      cprint(i, 'magenta', end='分隔线 ')
+#
 
 def vpp_single(arg, leo_end='\n'):
     if type(arg) in [float, np.float64, np.float32]:
@@ -118,16 +116,4 @@ def vpp(*args, end='\n'): #这里的end，到了vpp_single就叫leo—_end
                         vpp(v)
             print('')
 
-'''
-import logging
-#声明了一个 Logger 对象
-logger = logging.getLogger('wf_logger_name')
-import sys
-logger.setLevel(logging.DEBUG)
-# 创建一个流处理器handler并将其日志级别设置为DEBUG
-handler = logging.FileHandler('./wf.log', mode='w', encoding=None, delay=False)
-#  handler.setLevel(logging.CRITICAL)  ; handler.setFormatter( logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='Day_%d %H:%M:%S') )
-handler.setLevel(logging.CRITICAL)  ; handler.setFormatter( logging.Formatter(fmt='[%(asctime)s] - %(message)s', datefmt='Day_%d %H:%M:%S') )
-logger.addHandler(handler)
-logger.critical('BEST_FOLD_NUM_PE: %d'%(123))
-'''
+print('import了~/dotF/sinppetS/my.py')

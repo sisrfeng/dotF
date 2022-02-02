@@ -52,6 +52,7 @@ nnoremap <c-u> 15<c-u>
 " nnoremap gj :tabedit <cfile><CR>
     " gj留给vscode作为wrapped line的j
 nnoremap gf :tabedit <cfile><CR>
+
 nnoremap gh :tab help <C-R><C-W>
 " vim本来用K, K被我map了
     " to be used:  " select mode 是为了讨好MS word患者, 没啥用
@@ -436,6 +437,10 @@ func! DoubleAsSingle()
     " when an error is detected.  |v:errmsg| is still set.
     let v:errmsg = ""
     silent! :s#\"\([^"]*\)\"#'\1'#g
+                " 双引号中间夹着任意 非双引号字符
+
+        " silent:   Normal messages will 消失掉
+        " When [!] is added, even when an error is detected.  commands and mappings will not be aborted
     if (v:errmsg == "")
         echo "双变单"
     endif
@@ -462,12 +467,12 @@ nnoremap c} ci}
 
 nnoremap dw diw
 nnoremap d" da"
-nnoremap d( da(
-nnoremap d) da)
-nnoremap d[ da[
-nnoremap d] da]
-nnoremap d{ da{
-nnoremap d} da}
+" nnoremap d( da(
+" nnoremap d) da)
+" nnoremap d[ da[
+" nnoremap d] da]
+" nnoremap d{ da{
+" nnoremap d} da}
 
 
 
@@ -481,6 +486,13 @@ nnoremap d} da}
 " db:  往回删
 nnoremap dB %dab
 
+    "默认:
+        " "dib"	delete inner '(' ')' block
+        " "dab"	delete a '(' ')' block
+        " "dip"	delete inner paragraph
+        " "dap"	delete a paragraph
+        " "diB"	delete inner '{' '}' block
+        " "daB"	delete a '{' '}' block
 
 
 " nnoremap cb O'''<Esc>Go'''<Esc>
@@ -730,34 +742,41 @@ if exists('$TMUX')
 endif
 
 
-set title
-set mouse=a
-" syntax on  " 别用，会覆盖DIY的配置
-" syntax enable 一样
+"  基础设置
+    set title  " change the terminal's title
+    set mouse=a  " enable mouse for n,v,i,c mode
+    set mousehide  " Hide the mouse cursor while typing
 
-set nocompatible  " 别兼容老的vi
-set backspace=indent,eol,start
-" indent  allow backspacing over autoindent
-" eol     allow backspacing over line breaks (join lines)
-" start   allow backspacing over the start of insert; CTRL-W and CTRL-U stop once at the start of insert.
+    set nocompatible  " 别兼容老的vi
+    set backspace=indent,eol,start
+        " allow backspacing 删除:
+                " indent   autoindent
+                " eol      line breaks (join lines)
+                " start    the start of insert; CTRL-W and CTRL-U stop once at the start of insert.
+    " 别用，会覆盖DIY的配置:
+        " syntax on
+        " syntax enable  " 等于上面一行?
 
-" >>>`1.` 基础设置---------------------------------------------------------------------
-" history存储容量
-set history=2000
 
-" 文件修改之后自动载入
-set autoread
+        set history=2000  " history存储容量
+        set autoread  " 文件修改之后自动载入
 
-" shortmess: short messages, 简略提示
-set shortmess=I  " I:启动的时候不显示多余提示
-set shortmess+=t  " t: trunc if too long
-set shortmess+=F  " F don't give the file info when editing a file, like :silent
+        " shortmess: short messages, 简略提示
+        set shortmess=I  " I:启动的时候不显示多余提示
+        set shortmess+=t  " t: trunc if too long
+        set shortmess+=F  " F don't give the file info when editing a file, like :silent
 
-set shortmess=filnxtToOF
+        set shortmess=filnxtToOF
 
-" To reduce the number of hit-enter prompts:
-" - Set 'cmdheight' to 2 or higher.
-set cmdheight=2
+        set cmdheight=2
+            " To reduce the number of hit-enter prompts:
+            " - Set 'cmdheight' to 2 or higher.
+
+    " 自动判断编码时，依次尝试以下编码：
+    set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1,big5,eu
+    set fencs=utf8,gbk,gb2312,gb18030
+
+
 
 " swap file
     " let s:noSwapSuck_file = fnamemodify($MYVIMRC, ":p:h")  . "/noswapsuck.vim"    " 字符串concat，用点号
@@ -775,30 +794,36 @@ set cmdheight=2
     "
 
 
-" 突出显示当前行
-set cursorline
-
-
-" 启用鼠标
-set mouse=a
-set mousehide  " Hide the mouse cursor while typing
-
-set title  " change the terminal's title
-
 " Remember info about open buffers on close
-set viminfo^=%
+    " 只能存最后一次退出时所打开的session 的信息
+    " nvim的session, tab, window,  和tmux的session, window,  pane分别对应
+        set shada^=%
+        set shada='1000
+                " 单引号 对应mark
+                " Maximum number of previously edited files for which the marks  are remembered.
+                    " This parameter must always be included when  'shada' is non-empty.
+                    " 使得 the |jumplist| and the  |changelist| are stored in the shada file.
+        set shada+=f1
+                " 记录所有A-Z和0-9 marks  (它们是global marks)
+        set shada+=<500
+                "小于号:   Maximum number of lines saved for each register.
+                "         太大会导致启动慢
+        set shada+=s100
+                    "s: size 有点复杂
+        set shada+=%
+                    " %:
+                        " When included, save and restore the buffer list.
+                        "  If Vim is started without a file name argument,
+                        "  the  buffer list is restored from the shada file
 
+        " set shadafile=$XDG_...
+                    " 文件默认在~/.local/share/nvim/shada/main.shada
 
-"==========================================
-" Display Settings 展示/排版等界面格式设置
-"==========================================
-
-set ruler  " 显示当前的行号列号
-set showmatch  " 括号配对情况, 跳转并高亮一下匹配的括号
-set matchtime=5  " How many tenths of a second to blink when matching brackets
-
-
-" set cmdheight=2
+" Display Settings
+    set noshowmatch  " 用了matchup, 这个可以取消掉: 括号配对情况, 跳转并高亮一下匹配的括号
+    " set matchtime=2  " How many tenths of a second to blink when matching brackets
+    " set ruler  " 显示当前的行号列号  If the statusline is given by 'statusline' (i.e. not
+            " empty),这个设置会被覆盖,
 
 
 
@@ -827,6 +852,7 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
 
     set foldcolumn=auto
     " set foldignore=#,;"
+    set foldignore=
     let s:folded = 1
 
     " toggle fold /  fdm
@@ -880,9 +906,6 @@ set matchtime=5  " How many tenths of a second to blink when matching brackets
         " endfunc
 
 
-" 自动判断编码时，依次尝试以下编码：
-set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1,big5,eu
-set fencs=utf8,gbk,gb2312,gb18030
 
 nnoremap <C-a> ^
 inoremap <C-a> <ESC>I
@@ -948,44 +971,8 @@ nnoremap U <C-r>
 nnoremap <C-E> $
 
 
-
-
-
-
-
-
-" let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
-" 在vscode里 只有sa生效，其他不行，不知道为啥
-
-" easy-motion的nmap用的是S
-" let g:operator_sandwich_no_default_key_mappings = 1
-
-
-" NOTE: To prevent unintended operation
-" nmap s <Nop>
-" xmap s <Nop>
-" xmap creates a mapping for just Visual mode
-" vmap creates one for both Visual mode and Select mode. select mode很少用
-" <NOP>     no-opperation? do nothing (useful in mappings)
-
-" DEBUG: easymotion发疯来这里
-nnoremap s :echo '待用'
-
-" 之前不知道为什么不生效： 现在 没加这几行,也能用,应该是默认的
-xnoremap sa <Plug>(operator-sandwich-add)
-" xnoremap sd <Plug>(operator-sandwich-delete)
-" xnoremap sr <Plug>(operator-sandwich-replace)
-"
-" sc:  sandwich surround Code
-" nnoremap <Leader>pb <Plug>(operator-sandwich-add-query1st)
-" nnoremap sa <Plug>(operator-sandwich-add-query1st)
-"
-" 加了没反应
-nnoremap sc <Plug>(operator-sandwich-add)
-
-" longer updatetime (default is 4000 ms = ) leads to  delays and poor user experience.
 set updatetime=300
-
+    " longer updatetime (default is 4000 ms = ) leads to  delays and poor user experience.
 
 
 
@@ -1095,7 +1082,57 @@ func! VimPlugConds(arg1, ...)
                 \|   PlugInstall --sync | q
                 \| endif
 
+" vim-sandwich的设置, 要在plug#end()后
+    let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
 
+    " add spaces inside bracket
+    let g:sandwich#recipes += [
+      \   {'buns': ['{ ', ' }'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['{']},
+      \   {'buns': ['[ ', ' ]'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['[']},
+      \   {'buns': ['( ', ' )'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['(']},
+      \   {'buns': ['{\s*', '\s*}'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['{']},
+      \   {'buns': ['\[\s*', '\s*\]'], 'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['[']},
+      \   {'buns': ['(\s*', '\s*)'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['(']},
+      \ ]
+
+    let g:sandwich_no_default_key_mappings = 1
+    let g:operator_sandwich_no_default_key_mappings = 1
+
+    " : To prevent unintended operation
+        " nmap s <Nop>
+            "搞死了前面这个 nmap s <Plug>(easymotion-f)
+        " xmap s <Nop>
+        " xmap creates a mapping for just Visual mode
+             " <NOP>    do nothing (useful in mappings)  no-opperation
+
+    " [number]<command>[text object or motion]
+    " t: 记作tag, 成对符号
+    nmap ta <Plug>(operator-sandwich-add)
+    xmap ta <Plug>(operator-sandwich-add)
+    xmap td <Plug>(operator-sandwich-delete)
+    xmap tr <Plug>(operator-sandwich-replace)
+    nmap <silent> td <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+    nmap <silent> tr <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+    nmap <silent> tdb <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+    nmap <silent> trb <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+    " DEBUG: easymotion发疯来这里
+
+    " xnoremap sd <Plug>(operator-sandwich-delete)
+    " xnoremap sr <Plug>(operator-sandwich-replace)
+    "
+    " sc:  sandwich surround Code
+    " nmap <Leader>pb <Plug>(operator-sandwich-add-query1st)
+    " nmap sa <Plug>(operator-sandwich-add-query1st)
+    "
+    " 加了没反应
+
+    nmap trt     <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+                " p for pairs
+                " 这里不能用noremap
+
+                " 默认的是srb
+                    " silent! nmap <unique> srb <Plug>(sandwich-replace-auto)
+                    " nmap <silent> <Plug>(sandwich-replace-auto) <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
 
 " cnoreabbrev
 " cmap 对vscode也有效

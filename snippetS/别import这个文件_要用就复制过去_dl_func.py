@@ -1,7 +1,7 @@
 import warnings
 warnings.filterwarnings('ignore')
 from time import perf_counter as dida
-dida0 = dida()
+di = dida()
 
 import sys, os
 sys.path.append(os.path.expanduser ('~/dotF') )
