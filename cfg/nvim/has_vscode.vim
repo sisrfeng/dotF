@@ -69,4 +69,10 @@
         cnoreabbrev <expr> h     getcmdtype() == ":" && getcmdline() == 'h'            ? 'tab help'                          :   'h'
 
 
+" nnoremap gf :vsplit <cfile><CR>
+    " 不行
+" nunmap gf
+
+
 echom 'has_vscode.vim执行完了'
+
