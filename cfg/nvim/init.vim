@@ -49,7 +49,8 @@ nnoremap <c-d> 15<c-d>
 nnoremap <c-u> 15<c-u>
 
 " 看哪个好用:
-nnoremap gj :tabedit <cfile><CR>
+" nnoremap gj :tabedit <cfile><CR>
+    " gj留给vscode作为wrapped line的j
 nnoremap gf :tabedit <cfile><CR>
 nnoremap gh :tab help <C-R><C-W>
 " vim本来用K, K被我map了
