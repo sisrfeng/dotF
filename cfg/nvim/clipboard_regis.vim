@@ -129,7 +129,7 @@
                         "                                   the unnamed register(也就是"") is synchronized with the `system clipboard`
 
             endif
-            set clipboard=
+            set clipboard=unnamed
 
             " inoremap <C-V> "+p
                 " 之前为啥要这行? 不加也是粘贴
@@ -155,6 +155,17 @@
                     " until another X application places data in the clipboard, at which point xclip exits silently. You can use
                     " the -verbose option to see if and when xclip actually receives
                     " selection requests from other X applications. (命令行的貌似不算)
+                    "
+                    "
+
+                            " -selection
+                            "      specify which X selection to use,
+                            "      options are:
+                            "         "primary" to use XA_PRIMARY (default),
+                            "         "secondary" for XA_SECONDARY or
+                            "         "clipboard"
+                            "         for XA_CLIPBOARD
+
 
 
 
