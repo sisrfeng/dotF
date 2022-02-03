@@ -56,7 +56,6 @@ nnoremap <c-u> 15<c-u>
     " gj留给vscode作为wrapped line的j
 nnoremap gf :tab drop <cfile><CR>
 nnoremap gd :split<CR>md<C-]>
-    " nnoremap gd mdgd
         " gd只能在本文件内找
         " 先mark个d, 看完再'd
 
