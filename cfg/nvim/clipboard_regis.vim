@@ -1,6 +1,93 @@
+" 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
+    noremap <Leader>y "*y
+    noremap <Leader>Y "+y
+    noremap <Leader>p "*p
+    noremap <Leader>P "+p
+
+    " todo:  https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
+        " nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
+        " nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
+
 " echo 'vim能和tmux打通了. 有时报错 can not open display啥的. 有时又正常, 哪怕在用windows terminal, 且没开xming'
 
-    " xsel换成xcliip, 貌似可以在wsl下用unnamedplus了. 不需要下面这些?
+
+
+
+
+" The presence of a working `clipboard tool`    implicitly enables the '+' and '*' registers.
+  " Nvim looks for these clipboard tools, in order of priority:
+
+            "  |g:clipboard|  we can custom xclip by set g:clipboard
+            "  xclip (if $DISPLAY is set)
+            "  etc.....
+
+
+
+    " 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
+        " TRY use copy-always -- and keep yank-history by copyq(作者定义的某函数?)
+
+        " ATT: set g:clipboard before has('clipboard')  因为
+        "     https://github.com/neovim/neovim/issues/6029
+        " ALT:DEV: https://neovim.io/doc/user/provider.html
+
+        " To configure a custom clipboard tool,
+        " 和xlip, xsel等并列, 但优先级更高
+        " let g:clipboard = {
+        "     \   'name': 'myClipboard',
+        "     \   'copy': {
+        "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+        "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', 'primary', '-silent', '-loop', '2'],
+        "     \    },
+        "     \   'paste': {
+        "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-out'],
+        "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'primary', '-out'],
+        "     \   },
+        "     \   'cache_enabled': 1,
+        "     \ }
+        "
+        " let g:clipboard = {
+        "     \   'name': 'myClipboard',
+        "     \   'copy': {
+        "     \      '+': ['tmux', 'load-buffer', '-'],
+        "     \      '*': ['tmux', 'load-buffer', '-'],
+        "     \    },
+        "     \   'paste': {
+        "     \      '+': ['tmux', 'save-buffer', '-'],
+        "     \      '*': ['tmux', 'save-buffer', '-'],
+        "     \   },
+        "     \   'cache_enabled': 1,
+        "     \ }
+        " let g:clipboard = {
+        " \ 'name': 'wf_xclip',
+        " \ 'copy': {
+        " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+        " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
+        " \  },
+        " \ 'paste': {
+        " \   '+': 'xclip -selection clipboard -out',
+        " \   '*': 'xclip -selection primary  -out',
+        " \ },
+        " \ 'cache_enabled': 1,
+        " \}
+        " 这样不行
+        "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
+        if hostname() == 'redmi14-leo'
+        " if has('win32')
+            let g:clipboard = {
+                            \   'name': 'wf-win32yank-wsl',
+                            \   'copy': {
+                            \      '+': '/mnt/d/win32yank.exe -i --crlf',
+                            \      '*': '/mnt/d/win32yank.exe -i --crlf',
+                            \    },
+                            \   'paste': {
+                            \      '+': '/mnt/d/win32yank.exe -o --lf',
+                            \      '*': '/mnt/d/win32yank.exe -o --lf',
+                            \   },
+                            \   'cache_enabled': 0,
+                            \ }
+        endif
+
+        " xsel换成xclip, 貌似可以在wsl下用unnamedplus了. 不需要下面这些?
         " echo 'wls有bug， 禁用unnamedplus'
             " if hostname() == 'redmi14-leo' && !exists('g:vscode')
             "     " set clipboard=""  " 默认就是这样
@@ -12,84 +99,7 @@
             " endif
 
 
-" The presence of a working `clipboard tool`    implicitly enables the '+' and '*' registers.
-" Nvim looks for these clipboard tools, in order of priority:
 
-    "  |g:clipboard|  we can custom xclip by set g:clipboard
-
-    "  xclip (if $DISPLAY is set)
-    "  xsel (if $DISPLAY is set)
-    "
-    "  lemonade (for SSH) https://github.com/pocke/lemonade
-    "  doitclient (for SSH) http://www.chiark.greenend.org.uk/~sgtatham/doit/
-    "
-    "  win32yank (Windows)
-    "
-    "  tmux (if $TMUX is set)
-
-
-
-    " v:register	The name of the register in effect for the current normal mode  command
-    " v:register 取值情况:
-        "  1. if 'clipboard' contains "unnamed" :
-        "          echo v:register  输出* (星号)
-        "  2. if 'clipboard' contains "unnamedplus":
-        "          echo v:register  输出+ (加号)
-        "  3. if none is supplied:
-        "         echo v:register  输出" (双引号,  default register)
-       " Also see |getreg()| and |setreg()|
-
-
-
-        " 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
-            " TRY use copy-always -- and keep yank-history by copyq(作者定义的某函数?)
-
-            " ATT: set g:clipboard before has('clipboard')
-            "     https://github.com/neovim/neovim/issues/6029
-            " ALT:DEV: https://neovim.io/doc/user/provider.html
-
-            " To configure a custom clipboard tool,
-            " 和xlip, xsel等并列, 但优先级更高
-            " let g:clipboard = {
-            "     \   'name': 'myClipboard',
-            "     \   'copy': {
-            "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-            "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', 'primary', '-silent', '-loop', '2'],
-            "     \    },
-            "     \   'paste': {
-            "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-out'],
-            "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'primary', '-out'],
-            "     \   },
-            "     \   'cache_enabled': 1,
-            "     \ }
-            "
-            " let g:clipboard = {
-            "     \   'name': 'myClipboard',
-            "     \   'copy': {
-            "     \      '+': ['tmux', 'load-buffer', '-'],
-            "     \      '*': ['tmux', 'load-buffer', '-'],
-            "     \    },
-            "     \   'paste': {
-            "     \      '+': ['tmux', 'save-buffer', '-'],
-            "     \      '*': ['tmux', 'save-buffer', '-'],
-            "     \   },
-            "     \   'cache_enabled': 1,
-            "     \ }
-            " let g:clipboard = {
-            " \ 'name': 'wf_xclip',
-            " \ 'copy': {
-            " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-            " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
-            " \  },
-            " \ 'paste': {
-            " \   '+': 'xclip -selection clipboard -out',
-            " \   '*': 'xclip -selection primary  -out',
-            " \ },
-            " \ 'cache_enabled': 1,
-            " \}
-            " 这样不行
-            "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
-            "
             " BAD: has('clipboard') needs to access provider => shows errmsg
             "   E.G. system without my 'xsel-remote' wrapper installed (ubuntu
             " FIX:
@@ -99,6 +109,11 @@
                                     " 类似:
                                     " exists({expr})	The result is a Number, which is |TRUE| if {expr} is  defined, zero otherwise.
                                     " For checking if a file exists use |filereadable()|.
+
+
+
+
+
 
             if has('clipboard')  " 确认|clipboard| provider is available  (所以前面说  要先set g:clipboard  ??
                                  " 此'clipboard'是一个pseudo feature名, 不是g:clipboard这个variable
@@ -131,7 +146,17 @@
             endif
             set clipboard=unnamed
 
-            " inoremap <C-V> "+p
+" v:register	The name of the register in effect for the current normal mode command
+    " v:register 取值情况:
+            "  1. if 'clipboard' contains "unnamed" :
+            "          echo v:register  输出* (星号)
+            "  2. if 'clipboard' contains "unnamedplus":
+            "          echo v:register  输出+ (加号)
+            "  3. if none is supplied:
+            "         echo v:register  输出" (双引号,  default register)
+
+
+                    " inoremap <C-V> "+p
                 " 之前为啥要这行? 不加也是粘贴
             " iunmap <c-v>
             "   加了这行,导致ctrl c不能成为i_ctrl-v
@@ -140,44 +165,28 @@
 
             " xsel:
 
-                    " --input             -i  | read standard input into the selection
-                    "  --clipboard         -b  | operate on the CLIPBOARD selection
-                    "  --primary           -p  | operate on the PRIMARY selection (default)
-                    " --secondary         -s  | operate on the SECONDARY selection
+                    " --input            -i  | read standard input into the selection
+                    " --clipboard        -b  | operate on the CLIPBOARD selection
+                    " --primary          -p  | operate on the PRIMARY selection (default)
+                    " --secondary        -s  | operate on the SECONDARY selection
 
             " xclip
                     " xclip reads text from standard input or files and makes it available to
                     " other X applications for pasting as an X selection (traditionally with the middle  mouse  button).
-                    " It reads from all files specified, or from standard in, if no files are specified.
-                    " xclip can also print the contents of a selection to standard out with the -o option.
 
                     " The default action is to silently  wait  in  the  background  for `X selection requests (pastes)`
-                    " until another X application places data in the clipboard, at which point xclip exits silently. You can use
-                    " the -verbose option to see if and when xclip actually receives
-                    " selection requests from other X applications. (命令行的貌似不算)
-                    "
-                    "
+                    " until another X application places data in the clipboard, at which point xclip exits silently.
+                    " You can use  the -verbose option to see if and when xclip actually receives
+                    " selection requests from other X applications. (TUI的貌似不算)
 
                             " -selection
                             "      specify which X selection to use,
                             "      options are:
                             "         "primary" to use XA_PRIMARY (default),
                             "         "secondary" for XA_SECONDARY or
-                            "         "clipboard"
-                            "         for XA_CLIPBOARD
+                            "         "clipboard"  for XA_CLIPBOARD 这几个大写单词, 半天没搜到出处
 
 
-
-
-" 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
-noremap <Leader>y "*y
-noremap <Leader>Y "+y
-noremap <Leader>p "*p
-noremap <Leader>P "+p
-
-" todo:  https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
-    " nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
-    " nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
 
 
 
