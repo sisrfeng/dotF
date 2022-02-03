@@ -1058,6 +1058,7 @@ func! VimPlugConds(arg1, ...)
         cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab drop term://zsh'               :   'te'
         " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tab drop term://zsh'               :   't'
         cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
+                                                                                        "  checkhealth时  有些optional的内容,  有error,  别管.  perl的东西难搞
         cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
         cnoreabbrev <expr> r    getcmdtype() == ":" && getcmdline() == 'r'           ? 'register'               :   'r'
         cnoreabbrev <expr> m    getcmdtype() == ":" && getcmdline() == 'm'           ? 'messages'               :   'm'

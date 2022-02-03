@@ -17,7 +17,7 @@ if !exists('g:vscode')
     hi Normal guibg=NONE
     hi Menu   guibg=#abefcd  guifg=#123456
     hi Pmenu guibg=#ede6d3
-    hi SpecialKey guibg=Yellow guifg=black  " unprintable的字符 例如  
+    hi SpecialKey guibg=Yellow guifg=black  " unprintable的字符 例如
 
     " 背景米白色
     let g:rice_white_wf='#fdf6e3'
@@ -47,8 +47,8 @@ autocmd BufWritePost * if &diff == 1 | diffupdate | endif
     " 手动敲吧
 hi cursorcolumn guibg=rice_white_wf guifg=#00a253
 
-
 hi ErrorMsg guifg=#835000
+    " 加了这行, :checkhealth时会有报错, 但可以忽略?
 
 
 highlight Folded guibg=rice_white_wf guifg=#ada693
