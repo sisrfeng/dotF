@@ -1089,6 +1089,7 @@ nnoremap <c-h> ?<c-r><c-w><cr>
 " nnoremap mm zz
 " 保护小指, 逗号刚好在中指的位置  go to middle
 nnoremap ,, zz
+vnoremap ,, zz
 nnoremap , z
 nnoremap ,m zM
 nnoremap ,r zR

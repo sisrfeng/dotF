@@ -197,3 +197,25 @@ set virtualedit=insert,block
 
     nnoremap <Leader>aw :call Cursor_anywhere_01()<cr>
     nnoremap <Leader>ji :call Cursor_anywhere_01()<cr>ji
+
+
+register/复制粘贴
+            " has({feature}  Returns 1 if {feature} is supported, 0 otherwise
+            " 对比:
+            " exists({expr})	The result is a Number, which is |TRUE| if {expr} is  defined, zero otherwise.
+            " For checking if a file exists use |filereadable()|.
+        if has('clipboard')  " 确认|clipboard| provider is available  (所以前面说  要先写好 g:clipboard  ??
+                                " 此'clipboard'是一个pseudo feature名, 不是g:clipboard这个variable
+        " To ALWAYS use the clipboard for ALL operations (instead of  interacting with the '+' and/or '*' registers explicitly)
+        " 让unnamed寄存器(") 一直point to 加号寄存器
+            " 缺点: 导致vim内粘贴 跟远程传到本地 似的, 很慢:
+            " set clipboard=unnamedplus  " 此处的clipboard, 搜帮助时敲 :help 'clipboard' (因为它是一个option, 不是variabel, 也不是feature名
+            " set clipboard=unnamedplus,unnamed
+                                        " 这会给 * 寄存器也复制一份
+            set clipboard^=unnamed,unnamedplus
+                        " ^= 表示prepend,  += 表示append  (对于string是这样)
+                        " 在linux, windows和mac的behavior一致
+        else
+            set clipboard=unnamed
+                    "  让unnamed寄存器一直point to星号寄存器
+        endif

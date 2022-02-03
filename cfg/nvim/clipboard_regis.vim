@@ -1,3 +1,4 @@
+" 我的飞书笔记:https://cmb-d3-ocr.feishu.cn/docs/doccnSbue41vpDkdPAtYDWrxaNc#
 " 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
     noremap <Leader>y "*y
     noremap <Leader>Y "+y
@@ -5,10 +6,10 @@
     noremap <Leader>P "+p
 
     " todo:  https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
-        " nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
-        " nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
+         nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
+         nnoremap <silent> p :let @" = system('tmux show-buffer -b vim')<cr>p$x
 
-" echo 'vim能和tmux打通了. 有时报错 can not open display啥的. 有时又正常, 哪怕在用windows terminal, 且没开xming'
+
 
 
 
@@ -23,62 +24,13 @@
 
 
 
-    " 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
-        " TRY use copy-always -- and keep yank-history by copyq(作者定义的某函数?)
 
-        " ATT: set g:clipboard before has('clipboard')  因为
-        "     https://github.com/neovim/neovim/issues/6029
-        " ALT:DEV: https://neovim.io/doc/user/provider.html
-
-        " To configure a custom clipboard tool,
-        " 和xlip, xsel等并列, 但优先级更高
-        " let g:clipboard = {
-        "     \   'name': 'myClipboard',
-        "     \   'copy': {
-        "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-        "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', 'primary', '-silent', '-loop', '2'],
-        "     \    },
-        "     \   'paste': {
-        "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-out'],
-        "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'primary', '-out'],
-        "     \   },
-        "     \   'cache_enabled': 1,
-        "     \ }
-        "
-        " let g:clipboard = {
-        "     \   'name': 'myClipboard',
-        "     \   'copy': {
-        "     \      '+': ['tmux', 'load-buffer', '-'],
-        "     \      '*': ['tmux', 'load-buffer', '-'],
-        "     \    },
-        "     \   'paste': {
-        "     \      '+': ['tmux', 'save-buffer', '-'],
-        "     \      '*': ['tmux', 'save-buffer', '-'],
-        "     \   },
-        "     \   'cache_enabled': 1,
-        "     \ }
-        " let g:clipboard = {
-        " \ 'name': 'wf_xclip',
-        " \ 'copy': {
-        " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-        " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
-        " \  },
-        " \ 'paste': {
-        " \   '+': 'xclip -selection clipboard -out',
-        " \   '*': 'xclip -selection primary  -out',
-        " \ },
-        " \ 'cache_enabled': 1,
-        " \}
-        " 这样不行
-        "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
-
-        " https://stackoverflow.com/a/67229362/14972148
         if hostname() == 'redmi14-leo'
         " if has('win32')
             let g:clipboard = {
                             \   'name': 'wf-win32yank-wsl',
                             \   'copy': {
-                            \      '+': '/mnt/d/win32yank.exe -i --crlf',
+                            \      '+': 'echo "I am 加号寄存器"',
                             \      '*': '/mnt/d/win32yank.exe -i --crlf',
                             \    },
                             \   'paste': {
@@ -87,66 +39,88 @@
                             \   },
                             \   'cache_enabled': 0,
                             \ }
+            set clipboard=unnamed
+        else
+        " todo: 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
+
+            " To configure a custom clipboard tool,
+            let g:clipboard = {
+                \   'name': 'myClipboard',
+                \   'copy': {
+                \      '+': '/home/linuxbrew/.linuxbrew/bin/xclip -selection clipboard -silent -loop 2',
+                \      '*': ['tmux', 'load-buffer', '-'],
+                \    },
+                \   'paste': {
+                \      '+': '/home/linuxbrew/.linuxbrew/bin/xclip -selection clipboard -out',
+                \      '*': ['tmux', 'save-buffer', '-'],
+                \   },
+                \   'cache_enabled': 1,
+                \ }
+
+            " primary对应鼠标中键, 都用鼠标了, 那就别占了星号寄存器
+                " help里的写法: ['tmux', 'load-buffer', '-'],
+                " 看到Stack Overflow有人的写法 (整个string)  'win32yank.exe -o --lf'
+
+            " let g:clipboard = {
+            "     \   'name': 'myClipboard',
+            "     \   'copy': {
+            "     \      '+': ['tmux', 'load-buffer', '-'],
+            "     \      '*': ['tmux', 'load-buffer', '-'],器
+
+            " let g:clipboard = {
+            "     \   'name': 'myClipboard',
+            "     \   'copy': {
+            "     \      '+': ['tmux', 'load-buffer', '-'],
+            "     \      '*': ['tmux', 'load-buffer', '-'],
+
+            "     \    },
+            "     \   'paste': {
+            "     \      '+': ['tmux', 'save-buffer', '-'],
+            "     \      '*': ['tmux', 'save-buffer', '-'],
+            "     \   },
+            "     \   'cache_enabled': 1,
+            "     \ }
+            " let g:clipboard = {
+            " \ 'name': 'wf_xclip',
+            " \ 'copy': {
+            " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+            " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
+            " \  },
+            " \ 'paste': {
+            " \   '+': 'xclip -selection clipboard -out',
+            " \   '*': 'xclip -selection primary  -out',
+            " \ },
+            " \ 'cache_enabled': 1,
+            " \}
+            " 这样不行
+            "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
+            " https://stackoverflow.com/a/67229362/14972148
+            " 确实会创建目录
+            " let g:clipboard = {
+            "                 \ 'name': 'xsel-remote',
+            "                 \ 'copy': {
+            "                 \   '+': 'mkdir -p /home/wf/.t/cccccccccccccccccccc加',
+            "                 \   '*': 'mkdir -p /home/wf/.t/cccccccccccccccccccc星',
+            "                 \  },
+            "                 \ 'paste': {
+            "                 \   '+': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp加',
+            "                 \   '*': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp星',
+            "                 \ },
+            "                 \ 'cache_enabled': 1,
+            "                 \}
+            set clipboard=unnamedplus  " 看我上面定义的加号寄存器
+             " set clipboard^=unnamed,unnamedplus  " 在linux, windows和mac的behavior一致
+                        " ^= 表示prepend,  += 表示append  (对于string是这样)
+                    " 让unnamed寄存器(") 一直point to 加号寄存器,  同时给星号寄存器复制一份(这不就浪费了一个寄存器?
+                    " 现在又没有这个了缺点: 导致vim内粘贴 跟远程传到本地 似的, 很慢:
+
+            " xming开了也没用, 必须开moba 且在moba也连到远程
+            " 之前的笔记:
+                " echo 'vim能和tmux打通了. 有时报错 can not open display啥的. 有时又正常, 哪怕在用windows terminal, 且没开xming'
         endif
 
-        " xsel换成xclip, 貌似可以在wsl下用unnamedplus了. 不需要下面这些?
-        " echo 'wls有bug， 禁用unnamedplus'
-            " if hostname() == 'redmi14-leo' && !exists('g:vscode')
-            "     " set clipboard=""  " 默认就是这样
-            "
-            "     " 备用方案:
-            "     " wsl下:
-            "     " https://github.com/equalsraf/win32yank/release
-            "     " https://gist.github.com/MinSomai/c732fc66e36534feb5a8fb9e0a3c8fb2
-            " endif
 
 
-
-            " BAD: has('clipboard') needs to access provider => shows errmsg
-            "   E.G. system without my 'xsel-remote' wrapper installed (ubuntu
-            " FIX:
-            " if (path/to/xsel == "/usr/bin/xsel" && exists('$DISPLAY') && has('clipboard')
-			" if |clipboard| provider is available.
-            " has({feature})	Returns 1 if {feature} is supported, 0 otherwise
-                                    " 类似:
-                                    " exists({expr})	The result is a Number, which is |TRUE| if {expr} is  defined, zero otherwise.
-                                    " For checking if a file exists use |filereadable()|.
-
-
-
-
-
-
-            if has('clipboard')  " 确认|clipboard| provider is available  (所以前面说  要先set g:clipboard  ??
-                                 " 此'clipboard'是一个pseudo feature名, 不是g:clipboard这个variable
-                " 导致vim内粘贴 跟远程传到本地 似的, 很慢:
-                " set clipboard=unnamedplus  " 此处的clipboard, 搜帮助时敲 :help 'clipboard' (因为它是一个option, 不是variabel, 也不是feature名
-                " set clipboard=unnamedplus,unnamed
-                                           " 这会给 * 寄存器也复制一份
-               " 对于string, ^= 表示prepend,  += 表示append
-                set clipboard^=unnamed,unnamedplus
-                    " To ALWAYS use the clipboard for ALL operations (instead of  interacting with the '+' and/or '*' registers explicitly)
-                    " 将+寄存器 和clipboard绑定在一起?
-                                    " Nvim has no direct connection to the system clipboard. Instead it depends on
-                                    " a |provider| which transparently uses shell commands to communicate with the
-                                    " `system clipboard` or any other `clipboard "backend"`
-                                    "
-                                    "
-                                    " Nvim's `X11 clipboard providers` only use the PRIMARY and CLIPBOARD `selections`
-                                    " for the "*" and "+" registers, respectively.
-                                    "
-                    " +/加号 寄存器: system clipboard on Xorg, Ctrl加x/c/y
-            else
-                set clipboard=unnamed
-                        "  将*寄存器或clipboard绑定在一起?   * on Linux:  "mouse highlight"/"PRIMARY selection" clipboard (windows没有这技能?
-                        "                                                                                                 但是mobaxterm和vscode可以啊)
-                        "         on Mac OS X and Windows:
-                        "                                   the * and + registers both point to:   `system clipboard`/`clipboard` (ctrl加x/c/y)
-                        "                                   so unnamed and unnamedplus have the same effect:
-                        "                                   the unnamed register(也就是"") is synchronized with the `system clipboard`
-
-            endif
-            set clipboard=unnamed
 
 " v:register	The name of the register in effect for the current normal mode command
     " v:register 取值情况:
