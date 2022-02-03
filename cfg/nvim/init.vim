@@ -29,7 +29,10 @@
     " ++nested 在老版本中是nested
     " todo: ~/dotF/cfg/nvim/*.vim会match~/dotF/cfg/nvim/notes/*.vim.
     " 现在只好把notes下的文件改成其他后缀名
-    autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列 "| redraw!
+    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    " autocmd BufWritePost ~/dotF/cfg/nvim/wf_lua.lua echom "更新了lua写的配置" | lua require("%")
+
 
     " 4. Go back to the default group, named "end"
     augroup end
@@ -51,7 +54,12 @@ nnoremap <c-u> 15<c-u>
 " 看哪个好用:
 " nnoremap gj :tabedit <cfile><CR>
     " gj留给vscode作为wrapped line的j
-nnoremap gf :tabedit <cfile><CR>
+nnoremap gf :tab drop <cfile><CR>
+nnoremap gd :split<CR>md<C-]>
+    " nnoremap gd mdgd
+        " gd只能在本文件内找
+        " 先mark个d, 看完再'd
+
 
 nnoremap gh :tab help <C-R><C-W>
 " vim本来用K, K被我map了
@@ -114,12 +122,15 @@ nnoremap gh :tab help <C-R><C-W>
 " focus on comment or not
 
 
-" 不加连字符, peco-find 就不是一个word, viw就被连字符打断
 set iskeyword+=-
+    " 不加连字符, peco-find 就不是一个word, viw就被连字符打断
+set iskeyword-=#
+    " 如果井号作为单词的一部分, 会导致替换时, ctrl w多删了井号
+
 
 " About search
 " >_>_>===================================================================begin
-    set incsearch         " incremental searching
+    set incsearch  " incremental searching
     set wrapscan
     set ignorecase smartcase
 
@@ -216,13 +227,18 @@ let g:selecmode="mouse"
 " set listchars=tab:>_,trail:-,nbsp:+
 
 
-" todo
-    " shif left
-    " map <S-Left>
-    " map <S-Right>
-    " map <C-Left>
-    " map <C-Right>
+nnoremap <S-Left> :echom 'hihihihihi'<CR>
+nnoremap <S-Right> :echom 'hihihihihi'<CR>
+nnoremap <C-Left> :echom 'hihihihihi'<CR>
+nnoremap <C-Right> :echom 'hihihihihi'<CR>
+nnoremap <m-s-u> :echom 'hihi'<CR>
 
+" ctrl and shift
+    " map <c-s-a>
+    " map <s-c-a>
+        " 暂不支持
+        " https://stackoverflow.com/a/47656794/14972148
+        "
 source ~/dotF/cfg/nvim/clipboard_regis.vim
 
 
@@ -380,119 +396,6 @@ endif
 " ---------------------------nerdcommenter-config----------------------------------end]]
 
 
-" todo: vscode中会复制到 前后空格  " a变成i估计就行了
-nnoremap vp viwp
-nnoremap vw viw
-    " 想选到单词末尾, 用ve
-" 看哪个好用
-    nnoremap vP Vip
-    nnoremap <leader>v Vip
-" 类似于Y D C等，到行末
-    nnoremap P v$<left>p
-
-
-" todo: `omap`代替下面的有点重复的各种operator的map
-" omap ' i'
-" omap " vi"
-" omap ( i(
-" omap ) i)
-" omap [ i[
-" omap ] i]
-" omap { i{
-" omap } i}
-" omap } i}
-" omap ' i'
-
-
-
-nnoremap v" vi"
-nnoremap v( vi(
-nnoremap v) vi)
-nnoremap v[ vi[
-nnoremap v] vi]
-nnoremap v{ vi{
-nnoremap v} vi}
-nnoremap v} vi}
-
-
-nnoremap yp yyp
-nnoremap yw yiw
-nnoremap y' yi'
-nnoremap y" yi"
-nnoremap y( yi(
-nnoremap y) yi)
-nnoremap y[ yi[
-nnoremap y] yi]
-nnoremap y{ yi{
-nnoremap y} yi}
-
-
-nnoremap cw ciw
-
-
-
-func! DoubleAsSingle()
-    " When [!] is added, error messages will also be skipped,
-    " and commands and mappings will not be aborted
-    " when an error is detected.  |v:errmsg| is still set.
-    let v:errmsg = ""
-    silent! :s#\"\([^"]*\)\"#'\1'#g
-                " 双引号中间夹着任意 非双引号字符
-
-        " silent:   Normal messages will 消失掉
-        " When [!] is added, even when an error is detected.  commands and mappings will not be aborted
-    if (v:errmsg == "")
-        echo "双变单"
-    endif
-endfunc
-
-nnoremap c' :call DoubleAsSingle()<CR>ci'
-nnoremap v' :call DoubleAsSingle()<CR>vi'
-nnoremap y' :call DoubleAsSingle()<CR>yi'
-nnoremap d' :call DoubleAsSingle()<CR>da'
-" nnoremap c' :s#\"\([^"]*\)\"#'\1'#g<CR>ci'
-" nnoremap d' :s#\"\([^"]*\)\"#'\1'#g<CR>da'
-" nnoremap v' :s#\"\([^"]*\)\"#'\1'#g<CR>vi'
-" nnoremap y' :s#\"\([^"]*\)\"#'\1'#g<CR>ya'
-
-
-
-nnoremap c" ci"
-nnoremap c( ci(
-nnoremap c) ci)
-nnoremap c[ ci[
-nnoremap c] ci]
-nnoremap c{ ci{
-nnoremap c} ci}
-
-nnoremap dw diw
-nnoremap d" da"
-" nnoremap d( da(
-" nnoremap d) da)
-" nnoremap d[ da[
-" nnoremap d] da]
-" nnoremap d{ da{
-" nnoremap d} da}
-
-
-
-" inoremap cb '''<Esc>Go'''<Esc><C-o>i
-" change a block  " 百分号 能自动跳到配对的符号
-" onoremap b %ib
-" nnoremap cb %cib
-" nnoremap vb %vib
-" nnoremap yb %yib
-
-" db:  往回删
-nnoremap dB %dab
-
-    "默认:
-        " "dib"	delete inner '(' ')' block
-        " "dab"	delete a '(' ')' block
-        " "dip"	delete inner paragraph
-        " "dap"	delete a paragraph
-        " "diB"	delete inner '{' '}' block
-        " "daB"	delete a '{' '}' block
 
 
 " nnoremap cb O'''<Esc>Go'''<Esc>
@@ -630,7 +533,7 @@ vnoremap <C-S>      <C-C>:update<CR>
 " nnoremap <C-Z> u |  " CTRL-Z is Undo
                 " 竖线前的空格，视为map后的一部分。
 " z: 表示zsh
-nnoremap <C-Z> :tabedit term://zsh<cr>
+nnoremap <C-Z> :tab drop term://zsh<cr>
 " CTRL-Z is Undo
 inoremap <C-Z> <C-O>u
 
@@ -924,6 +827,10 @@ noremap <leader>2 2gt
 noremap <leader>3 3gt
 noremap <leader>4 4gt
 noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
 
 " Toggles between the active and last active tab "
 " The first tab is always 1 "
@@ -990,8 +897,8 @@ endfunc
 " <C-:> 不行，cat后`ctrl :`   显示的是<C-[>，和真的<C-[> 已经esc同体？
 
 " unmap <C-[>
-nnoremap  <c-'>     :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
-nnoremap  <Leader>: :tabedit ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
+nnoremap  <c-'>     :tab drop ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
+nnoremap  <Leader>: :tab drop ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
 
 " nnoremap <c-p> :echo 'to be uesd'<CR>
 nnoremap <c-n> :echo 'ctrl-n to be uesd'<CR>
@@ -1148,12 +1055,13 @@ func! VimPlugConds(arg1, ...)
         cnoreabbrev <expr> man   getcmdtype() == ":" && getcmdline() == 'man'          ? 'tab Man '                          :   'man'
         " cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab edit term: // zsh|p i'               :   'te'
         "                                                                                                      不行
-        cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tabedit term://zsh'               :   'te'
-        " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tabedit term://zsh'               :   't'
+        cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab drop term://zsh'               :   'te'
+        " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tab drop term://zsh'               :   't'
         cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
         cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
         cnoreabbrev <expr> r    getcmdtype() == ":" && getcmdline() == 'r'           ? 'register'               :   'r'
         cnoreabbrev <expr> m    getcmdtype() == ":" && getcmdline() == 'm'           ? 'messages'               :   'm'
+        cnoreabbrev <expr> me    getcmdtype() == ":" && getcmdline() == 'me'           ? 'messages'               :   'me'
 
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'

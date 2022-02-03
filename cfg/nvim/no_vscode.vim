@@ -20,18 +20,18 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
 
 
 " cnoreabbrev
-  cnoreabbrev <expr> pl    getcmdtype() == ":" && getcmdline() == 'pl'           ? 'tabedit ~/dotF/cfg/nvim/plug_wf.vim'       :   'pl'
-  cnoreabbrev <expr> bt    getcmdtype() == ":" && getcmdline() == 'bt'           ? 'tabedit ~/dotF/cfg/nvim/beautify_wf.vim'    :   'bt'
-  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
+  cnoreabbrev <expr> pl    getcmdtype() == ":" && getcmdline() == 'pl'           ? 'tab drop ~/dotF/cfg/nvim/plug_wf.vim'       :   'pl'
+  cnoreabbrev <expr> bt    getcmdtype() == ":" && getcmdline() == 'bt'           ? 'tab drop ~/dotF/cfg/nvim/beautify_wf.vim'    :   'bt'
+  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tab drop'                           : 'e'
   cnoreabbrev <expr> cc    getcmdtype() == ":" && getcmdline() == 'cc'           ? 'CocConfig'                         : 'cc'
-  cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tabedit ~/dotF/zsh/bindkey_wf.zsh'     : 'zbk'
-  cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tabedit ~/local.zsh'                  : 'bd'
-  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tabedit'                           : 'e'
-  cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tabedit ~/.t/tmp.vim'                : 'et'
-  cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tabedit ~/dotF/cfg/tmux/tmux.conf' : 'tc'
-  cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tabedit ~/dotF/cfg/nvim/init.vim'  : 'in'
-  cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tabedit ~/dotF/zsh/rc.zsh'             : 's'
-  cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tabedit ~/dotF/zsh/alias.zsh'          : 'al'
+  cnoreabbrev <expr> zbk   getcmdtype() == ":" && getcmdline() == 'zbk'          ? 'tab drop ~/dotF/zsh/bindkey_wf.zsh'     : 'zbk'
+  cnoreabbrev <expr> bd    getcmdtype() == ":" && getcmdline() == 'bd'           ? 'tab drop ~/local.zsh'                  : 'bd'
+  cnoreabbrev <expr> e     getcmdtype() == ":" && getcmdline() == 'e'            ? 'tab drop'                           : 'e'
+  cnoreabbrev <expr> et    getcmdtype() == ":" && getcmdline() == 'et'           ? 'tab drop ~/.t/tmp.vim'                : 'et'
+  cnoreabbrev <expr> tc    getcmdtype() == ":" && getcmdline() == 'tc'           ? 'tab drop ~/dotF/cfg/tmux/tmux.conf' : 'tc'
+  cnoreabbrev <expr> in    getcmdtype() == ":" && getcmdline() == 'in'           ? 'tab drop ~/dotF/cfg/nvim/init.vim'  : 'in'
+  cnoreabbrev <expr> s     getcmdtype() == ":" && getcmdline() == 's'            ? 'tab drop ~/dotF/zsh/rc.zsh'             : 's'
+  cnoreabbrev <expr> al    getcmdtype() == ":" && getcmdline() == 'al'           ? 'tab drop ~/dotF/zsh/alias.zsh'          : 'al'
 
   cnoreabbrev <expr> pi    getcmdtype() == ":" && getcmdline() == 'pi'           ? 'PlugInstall'                       : 'pi'
   "   vscode里也能用, 但会把原文件的内容 粘贴到一个新文件
@@ -81,7 +81,7 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
         " Normal mode, without causing a beep like <Esc> would.  However, this does not
         " work in Ex mode.  When used after a command that takes an argument, such as
     nnoremap <c-w>-  <c-w>s
-    nnoremap gd g<C-]>
+    " nnoremap gd g<C-]>
         " <C-]>只能在本文件内跳转
 
 
