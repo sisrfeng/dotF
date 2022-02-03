@@ -71,13 +71,12 @@
 
 
 [http]
-# fatal: unable to access 'https://github.com/sisrfeng/dotF.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
-# 危险的解决方法:
-# git config --global http.sslVerify false
-# git config --global http.postBuffer 1048576000
-    # 避免卡死:
-        lowSpeedLimit = 1000
-            #  If the HTTP transfer speed is less than 'http.lowSpeedLimit'
-            # for longer than 'http.lowSpeedTime' seconds, the transfer is aborted
-        lowSpeedTime = 60
+# 避免出现这类卡死:  fatal: unable to access 'https://github.com/sisrfeng/dotF.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+    lowSpeedLimit = 120
+        #  If the HTTP transfer speed is less than 'http.lowSpeedLimit'
+        # for longer than 'http.lowSpeedTime' seconds, the transfer is aborted
+    lowSpeedTime = 60
 
+    # 危险的解决方法: 
+      # git config --global http.sslVerify false
+      # git config --global http.postBuffer 1048576000

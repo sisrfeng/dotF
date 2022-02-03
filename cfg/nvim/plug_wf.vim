@@ -1,4 +1,4 @@
-todo:
+" todo:
 " nvr :  避免:terminal时 嵌套nvim
 " gonvim:  gui, 且能替代nvr, 貌似比目前的官方qt版gui更受欢迎:  https://github.com/equalsraf/neovim-qt/wiki
 "
