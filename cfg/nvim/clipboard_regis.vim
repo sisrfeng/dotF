@@ -71,6 +71,8 @@
         " \}
         " 这样不行
         "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
+
+        " https://stackoverflow.com/a/67229362/14972148
         if hostname() == 'redmi14-leo'
         " if has('win32')
             let g:clipboard = {
@@ -136,7 +138,7 @@
                     " +/加号 寄存器: system clipboard on Xorg, Ctrl加x/c/y
             else
                 set clipboard=unnamed
-                        "  将*寄存器或clipboard绑定在一起?   * on Linuxor:  "mouse highlight"/PRIMARY selection clipboard (windows没有这技能?
+                        "  将*寄存器或clipboard绑定在一起?   * on Linux:  "mouse highlight"/"PRIMARY selection" clipboard (windows没有这技能?
                         "                                                                                                 但是mobaxterm和vscode可以啊)
                         "         on Mac OS X and Windows:
                         "                                   the * and + registers both point to:   `system clipboard`/`clipboard` (ctrl加x/c/y)

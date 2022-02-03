@@ -1,3 +1,8 @@
+todo:
+" nvr :  避免:terminal时 嵌套nvim
+" gonvim:  gui, 且能替代nvr, 貌似比目前的官方qt版gui更受欢迎:  https://github.com/equalsraf/neovim-qt/wiki
+"
+"
 " 插件不放进dotF, 避免用submodule等复杂命令.
 " 如何应对内网, 离线安装? 到时再说
 
