@@ -15,7 +15,7 @@
 " The presence of a working `clipboard tool`    implicitly enables the '+' and '*' registers.
 " Nvim looks for these clipboard tools, in order of priority:
 
-    "  |g:clipboard|
+    "  |g:clipboard|  we can custom xclip by set g:clipboard
 
     "  xclip (if $DISPLAY is set)
     "  xsel (if $DISPLAY is set)
@@ -50,19 +50,19 @@
 
             " To configure a custom clipboard tool,
             " 和xlip, xsel等并列, 但优先级更高
-            let g:clipboard = {
-                \   'name': 'myClipboard',
-                \   'copy': {
-                \      '+': ['/usr/binxclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-                \      '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
-                \    },
-                \   'paste': {
-                \      '+': ['/usr/binxclip', '-selection', 'clipboard', '-out'],
-                \      '*': ['/usr/binxclip', '-selection', 'primary', '-out'],
-                \   },
-                \   'cache_enabled': 1,
-                \ }
-
+            " let g:clipboard = {
+            "     \   'name': 'myClipboard',
+            "     \   'copy': {
+            "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+            "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', 'primary', '-silent', '-loop', '2'],
+            "     \    },
+            "     \   'paste': {
+            "     \      '+': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'clipboard', '-out'],
+            "     \      '*': ['/home/linuxbrew/.linuxbrew/bin/xclip', '-selection', 'primary', '-out'],
+            "     \   },
+            "     \   'cache_enabled': 1,
+            "     \ }
+            "
             " let g:clipboard = {
             "     \   'name': 'myClipboard',
             "     \   'copy': {
@@ -129,7 +129,7 @@
                         "                                   the unnamed register(也就是"") is synchronized with the `system clipboard`
 
             endif
-            " set clipboard=
+            set clipboard=
 
             " inoremap <C-V> "+p
                 " 之前为啥要这行? 不加也是粘贴
