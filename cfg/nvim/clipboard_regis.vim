@@ -1,9 +1,20 @@
 " 我的飞书笔记:https://cmb-d3-ocr.feishu.cn/docs/doccnSbue41vpDkdPAtYDWrxaNc#
 " 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
-    noremap <Leader>y "*y
+    nnoremap <Leader>y "+y
+    vnoremap <leader>y "+y
+
     noremap <Leader>Y "+y
-    noremap <Leader>p "*p
-    noremap <Leader>P "+p
+    " noremap <Leader>P "+p
+        " 没有ctrl v快  hi
+    nnoremap <Leader>p <C-V>
+
+    " nnoremap <Leader>p i<c-v><esc>
+                " 这里的ctrl v是vim本来的作用, 而非粘贴
+
+    " 选中并高亮最后一次插入的内容
+    nnoremap gv `[v`]
+
+
 
     " todo:  https://vi.stackexchange.com/questions/7449/how-can-i-use-tmux-for-copying-if-i-cant-access-the-system-clipboard
          nnoremap <silent> yy yy:call system('tmux set-buffer -b vim ' . shellescape(@"))<CR>
@@ -46,11 +57,11 @@
             let g:clipboard = {
                 \   'name': 'myClipboard',
                 \   'copy': {
-                \      '+': '/home/linuxbrew/.linuxbrew/bin/xclip -selection clipboard -silent -loop 2',
+                \      '+': 'xclip -selection clipboard -in -silent -loops 2',
                 \      '*': ['tmux', 'load-buffer', '-'],
                 \    },
                 \   'paste': {
-                \      '+': '/home/linuxbrew/.linuxbrew/bin/xclip -selection clipboard -out',
+                \      '+': 'xclip -selection clipboard -out',
                 \      '*': ['tmux', 'save-buffer', '-'],
                 \   },
                 \   'cache_enabled': 1,

@@ -3,26 +3,26 @@ rows 15
 columns 125
 line = 0
 
-intr = ^C
-quit = ^\
-erase = ^?
-kill = ^U
-eof = ^D
-eol = <undef>
+intr    = ^C
+quit    = ^\
+erase   = ^?
+kill    = ^U
+eof     = ^D
+susp    = ^Z
 
-eol2 = <undef>
-swtch = <undef>
-start = <undef>
-stop = <undef>
-susp = ^Z
+eol     = <undef>
+eol2    = <undef>
+swtch   = <undef>
+start   = <undef>
+stop    = <undef>
 
-rprnt = ^R
-werase = ^W
-# s for string 
-lnext = ^S
+rprnt   = ^R
+werase  = ^W
+
+lnext   = ^S  # s for string 
 discard = ^O
-min = 1
-time = 0
+min     = 1
+time    = 0
 
 -parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl -ixon -ixoff

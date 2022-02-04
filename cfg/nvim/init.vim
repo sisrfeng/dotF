@@ -91,6 +91,7 @@ nnoremap gh :tab help <C-R><C-W>
     "
 
     nnoremap <c-c> <c-v>
+            " vscode里,map <c-c> 或者<c-v>都不生效, 一直是vim本来的功能
     cnoremap <c-c> <c-v>
         " 变成^  （以^H等方式显示一些控制字符）
     " iunmap <c-v>  加了这行,导致ctrl c不能成为i_ctrl-v
@@ -112,6 +113,8 @@ nnoremap gh :tab help <C-R><C-W>
     " inoremap <c-v> <c-v>
     " cnoremap <c-v> <c-v>
     " nnoremap <c-v> <c-v>
+            " ctrl v不知道为啥变成了 在normal mode下粘贴windows的clipboard内容
+            " 大概看了下, 应该不是stty和tmux的问题
 
     " 加了这两行，还是删除到行首
     " cnoremap <c-q> <c-v>
@@ -841,20 +844,10 @@ autocmd TabLeave * let g:last_active_tab = tabpagenr()  " tabpagenr(): 换取当
 
 
 
-
-nnoremap Y y$
-" 和yy,dd,cc一致
 nnoremap vv V
+    " 和yy,dd,cc一致
+nnoremap Y y$
 nnoremap V v$
-
-" 复制选中区到系统剪切板中
-vnoremap <leader>y "+y
-
-
-" 选中并高亮最后一次插入的内容
-nnoremap gv `[v`]
-
-
 
 
 " Jump to start and end of line using the home row keys
