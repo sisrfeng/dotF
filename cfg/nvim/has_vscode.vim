@@ -1,8 +1,8 @@
 " some map
 
-    map <c-c> <c-v>
-            " 应该不生效
-            " vscode里,map <c-c> 或者<c-v>都不生效, 一直是vim本来的功能
+    " map <c-c> <c-v>
+            " 不生效
+            " 直接在vscode里,敲 :map <c-c> 或者<c-v>都不生效, 一直是vim本来的功能
     "set wrap 后，同物理行上线直接跳。
     map j gj
     map k gk
