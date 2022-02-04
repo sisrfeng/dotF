@@ -6,10 +6,15 @@
     noremap <Leader>Y "+y
     " noremap <Leader>P "+p
         " 没有ctrl v快  hi
-    nnoremap <Leader>p <C-V>
+        " :map <c-v>显示 no map,  但<C-v>原本的功能不见了, 怎么改都是在normal mode下粘贴系统clipboard的内容
+        "  map <c-v> :echom 'hihi'之类的都不生效, 但:map <c-v> 会有map后的key显示
 
     " nnoremap <Leader>p i<c-v><esc>
-                " 这里的ctrl v是vim本来的作用, 而非粘贴
+                " 这里的ctrl v是显示特殊字符
+    " nnoremap <Leader>p <C-v>
+                " 这里的ctrl v是进入visual block, 无法设为粘贴
+    " nmap <Leader>p <C-v>
+                "  recurssive map 都不生效, 奇怪了
 
     " 选中并高亮最后一次插入的内容
     nnoremap gv `[v`]
@@ -96,11 +101,7 @@ inoremap <C-P> <Esc>pa
         " paste in visual mode without updating the default register
 
     nnoremap p gp
-        " todo:
-        " You can implement a custom paste handler by redefining |vim.paste()|.
-        " Example:详见wf_lua.lua
-            lua require('wf_lua')
-                " 说是要有个lua目录, 但我现在没建, 也可以source(lua里叫require)
+
 
 
     " todo: `omap`代替下面的有点重复的各种operator的map
