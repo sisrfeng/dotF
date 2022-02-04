@@ -31,7 +31,8 @@
     " 现在只好把notes下的文件改成其他后缀名
     " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
     autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
-    " autocmd BufWritePost ~/dotF/cfg/nvim/wf_lua.lua echom "更新了lua写的配置" | lua require("%")
+    autocmd BufWritePost ~/dotF/cfg/nvim/lua/wf_lua.lua echom "更新了lua写的配置" | lua require("wf_lua")
+                                                            " 还是得重启nvim才能更新
 
 
     " 4. Go back to the default group, named "end"
@@ -48,8 +49,6 @@ inoremap jj <esc>
 " tty?
     set ttimeout ttimeoutlen=10
 
-nnoremap <c-d> 15<c-d>
-nnoremap <c-u> 15<c-u>
 
 " 看哪个好用:
 " nnoremap gj :tabedit <cfile><CR>
@@ -544,7 +543,7 @@ inoremap <C-Z> <C-O>u
 "<C-R>:    Insert the contents of a register
 
 " CTRL-Y is Redo (although not repeat)
-nnoremap <C-Y> <C-R>
+" nnoremap <C-Y> <C-R>  <c-y>还是用于scroll吧
 " inoremap <C-Y> <C-O><C-R>
 inoremap <C-Y> <Esc><C-R>a
 
@@ -812,13 +811,29 @@ endif
         " endfunc
 
 
+" nnoremap ww <c-w>w
+nnoremap ws <c-w>w
+        " windows switch
 
-nnoremap <C-a> ^
-inoremap <C-a> <ESC>I
 
-nnoremap <C-e> $
-inoremap <C-e> <ESC>A
+" 滚动scrolling of the viewport
+    " c-d本来是翻页，光标会动
+    set scrolloff=4
+        " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
+    " 光标不再位于原来的文本处
+        nnoremap <c-d> 15<c-d>
+        nnoremap <c-u> 15<c-u>
+    " ctrl-e (记作 extra lines)和ctrl-y是一对, 光标还在原来的文本处
+        nnoremap <c-e> 4<c-e>
+        nnoremap <c-y> 4<c-y>
 
+
+" vk88加a/e, 这些map留作他用
+    " nnoremap <C-a> ^
+    " inoremap <C-a> <ESC>I
+
+    " nnoremap <C-e> $
+    " inoremap <C-e> <ESC>A
 
 
 " http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
@@ -865,12 +880,6 @@ nnoremap ` '
 nnoremap U <C-r>
 
 
-
-
-" 放前面会被某些内容覆盖掉
-nnoremap <C-E> $
-
-
 set updatetime=300
     " longer updatetime (default is 4000 ms = ) leads to  delays and poor user experience.
 
@@ -901,15 +910,6 @@ nnoremap O O<backspace>
 " 设了这个会导致k在最后一行卡顿一下 nnoremap ko O
 
 
-" 没啥用，文字容易跑走
-    " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
-    " set scrolloff=7
-
-
-" 滚动scrolling of the viewport
-" c-d本来是翻页，光标会动
-nnoremap <C-d> 8<C-e>
-nnoremap <C-u> 8<C-y>
 
 " autocmd BufRead *  execute ":call Conceal_strang_chr()"
 " 需要时手动执行吧

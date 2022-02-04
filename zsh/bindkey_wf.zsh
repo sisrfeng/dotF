@@ -140,17 +140,8 @@ typeset -g -A key_wf
     bind -s "\eo" "~/omd_dotF \n"  #  alt负责路径切换
 
 function find-file-peco() {
-    local tac
-    if which tac > /dev/null  # # 把送到stdout /bin/tac啥的 扔到"黑洞". 只作判断,用户不需要看到stdout
-    then
-        tac="tac"
-    else
-        tac="tail -r"
-        # BSD 'tail' (the one with '-r') can only reverse files that are at most as large as its buffer, which is typically 32k.
-        # A more reliable and versatile way to reverse files is the GNU 'tac' command.
-    fi
-
     # 见alias.zsh里的f()
+    
     if [[ `pwd` == "$HOME/d" || `pwd` == "/d" ]]
     then
         # BUFFER (scalar):   The entire contents of the edit buffer.
@@ -164,12 +155,16 @@ function find-file-peco() {
             # and is by definition equal to $#LBUFFER.
             # Attempts to move the cursor outside the buffer will result in the cursor being moved to the appropriate end of the buffer.
 
+        # 排除不了: -path "/data2/wf2/.cache_wf" -prune -o \
+        # 可以排除: -path "./.cache_wf" -prune -o \
+
         BUFFER=$(find . \
         -path "/d/docker" -prune -o       \
         -path "$HOME/d/docker" -prune -o  \
         -path "$HOME/d/.t" -prune -o      \
         -path "$HOME/t" -prune -o         \
-        -path "$XDG_CACHE_HOME" -prune -o \
+        -path "./.4regret" -prune -o \
+        -path "./.cache_wf" -prune -o \
         -path "~/d/.4regret" -prune -o \
         -path "./.t" -prune -o            \
         -name "*$1*"  | peco --query "$LBUFFER" )
@@ -183,7 +178,7 @@ function find-file-peco() {
         -path "/d/docker" -prune -o       \
         -path "$HOME/d/docker" -prune -o  \
         -path "$HOME/d" -prune -o         \
-        -path "$XDG_CACHE_HOME" -prune -o \
+        -path "$XDG_CACHE_HOME/**" -prune -o \
         -path "~/d/.4regret" -prune -o \
         -path "./d" -prune -o             \
         -path "$HOME/d/.t" -prune -o      \
@@ -203,13 +198,10 @@ zle -N find-file-peco
 
 function history-peco() {
     # cut -c 8-  去掉序号和空格
-
                        # -1000: 最近2000条历史         # 别用系统的根目录下的peco，太老，用dotF下的
-    BUFFER=$(history -i -2000 | eval tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $LBUFFER")
-                                   # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
-                                    # 命令tac装不了的话, tail也凑合
-                                        # BSD 'tail' can only reverse files that are at most as large as its buffer, which is typically 32k.
-                                        # A more reliable and versatile way to reverse files is the GNU 'tac' command.
+    BUFFER=$(history -i -2000 |  tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $LBUFFER")
+                               # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
+                                # 命令tac装不了的话, tail也凑合
     BUFFER=${BUFFER:18}  # history加了-i，显示详细时间，回车后只取第19个字符开始的内容，（删掉时间)
          # ${parameter:start:length}
     CURSOR=$#BUFFER

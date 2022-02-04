@@ -71,7 +71,7 @@ source ~/dotF/cfg/nvim/beautify_wf.vim
     nnoremap A g$a
     nnoremap I g^i
 
-    nnoremap gm g$
+    " nnoremap gm g$
     " nnoremap M
 
     nnoremap <c-\> <c-w>v

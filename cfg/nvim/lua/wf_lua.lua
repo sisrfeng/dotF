@@ -1,4 +1,6 @@
--- -- print('wf redefining paste')
+-- print('重新定义vim.paste')
+-- vim.cmd('echom "读取wf_lua.lua"')  -- 还是要重开nvim的session, 本文件的新内容才生效
+
 --:help ui-paste:
         -- You can implement a custom paste handler by redefining |vim.paste()|.
         -- Example: >
@@ -10,10 +12,20 @@
 -- 这里在生效!!
 -- 如果让函数啥也不干, ctrl v在insort mode和normal mode下都没动静
         vim.paste = (function(lines, phase)
-                -- 没有vim.put
-                -- 本来用的是 nvim_paste, 这里换成nvim_put
-                vim.api.nvim_put(lines,   'c',    true,    true)
-        end)
+                        vim.cmd('echo "粘贴会调用 wf_lua.lua里的vim.paste"')
+
+                        -- vim.cmd('!mkdir -p ~/.t/llllllllll')  -- 会生效
+
+                        -- print('lualualua')  -- print到哪里?
+                        -- os.execute("mkdir " .. "~/.t/lualua_nvim" )  -- 不生效,
+                                                                        -- 因为这里被vim调用, 而不是纯lua?
+
+                        -- 没有vim.put
+                        -- 本来用的是 nvim_paste, 这里换成nvim_put
+                        vim.api.nvim_put(lines,   'c',    true,    true)
+
+                    end)
+
 
                 -- nvim_put({lines}, {type}, {after}, {follow})
                 --                     • "c" |charwise| mode
@@ -43,7 +55,7 @@
 --                    end
 --                  end)(vim.paste)
 --                  自己调用自己?
--- <
+-- 
 --
 --                 Parameters: ~
 --                     {lines}  |readfile()|-style list of lines to paste.

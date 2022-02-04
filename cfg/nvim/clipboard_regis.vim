@@ -1,12 +1,16 @@
+lua require('wf_lua')
+
 " 我的飞书笔记:https://cmb-d3-ocr.feishu.cn/docs/doccnSbue41vpDkdPAtYDWrxaNc#
 " 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
     nnoremap <Leader>y "+y
     vnoremap <leader>y "+y
 
-    noremap <Leader>Y "+y
+    noremap <Leader>Y "+Y
     " noremap <Leader>P "+p
-        " 没有ctrl v快  hi
+        " 没有ctrl v 那么快
         " :map <c-v>显示 no map,  但<C-v>原本的功能不见了, 怎么改都是在normal mode下粘贴系统clipboard的内容
+        " 把init.vim清空了, 还是掰不回来.
+        " 用apt装的neovim, 而非homebrew装的, 还是掰不回来
         "  map <c-v> :echom 'hihi'之类的都不生效, 但:map <c-v> 会有map后的key显示
 
     " nnoremap <Leader>p i<c-v><esc>
