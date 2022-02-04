@@ -2,9 +2,11 @@
 
 
 -- todo
-vim.paste = (function(lines, phase)
-        vim.api.nvim_put(lines,   'c',    true,    true)
-end)
+
+-- vim.paste = (function(lines, phase)
+--         vim.api.nvim_put(lines,   'c',    true,    true)
+-- end)
+
             -- nvim_put({lines}, {type}, {after}, {follow})
             --                     • "c" |charwise| mode
             --                     • "l" |linewise| mode

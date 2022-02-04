@@ -93,6 +93,7 @@ nnoremap gh :tab help <C-R><C-W>
     nnoremap <c-c> <c-v>
     cnoremap <c-c> <c-v>
         " 变成^  （以^H等方式显示一些控制字符）
+    " iunmap <c-v>  加了这行,导致ctrl c不能成为i_ctrl-v
     inoremap <c-c> <c-v>
         " i_CTRL-C	Quit insert mode,
         "             not check for  abbreviations.

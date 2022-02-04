@@ -219,3 +219,95 @@ register/复制粘贴
             set clipboard=unnamed
                     "  让unnamed寄存器一直point to星号寄存器
         endif
+
+            " 敲"+yy等, 确实会创建目录:
+            " let g:clipboard = {
+            "                 \ 'name': 'xsel-remote',
+            "                 \ 'copy': {
+            "                 \   '+': 'mkdir -p /home/wf/.t/cccccccccccccccccccc加',
+            "                 \   '*': 'mkdir -p /home/wf/.t/cccccccccccccccccccc星',
+            "                 \  },
+            "                 \ 'paste': {
+            "                 \   '+': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp加',
+            "                 \   '*': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp星',
+            "                 \ },
+            "                 \ 'cache_enabled': 1,
+            "                 \}
+            "
+            "
+            "
+            " let g:clipboard = {
+            "     \   'name': 'myClipboard',
+            "     \   'copy': {
+            "     \      '+': ['tmux', 'load-buffer', '-'],
+            "     \      '*': ['tmux', 'load-buffer', '-'],器
+
+            " let g:clipboard = {
+            "     \   'name': 'myClipboard',
+            "     \   'copy': {
+            "     \      '+': ['tmux', 'load-buffer', '-'],
+            "     \      '*': ['tmux', 'load-buffer', '-'],
+
+            "     \    },
+            "     \   'paste': {
+            "     \      '+': ['tmux', 'save-buffer', '-'],
+            "     \      '*': ['tmux', 'save-buffer', '-'],
+            "     \   },
+            "     \   'cache_enabled': 1,
+            "     \ }
+            " let g:clipboard = {
+            " \ 'name': 'wf_xclip',
+            " \ 'copy': {
+            " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
+            " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
+            " \  },
+            " \ 'paste': {
+            " \   '+': 'xclip -selection clipboard -out',
+            " \   '*': 'xclip -selection primary  -out',
+            " \ },
+            " \ 'cache_enabled': 1,
+            " \}
+            " 这样不行
+            "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
+            " https://stackoverflow.com/a/67229362/14972148
+            "
+            "
+    " v:register	The name of the register in effect for the current normal mode command
+        " v:register 取值情况:
+                "  1. if 'clipboard' contains "unnamed" :
+                "          echo v:register  输出* (星号)
+                "  2. if 'clipboard' contains "unnamedplus":
+                "          echo v:register  输出+ (加号)
+                "  3. if none is supplied:
+                "         echo v:register  输出" (双引号,  default register)
+                "
+                "
+                "
+                "
+            " xsel:
+
+                    " --input            -i  | read standard input into the selection
+                    " --clipboard        -b  | operate on the CLIPBOARD selection
+                    " --primary          -p  | operate on the PRIMARY selection (default)
+                    " --secondary        -s  | operate on the SECONDARY selection
+
+            " xclip
+                    " xclip reads text from standard input or files and makes it available to
+                    " other X applications for pasting as an X selection (traditionally with the middle  mouse  button).
+
+                    " The default action is to silently  wait  in  the  background  for `X selection requests (pastes)`
+                    " until another X application places data in the clipboard, at which point xclip exits silently.
+                    " You can use  the -verbose option to see if and when xclip actually receives
+                    " selection requests from other X applications. (TUI的貌似不算)
+
+                            " -selection
+                            "      specify which X selection to use,
+                            "      options are:
+                            "         "primary" to use XA_PRIMARY (default),
+                            "         "secondary" for XA_SECONDARY or
+                            "         "clipboard"  for XA_CLIPBOARD 这几个大写单词, 半天没搜到出处
+
+
+
+
+

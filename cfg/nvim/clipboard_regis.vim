@@ -12,9 +12,6 @@
 
 
 
-
-
-
 " The presence of a working `clipboard tool`    implicitly enables the '+' and '*' registers.
   " Nvim looks for these clipboard tools, in order of priority:
 
@@ -30,7 +27,7 @@
             let g:clipboard = {
                             \   'name': 'wf-win32yank-wsl',
                             \   'copy': {
-                            \      '+': 'echo "I am 加号寄存器"',
+                            \      '+': '/mnt/d/win32yank.exe -i --crlf',
                             \      '*': '/mnt/d/win32yank.exe -i --crlf',
                             \    },
                             \   'paste': {
@@ -39,7 +36,9 @@
                             \   },
                             \   'cache_enabled': 0,
                             \ }
+                    " windows的+和*, 本来是一样的, 但这里可以改掉.
             set clipboard=unnamed
+                        " wsl和windows的clipboard什么关系?
         else
         " todo: 参考:https://searchcode.com/file/189000618/vim/cfg/features/clipboard.vim/
 
@@ -61,114 +60,17 @@
                 " help里的写法: ['tmux', 'load-buffer', '-'],
                 " 看到Stack Overflow有人的写法 (整个string)  'win32yank.exe -o --lf'
 
-            " let g:clipboard = {
-            "     \   'name': 'myClipboard',
-            "     \   'copy': {
-            "     \      '+': ['tmux', 'load-buffer', '-'],
-            "     \      '*': ['tmux', 'load-buffer', '-'],器
-
-            " let g:clipboard = {
-            "     \   'name': 'myClipboard',
-            "     \   'copy': {
-            "     \      '+': ['tmux', 'load-buffer', '-'],
-            "     \      '*': ['tmux', 'load-buffer', '-'],
-
-            "     \    },
-            "     \   'paste': {
-            "     \      '+': ['tmux', 'save-buffer', '-'],
-            "     \      '*': ['tmux', 'save-buffer', '-'],
-            "     \   },
-            "     \   'cache_enabled': 1,
-            "     \ }
-            " let g:clipboard = {
-            " \ 'name': 'wf_xclip',
-            " \ 'copy': {
-            " \   '+': ['xclip', '-selection', 'clipboard', '-silent', '-loop', '2'],
-            " \   '*': ['xclip', '-selection', 'primary', '-silent', '-loop', '2'],
-            " \  },
-            " \ 'paste': {
-            " \   '+': 'xclip -selection clipboard -out',
-            " \   '*': 'xclip -selection primary  -out',
-            " \ },
-            " \ 'cache_enabled': 1,
-            " \}
-            " 这样不行
-            "     '*': 'echom "wf_paste" ; xclip -selection primary  -out',
-            " https://stackoverflow.com/a/67229362/14972148
-            " 确实会创建目录
-            " let g:clipboard = {
-            "                 \ 'name': 'xsel-remote',
-            "                 \ 'copy': {
-            "                 \   '+': 'mkdir -p /home/wf/.t/cccccccccccccccccccc加',
-            "                 \   '*': 'mkdir -p /home/wf/.t/cccccccccccccccccccc星',
-            "                 \  },
-            "                 \ 'paste': {
-            "                 \   '+': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp加',
-            "                 \   '*': 'mkdir -p /home/wf/.t/pppppppppppppppppppppp星',
-            "                 \ },
-            "                 \ 'cache_enabled': 1,
-            "                 \}
-            set clipboard=unnamedplus  " 看我上面定义的加号寄存器
-             " set clipboard^=unnamed,unnamedplus  " 在linux, windows和mac的behavior一致
-                        " ^= 表示prepend,  += 表示append  (对于string是这样)
-                    " 让unnamed寄存器(") 一直point to 加号寄存器,  同时给星号寄存器复制一份(这不就浪费了一个寄存器?
-                    " 现在又没有这个了缺点: 导致vim内粘贴 跟远程传到本地 似的, 很慢:
-
+            " set clipboard=unnamedplus  " 看我上面定义的加号寄存器
+            set clipboard=
             " xming开了也没用, 必须开moba 且在moba也连到远程
             " 之前的笔记:
                 " echo 'vim能和tmux打通了. 有时报错 can not open display啥的. 有时又正常, 哪怕在用windows terminal, 且没开xming'
         endif
 
-
-
-
-" v:register	The name of the register in effect for the current normal mode command
-    " v:register 取值情况:
-            "  1. if 'clipboard' contains "unnamed" :
-            "          echo v:register  输出* (星号)
-            "  2. if 'clipboard' contains "unnamedplus":
-            "          echo v:register  输出+ (加号)
-            "  3. if none is supplied:
-            "         echo v:register  输出" (双引号,  default register)
-
-
-                    " inoremap <C-V> "+p
-                " 之前为啥要这行? 不加也是粘贴
-            " iunmap <c-v>
-            "   加了这行,导致ctrl c不能成为i_ctrl-v
-
-            inoremap <C-P> <Esc>pa
-
-            " xsel:
-
-                    " --input            -i  | read standard input into the selection
-                    " --clipboard        -b  | operate on the CLIPBOARD selection
-                    " --primary          -p  | operate on the PRIMARY selection (default)
-                    " --secondary        -s  | operate on the SECONDARY selection
-
-            " xclip
-                    " xclip reads text from standard input or files and makes it available to
-                    " other X applications for pasting as an X selection (traditionally with the middle  mouse  button).
-
-                    " The default action is to silently  wait  in  the  background  for `X selection requests (pastes)`
-                    " until another X application places data in the clipboard, at which point xclip exits silently.
-                    " You can use  the -verbose option to see if and when xclip actually receives
-                    " selection requests from other X applications. (TUI的貌似不算)
-
-                            " -selection
-                            "      specify which X selection to use,
-                            "      options are:
-                            "         "primary" to use XA_PRIMARY (default),
-                            "         "secondary" for XA_SECONDARY or
-                            "         "clipboard"  for XA_CLIPBOARD 这几个大写单词, 半天没搜到出处
-
-
-
-
+inoremap <C-P> <Esc>pa
 
 
 " 之前在init.vim的内容:
-    " todo: vscode中会复制到 前后空格  " a变成i估计就行了
     nnoremap vp viwp
     nnoremap vw viw
         " 想选到单词末尾, 用ve
@@ -178,7 +80,7 @@
     " 类似于Y D C等，到行末
         nnoremap P v$<left>P
     " noremap x "_x
-        " 导致xp无法使用 (专治typo)
+        " 导致(专治typo的)xp无法使用
     vnoremap p "_dP
         " paste in visual mode without updating the default register
 
