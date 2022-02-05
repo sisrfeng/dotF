@@ -862,6 +862,7 @@ gg(){
     # 貌似比git stash apply好
     # echo '会报：Dropped refs/stash@{0}'
     # echo "\n 【亲，检查一下有没有冲突】 "
+    zsh
 }
 
 
