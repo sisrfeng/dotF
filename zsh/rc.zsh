@@ -660,3 +660,5 @@ export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
 
 export BROWSER=w3m
 source ~/local.zsh
+
+# dl && echo '开了代理'
