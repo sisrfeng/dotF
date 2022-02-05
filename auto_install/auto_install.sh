@@ -34,6 +34,7 @@ alias ai='brew install'
     yes | (ai rename wget  tldr)
     ai python3-neovim
     yes | (ai silversearcher-ag)
+    yes | (ai node tmux nvim xclip )
 
     # 配置邮箱
         # aptitude install -y postfix  # 有交互, 应该需要手动
