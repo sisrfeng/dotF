@@ -1304,34 +1304,6 @@ alias cm='whence -ca'
     # cm for command
     # 代替where which type
     # -v for verbose, 不过好像没用
-h(){
-    # todo https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion-Flags
-    # parameter expansion
-    # 结合brew和npm安装的tldr的优点, 跑2次tldr
-    # if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 2> /dev/null` == *"This page doesn't exist yet"* ]];  then
-    echo '这具体是:'
-    whence -ca $1
-    echo ' '
-    echo "$1 的用法:"
-    if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
-        run-help $1
-            # 要是tldr找不到, 才run-help
-    else
-        # _tldr $1 > ~/.t/tldr_tmp.zsh
-        _tldr $1 > ~/.t/tldr_tmp.zsh
-        nvim ~/.t/tldr_tmp.zsh
-                # 不好的方案
-                    # _tldr $1 | nvim  # nvim会抽风
-                    # nvim   `_tldr $1`  # 不行, ``返回的是-1, 而非stdout内容
-                    # bat ~/.t/.tldr_tmp.zsh  # 粘贴不方便
-    fi
-    # echo 'zsh的man不全？试试这个'
-    # echo 'w3m man.cx/你的命令'  # 更新：run-help就可以找到zsh的built-in
-
-    # todo
-    # man可以指定pager,  less这个pager可以指定打开的位置
-    # man --pager="less --pattern 'keyboard definition'" zshcontrib
-}
 
 # 在zshrc里设置了代理，这里不用设
 alias goo='googler'

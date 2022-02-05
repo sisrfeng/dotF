@@ -4,6 +4,38 @@
 
 
 alias bind=bindkey  # 和tmux一致
+alias unbind='bindkey -r'
+
+# 逐级查help
+h(){
+    # todo https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion-Flags
+    # parameter expansion
+    # 结合brew和npm安装的tldr的优点, 跑2次tldr
+    # if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 2> /dev/null` == *"This page doesn't exist yet"* ]];  then
+    echo '这具体是:'
+    whence -ca $1
+    echo ' '
+    echo "$1 的用法:"
+    if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
+        run-help $1
+            # 要是tldr找不到, 才run-help
+    else
+        # _tldr $1 > ~/.t/tldr_tmp.zsh
+        _tldr $1 > ~/.t/tldr_tmp.zsh
+        nvim ~/.t/tldr_tmp.zsh
+                # 不好的方案
+                    # _tldr $1 | nvim  # nvim会抽风
+                    # nvim   `_tldr $1`  # 不行, ``返回的是-1, 而非stdout内容
+                    # bat ~/.t/.tldr_tmp.zsh  # 粘贴不方便
+    fi
+    # echo 'zsh的man不全？试试这个'
+    # echo 'w3m man.cx/你的命令'  # 更新：run-help就可以找到zsh的built-in
+
+    # todo
+    # man可以指定pager,  less这个pager可以指定打开的位置
+    # man --pager="less --pattern 'keyboard definition'" zshcontrib
+}
+
 
 # stty对终端输入的设置
 # ref:  ./stty_out.yml
@@ -141,7 +173,7 @@ typeset -g -A key_wf
 
 function find-file-peco() {
     # 见alias.zsh里的f()
-    
+
     if [[ `pwd` == "$HOME/d" || `pwd` == "/d" ]]
     then
         # BUFFER (scalar):   The entire contents of the edit buffer.
@@ -249,11 +281,28 @@ zle -N process-peco
         # bind "\ed" undo # 撤销, 好用
         # bind "\e\d"  同上
 
-        # ctrl alt h或者zsh-vi-mode下shift h
+    # ctrl alt h  和 zsh-vi-mode里, 敲shift h (后者 还不知道怎么改成 map H 0)
+        # zle -N h
+        #     #  h() 是我写的函数
+        #     #  名字这么短, buggy ?
+        # bind -s '^[^H' h  # 算了, 要用h()的话, 还是敲 h 某某某吧, 这个keybind留给run-help
+        bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
         # bindkey '^[^h' run-help  小写导致  ctrl alt h不行
-        # bindkey '^[^H' run-help  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
-        bindkey '^[^H' h  # zsh-vi-mode 应该把它变成 delete-forward-word. 放这里不怕被覆盖
-                    #  h() 是我写的函数
+
+    # vi/vim/vi-mode/zsh-vi/ vicmd/viin/visual
+        # visual 就是vi的visual mode
+            # bind -M visual  'H' beginning-of-line  # H两边 加不加引号都可以
+            # bind -M visual  'H' 'echo hi'  # 这会报错, 说没有这个widget. 要加 -s
+            bind -M visual  H beginning-of-line
+            bind -M visual  L end-of-line
+        # vicmd对应真vim里的normal mode
+            bind -M vicmd  L  end-of-line
+            bind -M vicmd  H  beginning-of-line
+
+            # todo: 参考 https://github.com/b4b4r07/zsh-vimode-visual
+            # 或者直接进入vim编辑? 懒得配那么多东西
+
+    #
     # string
         bind -s "\C-t" "tt \C-j"  # python ~/d/tmp.py  # t for try
         bind -s "\C-H" "echo '我是ctrl H，被tmux占用' \n"

@@ -1,23 +1,42 @@
 # 需要sudo
 # >_>_>===================================================================begin
 # 换源
+    set -x
+    mkdir -p /etc/apt/
+
+    mv /etc/apt/sources.list /etc/apt/sources.list.origin_useless
+    string=`cat /etc/issue`
+    if [[ $string =~ "Ubuntu 18" ]]  # regex
+    then
+        cp -rf auto_install/sources_china_ubuntu18.py /etc/apt/sources.list
+    fi
+
+    if [[ $string =~ "Ubuntu 20" ]]  # regex
+    then
+        cp -rf auto_install/sources_china_ubuntu20.py /etc/apt/sources.list
+    fi
 
 cat ./auto_install/git_url.txt>>/etc/hosts
-brew install -y -qq network-manager
+apt install -y -qq network-manager
 service network-manager restart
     # 不用这行: /etc/rc.d/init.d/network restart
         # Ubuntu uses network-manager instead of the traditional Linux networking model.
         # so you should restart the network-manager service instead of the network service
 
-# brew install
+# apt install
 # todo: 换做homebrew? 免sudo安装
-    yes | (brew update ; brew upgrade ; brew install  nscd )
-    # /etc/init.d/nscd restart
+    # yes | (apt update && apt upgrade ; apt install  nscd )
+        # upgrade可能把别人容器的依赖关系破坏了
+    yes | (apt update ; apt install  nscd )
+    /etc/init.d/nscd restart
 
     yes | unminimize
+    yes | (apt install software-properties-common)  # software-properties-common提供了这个bin：  add-apt-repository
+    yes | (add-apt-repository ppa:ultradvorka/ppa )
+    yes | (add-apt-repository ppa:deadsnakes/ppa && apt -qq update )
+    yes | (apt install sudo)  # 仅限于容器内用root。容器外，没sudo别乱搞
 
-# alias ai='brew install -y -qq'
-alias ai='brew install'
+alias ai='sudo apt install -y -qq'
     ai libatlas-base-dev  gfortran libopenblas-dev liblapack-dev
     ai python3.9
     ai python3.9-distutils
@@ -25,7 +44,7 @@ alias ai='brew install'
     yes | (ai man bat)
     ln -s /usr/bin/batcat /usr/local/bin/bat
 
-    yes | (ai zsh; ai progress; ai libevent-dev)
+    yes | (ai aptitude ;aptitude update -q ; ai zsh; ai progress; ai libevent-dev)
     yes | (ai htop ;ai ack ;ai axel; ai intltool; ai tmux ; ai fontconfig; ai xdg-utils)
     yes | (ai exiftool htop tree tzdata locales)
     yes | (ai ctags; ai build-essential; ai cmake; ai python-dev)
@@ -34,14 +53,12 @@ alias ai='brew install'
     yes | (ai rename wget  tldr)
     ai python3-neovim
     yes | (ai silversearcher-ag)
-
-    # 配置邮箱
-        # aptitude install -y postfix  # 有交互, 应该需要手动
-        # postconf smtputf8_enable=no
-        # postfix start
-        # postfix reload
-        # yes | (mutt msmtp)
-        # touch ~/.msmtp.log
+    # aptitude install -y postfix  # 有交互, 应该需要手动
+    postconf smtputf8_enable=no
+    postfix start
+    postfix reload
+    # yes | (mutt msmtp)
+    # touch ~/.msmtp.log
 
 
     # under ubuntu16 try this:
@@ -51,12 +68,12 @@ alias ai='brew install'
     fi
 
 
-        # touch /var/lib/locales/supported.d/local
-        #
-        # echo 'en_US.UTF-8 UTF-8
-        # zh_CN.UTF-8 UTF-8
-        # zh_CN.GBK GBK
-        # zh_CN GB2312'>>/var/lib/locales/supported.d/local
+    # touch /var/lib/locales/supported.d/local
+    #
+    # echo 'en_US.UTF-8 UTF-8
+    # zh_CN.UTF-8 UTF-8
+    # zh_CN.GBK GBK
+    # zh_CN GB2312'>>/var/lib/locales/supported.d/local
 
     # 中文]]
     ai locale-gen
@@ -85,6 +102,7 @@ alias ai='brew install'
 
 
 yes | (ai python3-pip)
+\apt autoremove -y -q
 
 # 不需要sudo
 # >_>_>===================================================================begin
@@ -103,6 +121,8 @@ touch "$HOME/.z" # 这是zsh的z跳转的记录文件
 
 # 用bash跑!!
 shopt -s  expand_aliases
+    # alias apt='apt -y -qq'
+    alias apt='apt -y -q'
     alias pip='\pip3 -qq'
     alias pip3='\pip3 -qq'
     alias cp='cp -r'
