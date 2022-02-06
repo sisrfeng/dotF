@@ -1,11 +1,12 @@
-" [[---------------------------------------Theme Settings    主题设置
-" source  ~/.local/share/nvim/plugged/vim-solarized8/colors/solarized8.vim
-" set background=light
+" 还是自己配吧, 这个主题的红色不好看:
+        " source  ~/.local/share/nvim/plugged/vim-solarized8/colors/solarized8.vim
+        " set background=light
+        "
+        " if !exists('g:vscode')
+        "     autocmd vimenter * ++nested colorscheme solarized8 | hi CursorLine guibg=#e3efe3 |  hi Cursor guibg=#ffff7c
+        " endif
 "
-" if !exists('g:vscode')
-"     autocmd vimenter * ++nested colorscheme solarized8 | hi CursorLine guibg=#e3efe3 |  hi Cursor guibg=#ffff7c
-" endif
-"
+
 source ~/dotF/cfg/nvim/paperlike_wf.vim
 
 
@@ -116,19 +117,3 @@ hi StatusLineNC   gui=bold guibg=#e0f0f0 guifg=#0099a0
 " 每行超过 n 个字的时候 , vim 自动加上换行符
 set textwidth=100
 
-
-
-
-" hi User0 guifg=#ffffff  guibg=#094afe
-hi User0 guifg=#000000  guibg=#000a99
-" hi User1 guifg=#ffdad8  guibg=#880c0e
-" hi User2 guifg=#000000  guibg=#F4905C
-" hi User3 guifg=#292b00  guibg=#f4f597
-" hi User4 guifg=#112605  guibg=#aefe7B
-" hi User5 guifg=#051d00  guibg=#7dcc7d
-" hi User7 guifg=#ffffff  guibg=#880c0e gui=bold
-" hi User8 guifg=#ffffff  guibg=#5b7fbb
-" hi User9 guifg=#ffffff  guibg=#810085
-
-source ~/dotF/cfg/nvim/tab_status_lines.vim
-    " 或者叫tabline? tab statusline tab栏 tab status

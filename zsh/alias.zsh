@@ -1,10 +1,13 @@
-# The shell evaluation order ( POSIX)
-    # aliases 优先于
+# The shell evaluation order ( POSIX) 优先级递减:
+    # aliases
     # variables
     # command substitutions
     # special built-ins
     # functions
     # regular built-ins
+
+    # https://stackoverflow.com/questions/6162903/why-do-backslashes-prevent-alias-expansion
+    # `env --ignore-environment`  比`\`更强, 解决了链接中2的缺点
 
 
 # nn: new name 或者nick name
@@ -14,11 +17,26 @@ nn zbk='e ~/dotF/zsh/bindkey_wf.zsh ; zsh'
 nn ll='flake8'
 nn pl='e ~/dotF/cfg/nvim/plug_wf.vim'
 
+nn con='conda'
+nn ci='conda install -y'
+# conda create --name new_name --clone old_name
+# conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
+cda(){
+    conda activate $1
+    echo "$1" > $XDG_CACHE_HOME/conda_name
+        # echo "$foo" instead of just echo $foo.
+        # Without double-quotes the variable's contents get parsed in a somewhat weird way that tends to cause bugs.
+
+}
+nn c_ac='conda activate'
+nn c_de='conda deactivate &&  t $XDG_CACHE_HOME/conda_name'
+    # 结合tmux send-keys  'conda activate `cat $XDG_CACHE_HOME/conda_name`' Enter
 
 
-# https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
 nn '$'='' # 省去删掉复制来的命令 最前面的$
-# oh my git    oh my god
+    # https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
+
+
 
 nn w3m='echo "w3m或者ranger显示图片是很难的__等关注的issue的邮件通知吧" ; w3m'
 nn u='unset ALL_PROXY'
@@ -83,21 +101,7 @@ ht(){
     # 这样就把stderr重定向成stdout，stdout重定向到mylog.txt,  敲完这行，命令行没有输出，继续敲下一个命令
 }
 
-# 失败：
-# https://stackoverflow.com/questions/58225759/how-do-i-copy-and-paste-bash-without-dollar-signs
-# ud() { . <( sed 's/^\$ //' ); }
-# undollar() { . <( sed 's/^\$ //' ); }
-
-
-
-# 改了函数以后，敲source $ZDOTFILE/.zshrc, 不生效。要新开zsh
-
-# `env -i` 比“\”更强, 解决了2的缺点   https://stackoverflow.com/questions/6162903/why-do-backslashes-prevent-alias-expansion
-# 函数与别名：1 定义函数后， alias 原=函数名。好处：敲`\原` ，能使用原命令，坏处：`co 原` 后，要多敲`co 函数名`
-#            2 直接定义 my_func_ls(){ }      与上面相反. 【注意函数名别和built-in重复】
-
-
-nn cle='clear -x'
+alias cle='clear -x'
 
 q(){
     tree -L 2 --filelimit=50 $1 | peco
@@ -108,13 +112,13 @@ git_rm_sub(){
     git submodule deinit -f $sub_name
     rm -rf .git/modules/$sub_name
     git config -f .gitmodules --remove-section submodule.$sub_name
-    git config -f .git/config --remove-section submodule.$sub_name
     git rm --cached $sub_name
     git commit -m "彻底清理submodule: $sub_name"
 }
 
 # alias git='LANG=en_GB git' # 不行
 
+# zip
 zi(){
     # on the words between the [[ and ]];
         # not performed:
@@ -1289,14 +1293,15 @@ nn apt-get='apt'
 # 或者
 # basename $PWD  # 更通用
 
-# sh -c "$(curl -fsLS git.io/chezmoi)" 意思：
+# sh -c "$(curl -fsLS git.io/某某)" 意思：
     # -f :Fail silently (no output at all) on HTTP error
     # -s :Silent mode
     # -S : Show error even when -s is used
     # -L : follow redirects
 
-# nn wg='axel'
-nn wg='python3 ~/dotF/mini_FS/bin/axel_with_quote.py'
+nn wg='axel'
+# nn wg='python3 ~/dotF/mini_FS/bin/axel_with_quote.py'  # 要是命令行里有符号&,
+# 必须手动多敲单引号包裹
 nn wget='echo "using axel. 要是遇到别人写wget -O-，知道它是重定向到stdout就好。 axel的参数和wget不同" ; axel'
 nn wgname='wget -c -O "wf_need_to_change_name"'
 

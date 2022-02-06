@@ -1,42 +1,21 @@
 
-" todo
-set showtabline=2
-    " 1: only if there are at least two tab pages
-    " 2: always
-" 装了这个很简单的插件
-    " https://github.com/mkitt/tabline.vim
-    " Tab number
-    " Filename (basename only)
-    " [+] if the current buffer has been modified
 
+" tabline:
+    set showtabline=2
+        " 1: only if there are at least two tab pages
+        " 2: always
+
+    " 装了这个很简单的插件
+        " https://github.com/mkitt/tabline.vim
+        " todo 删掉括号
+
+
+set laststatus=2  "  always show statusline
 " Each status line item is of the form: ( All fields except the {item} are optional.)
 "       %-0{minwid}.{maxwid}{item}
-" 在上面的基础上：  (几表示某个highlight设置)
-" %Highlight配色号码
+"    在上面的基础上：  (几表示某个highlight设置)
+"    %Highlight配色号码
 
-"    %=   右对齐
-"    %r  readonly, 显示 [RO]
-" set statusline=
-" set statusline=%7*=%r
-" set statusline=%=%t                            " tittle
-" set statusline+=%=\ buffer号:%n\            "buffer number
-" set statusline+=%=%m                         "modified flag
-" " set statusline+=%=文件格式:%{&ff}            "是否unix
-" " flag[Preview] ??
-" set statusline+=%=\ %h
-" set statusline+=%=\ %w
-" set statusline+=%=\ %k
-" set statusline+=%=\ %q
-" set statusline+=%999X
-" " set statusline+=
-" set statusline+=%=第%l行/
-" set statusline+=%L行               "total lines
-" set statusline+=(%p%%)
-" set statusline+=%=第%v列         "virtual column number (screen column)
-" " set statusline+=\ %c           " Column number (byte index).
-"
-"
-set laststatus=2  "  always show statusline
 
 hi User1 guifg=#ffdad8  guibg=#000a99
 set statusline=
@@ -60,3 +39,39 @@ set statusline+=%9*\ 列:%3c\                            "Colnr
     "  貌似不能放进colorscheme file.
     " hi User1 guifg=#ffdad8  guibg=#880c0e
 
+
+
+
+"    %=   右对齐
+"    %r  readonly, 显示 [RO]
+" set statusline=
+" set statusline=%7*=%r
+" set statusline=%=%t                            " tittle
+" set statusline+=%=\ buffer号:%n\            "buffer number
+" set statusline+=%=%m                         "modified flag
+" " set statusline+=%=文件格式:%{&ff}            "是否unix
+" " flag[Preview] ??
+" set statusline+=%=\ %h
+" set statusline+=%=\ %w
+" set statusline+=%=\ %k
+" set statusline+=%=\ %q
+" set statusline+=%999X
+" " set statusline+=
+" set statusline+=%=第%l行/
+" set statusline+=%L行               "total lines
+" set statusline+=(%p%%)
+" set statusline+=%=第%v列         "virtual column number (screen column)
+" " set statusline+=\ %c           " Column number (byte index).
+"
+"
+
+" hi User0 guifg=#ffffff  guibg=#094afe
+hi User0 guifg=#000000  guibg=#000a99
+" hi User1 guifg=#ffdad8  guibg=#880c0e
+" hi User2 guifg=#000000  guibg=#F4905C
+" hi User3 guifg=#292b00  guibg=#f4f597
+" hi User4 guifg=#112605  guibg=#aefe7B
+" hi User5 guifg=#051d00  guibg=#7dcc7d
+" hi User7 guifg=#ffffff  guibg=#880c0e gui=bold
+" hi User8 guifg=#ffffff  guibg=#5b7fbb
+" hi User9 guifg=#ffffff  guibg=#810085

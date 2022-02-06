@@ -30,7 +30,8 @@
     " todo: ~/dotF/cfg/nvim/*.vim会match~/dotF/cfg/nvim/notes/*.vim.
     " 现在只好把notes下的文件改成其他后缀名
     " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
-    autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了配置"| redraw!
     autocmd BufWritePost ~/dotF/cfg/nvim/lua/wf_lua.lua echom "更新了lua写的配置" | lua require("wf_lua")
                                                             " 还是得重启nvim才能更新
 
@@ -110,7 +111,9 @@ nnoremap gh :tab help <C-R><C-W>
 
     " 加了几行，还是粘贴
     " inoremap <c-v> <c-v>
-    " cnoremap <c-v> <c-v>
+    " cnoremap <c-v> <esc>:echo 'hi'
+            " 没反应  " 会粘到正文里. 什么插件在搞鬼?
+
     " nnoremap <c-v> <c-v>
             " ctrl v不知道为啥变成了 在normal mode下粘贴windows的clipboard内容
             " 大概看了下, 应该不是stty和tmux的问题
@@ -534,8 +537,6 @@ vnoremap <C-S>      <C-C>:update<CR>
 " nnoremap <C-Z> u|  " CTRL-Z is Undo
 " nnoremap <C-Z> u |  " CTRL-Z is Undo
                 " 竖线前的空格，视为map后的一部分。
-" z: 表示zsh
-nnoremap <C-Z> :tab drop term://zsh<cr>
 " CTRL-Z is Undo
 inoremap <C-Z> <C-O>u
 
@@ -673,7 +674,9 @@ endif
 
         set shortmess=filnxtToOF
 
-        set cmdheight=2
+
+        set cmdheight=1
+        " set cmdheight=2
             " To reduce the number of hit-enter prompts:
             " - Set 'cmdheight' to 2 or higher.
 
@@ -1048,11 +1051,11 @@ func! VimPlugConds(arg1, ...)
         cnoreabbrev <expr> man   getcmdtype() == ":" && getcmdline() == 'man'          ? 'tab Man '                          :   'man'
         " cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab edit term: // zsh|p i'               :   'te'
         "                                                                                                      不行
-        cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tab drop term://zsh'               :   'te'
+        cnoreabbrev <expr> te    getcmdtype() == ":" && getcmdline() == 'te'           ? 'tabedit term://zsh'               :   'te'
         " cnoreabbrev <expr> t     getcmdtype() == ":" && getcmdline() == 't'           ? 'tab drop term://zsh'               :   't'
         cnoreabbrev <expr> ckh    getcmdtype() == ":" && getcmdline() == 'ckh'           ? 'checkhealth'               :   'ckh'
                                                                                         "  checkhealth时  有些optional的内容,  有error,  别管.  perl的东西难搞
-        cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
+        " cnoreabbrev <expr> st    getcmdtype() == ":" && getcmdline() == 'st'           ? 'split term://zsh'               :   'st'
         cnoreabbrev <expr> r    getcmdtype() == ":" && getcmdline() == 'r'           ? 'register'               :   'r'
         cnoreabbrev <expr> m    getcmdtype() == ":" && getcmdline() == 'm'           ? 'messages'               :   'm'
         cnoreabbrev <expr> me    getcmdtype() == ":" && getcmdline() == 'me'           ? 'messages'               :   'me'
@@ -1060,22 +1063,44 @@ func! VimPlugConds(arg1, ...)
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
 
-" autocmd TermOpen * startinsert
-" 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
+autocmd TermOpen * startinsert
+    " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
+    " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
 
     " 0到255
     let g:terminal_color_4 = '442200'
     let g:terminal_color_5 = 'black'
     let g:terminal_color_255 = 'black'
-    " tnoremap <M-C-Y> <c-\><c-n><space>
+    "  DEBUG:
+    tnoremap <M-C-Y>h <c-\><c-n>:tabprev<cr>
                                 "" space好像不能传到termnial的父进程
-    tnoremap <M-C-Y> <c-\><c-n>
+
+    nnoremap <M-C-Y>c       : tabedit term://zsh<cr>
+    nnoremap <M-C-Y><space> : split term://zsh<cr>
+
+    inoremap <M-C-Y>c       <esc>:tabedit term://zsh<cr>
+    inoremap <M-C-Y><space> <esc>:split term://zsh<cr>
+
+    nnoremap <M-C-Y>\ :vsplit term://zsh<cr>
+    nnoremap <M-C-Y>\ :vsplit term://zsh<cr>
+
+    inoremap <M-C-Y>\ <esc>:vsplit term://zsh<cr>
+    inoremap <M-C-Y>\ <esc>:vsplit term://zsh<cr>
+
+    nnoremap <silent> <M-C-Y>h  :tabprev<cr>
+    nnoremap <silent> <M-C-Y>l  :tabnext<cr>
+
+    inoremap <silent> <M-C-Y>h  <esc>:tabprev<cr>
+    inoremap <silent> <M-C-Y>l  <esc>:tabnext<cr>
+
+    nnoremap <silent> <M-C-Y>j  <c-w>j
+    nnoremap <silent> <M-C-Y>k  <c-w>k
+
+    " z: 表示zsh
+    nnoremap <C-Z> :tabedit term://zsh<cr>
 
 nnoremap <leader>h :tabprev<cr>
-nnoremap <silent> <M-C-Y>h  :tabprev<cr>
 nnoremap <leader>l :tabnext<cr>
-nnoremap <silent> <M-C-Y>l  :tabnext<cr>
-
 nnoremap <c-l> /<c-r><c-w><cr>
 nnoremap <c-h> ?<c-r><c-w><cr>
 

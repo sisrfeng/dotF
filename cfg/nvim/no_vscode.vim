@@ -1,5 +1,6 @@
 source ~/dotF/cfg/nvim/beautify_wf.vim
         " 这行要调用lucius， 要在它后面：call plug#end()
+source ~/dotF/cfg/nvim/tab_status_lines.vim
 
 " abbrev 和map的区别，就像ahk里 hotkey和hotstring
 " 触发： space, Escape, or Enter.

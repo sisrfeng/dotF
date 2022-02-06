@@ -16,8 +16,6 @@ Plug 'voldikss/vim-translator'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
 
-Plug 'mkitt/tabline.vim'
-
     " 翻译光标下的文本，在命令行回显
     nnoremap  gdd <Plug>Translate
     vnoremap <silent> <Leader>a <Plug>TranslateV
