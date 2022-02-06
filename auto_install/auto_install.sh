@@ -2,6 +2,15 @@
 # >_>_>===================================================================begin
 # 换源
 
+
+# todo 待测试:
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # The installation script installs Homebrew to /home/linuxbrew/.linuxbrew using sudo if possible and
+        # within your home directory at ~/.linuxbrew otherwise.
+        # Homebrew does not use sudo after installation.
+        Using /home/linuxbrew/.linuxbrew allows the use of more binary packages (bottles) than installing in your personal home directory.
+
 cat ./auto_install/git_url.txt>>/etc/hosts
 brew install -y -qq network-manager
 service network-manager restart

@@ -1278,7 +1278,8 @@ alias apt-get='apt'
     # -S : Show error even when -s is used
     # -L : follow redirects
 
-alias wg='axel'
+# alias wg='axel'
+alias wg='python3 ~/dotF/mini_FS/bin/axel_with_quote.py'
 alias wget='echo "using axel. 要是遇到别人写wget -O-，知道它是重定向到stdout就好。 axel的参数和wget不同" ; axel'
 alias wgname='wget -c -O "wf_need_to_change_name"'
 
