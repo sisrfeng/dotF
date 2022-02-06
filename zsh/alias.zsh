@@ -1308,5 +1308,5 @@ alias cm='whence -ca'
 
 # 在zshrc里设置了代理，这里不用设
 alias goo='googler'
-alias bi='brew  install '
+alias bi='brew  install'
 
