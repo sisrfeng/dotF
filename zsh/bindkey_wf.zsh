@@ -1,10 +1,9 @@
-# zsh does not use readline, It does not read /etc/inputrc or ~/.inputrc.
-# it uses its own and more powerful Zsh Line Editor (ZLE).
-# todo: https://sgeb.io/posts/zsh-zle-custom-widgets/
+# zsh use Zsh Line Editor (ZLE),  instead of  readline,( does not read /etc/inputrc or ~/.inputrc.)
+    # todo: https://sgeb.io/posts/zsh-zle-custom-widgets/
 
 
 alias bind=bindkey  # 和tmux一致
-alias unbind='bindkey -r'
+alias unbind='bindkey -r'  # 删除/清理bindkey
 
 # 逐级查help
 h(){
@@ -39,7 +38,6 @@ h(){
 
 # stty对终端输入的设置
 # ref:  ./stty_out.yml
-
     # Ctrl+Q is normally START (unfreeze).
     # You may not be able to change this value, because
     # the hardware (现在常见的情况，其实是终端模拟器？) may insist on using C-Q regardless of what you specify.
@@ -150,9 +148,12 @@ typeset -g -A key_wf
     # Control Sequence Introducer
 
 # alt 负责路径跳转
+    #这3行 都会显示alt作为prefix的键位
+            # bind -p "\033"
+            # bind -p "\e"
+            # bind -p "^["
 
-
-# bind -s in-string out-string
+    # bind -s in-string out-string
     bind -s '\eh' '~ \n'
     # t太难按了
     # bind -s '\et' '~/.l \n'
@@ -166,84 +167,83 @@ typeset -g -A key_wf
     bind -s '\et' '~/.t \n'
     bind -s '\ec' 'cfg \n'
 
-    # bind -s "\C-o" "cle \C-j"  # 很少用
-
-    bind -s "\C-o" "- \n"  # 和vim的体验一致
     bind -s "\eo" "~/omd_dotF \n"  #  alt负责路径切换
 
-function find-file-peco() {
-    # 见alias.zsh里的f()
+# find file
+    function find-file-peco() {
+        # 见alias.zsh里的f()
 
-    if [[ `pwd` == "$HOME/d" || `pwd` == "/d" ]]
-    then
-        # BUFFER (scalar):   The entire contents of the edit buffer.
-            # LBUFFER 如果用LBUFFER=某某 , $RBUFFER不会变
-            # RBUFFER (scalar)
-            # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-BUFFER
+        if [[ `pwd` == "$HOME/d" || `pwd` == "/d" ]]
+        then
+            # BUFFER (scalar):   The entire contents of the edit buffer.
+                # LBUFFER 如果用LBUFFER=某某 , $RBUFFER不会变
+                # RBUFFER (scalar)
+                # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-BUFFER
 
-        # CURSOR (integer)
-            # The offset of the cursor, within the edit buffer.
-            # This is in the range 0 to $#BUFFER,
-            # and is by definition equal to $#LBUFFER.
-            # Attempts to move the cursor outside the buffer will result in the cursor being moved to the appropriate end of the buffer.
+            # CURSOR (integer)
+                # The offset of the cursor, within the edit buffer.
+                # This is in the range 0 to $#BUFFER,
+                # and is by definition equal to $#LBUFFER.
+                # Attempts to move the cursor outside the buffer will result in the cursor being moved to the appropriate end of the buffer.
 
-        # 排除不了: -path "/data2/wf2/.cache_wf" -prune -o \
-        # 可以排除: -path "./.cache_wf" -prune -o \
+            # 排除不了: -path "/data2/wf2/.cache_wf" -prune -o \
+            # 可以排除: -path "./.cache_wf" -prune -o \
 
-        BUFFER=$(find . \
-        -path "/d/docker" -prune -o       \
-        -path "$HOME/d/docker" -prune -o  \
-        -path "$HOME/d/.t" -prune -o      \
-        -path "$HOME/t" -prune -o         \
-        -path "./.4regret" -prune -o \
-        -path "./.cache_wf" -prune -o \
-        -path "~/d/.4regret" -prune -o \
-        -path "./.t" -prune -o            \
-        -name "*$1*"  | peco --query "$LBUFFER" )
-        # 别用系统的根目录下的peco，太老，用dotF下的
+            BUFFER=$(find . \
+            -path "/d/docker" -prune -o       \
+            -path "$HOME/d/docker" -prune -o  \
+            -path "$HOME/d/.t" -prune -o      \
+            -path "$HOME/t" -prune -o         \
+            -path "./.4regret" -prune -o \
+            -path "./.cache_wf" -prune -o \
+            -path "~/d/.4regret" -prune -o \
+            -path "./.t" -prune -o            \
+            -name "*$1*"  | peco --query "$LBUFFER" )
+            # 别用系统的根目录下的peco，太老，用dotF下的
+            CURSOR=$#BUFFER
+
+            # echo '当前路径为： ~/d'
+            # echo '(没进去搜的目录, 仍会输出一行 )'
+        else
+            BUFFER=$(find . \
+            -path "/d/docker" -prune -o       \
+            -path "$HOME/d/docker" -prune -o  \
+            -path "$HOME/d" -prune -o         \
+            -path "$XDG_CACHE_HOME/**" -prune -o \
+            -path "~/d/.4regret" -prune -o \
+            -path "./d" -prune -o             \
+            -path "$HOME/d/.t" -prune -o      \
+            -path "$HOME/t" -prune -o         \
+            -path "./.t" -prune -o            \
+            -path "/proc" -prune -o           \
+            -path "/dev" -prune -o            \
+            -name "*$1*"  | peco --query "$LBUFFER" )
+            # 别用系统的根目录下的peco，太老，用dotF下的
+            CURSOR=$#BUFFER
+
+            # echo '不搜 ~/d 或  /d '
+            # echo '(没进去搜的目录, 仍会输出一行 )'
+        fi
+    }
+    zle -N find-file-peco
+
+# history-peco
+    function history-peco() {
+        # cut -c 8-  去掉序号和空格
+                        # -1000: 最近2000条历史         # 别用系统的根目录下的peco，太老，用dotF下的
+        BUFFER=$(history -i -2000 |  tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $LBUFFER")
+                                # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
+                                    # 命令tac装不了的话, tail也凑合
+        BUFFER=${BUFFER:18}  # history加了-i，显示详细时间，回车后只取第19个字符开始的内容，（删掉时间)
+            # ${parameter:start:length}
         CURSOR=$#BUFFER
+        # 这个表示 数后面的字符串长度 ：$#
+        # BUFFER改成其他的，不行
+        # CURSOR变成小写 就不行了
 
-        # echo '当前路径为： ~/d'
-        # echo '(没进去搜的目录, 仍会输出一行 )'
-    else
-        BUFFER=$(find . \
-        -path "/d/docker" -prune -o       \
-        -path "$HOME/d/docker" -prune -o  \
-        -path "$HOME/d" -prune -o         \
-        -path "$XDG_CACHE_HOME/**" -prune -o \
-        -path "~/d/.4regret" -prune -o \
-        -path "./d" -prune -o             \
-        -path "$HOME/d/.t" -prune -o      \
-        -path "$HOME/t" -prune -o         \
-        -path "./.t" -prune -o            \
-        -path "/proc" -prune -o           \
-        -path "/dev" -prune -o            \
-        -name "*$1*"  | peco --query "$LBUFFER" )
-        # 别用系统的根目录下的peco，太老，用dotF下的
-        CURSOR=$#BUFFER
-
-        # echo '不搜 ~/d 或  /d '
-        # echo '(没进去搜的目录, 仍会输出一行 )'
-    fi
-}
-zle -N find-file-peco
-
-function history-peco() {
-    # cut -c 8-  去掉序号和空格
-                       # -1000: 最近2000条历史         # 别用系统的根目录下的peco，太老，用dotF下的
-    BUFFER=$(history -i -2000 |  tac | cut -c 8- | \peco --initial-filter="Regexp" --query "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2} $LBUFFER")
-                               # tac后，最新的在最上                # 正则， 通配年-月-日 时:分:秒："\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}\\s{2}"
-                                # 命令tac装不了的话, tail也凑合
-    BUFFER=${BUFFER:18}  # history加了-i，显示详细时间，回车后只取第19个字符开始的内容，（删掉时间)
-         # ${parameter:start:length}
-    CURSOR=$#BUFFER
-    # 这个表示 数后面的字符串长度 ：$#
-    # BUFFER改成其他的，不行
-    # CURSOR变成小写 就不行了
-
-     # 我没存peco的源码  “it is a single binary! You can put it anywhere you want"
-}
-zle -N history-peco
+        # 我没存peco的源码  “it is a single binary! You can put it anywhere you want"
+    }
+    zle -N history-peco
 
 # 其实直接按k 敲命令 再tab也可以. 但如果多个python程序在跑, 就要看后面的参数
 process-peco() {
@@ -265,8 +265,8 @@ process-peco() {
 zle -N process-peco
 
 # ctrl作为前缀：
-# 1. `\C-x',
-# 2.  `^x '  别用, 方便搜索, 并且和vim更像
+    # 1. `\C-x',
+    # 2.  `^x '  别用, 方便搜索, 并且和vim更像
 
         # 按2下ctrl，相当于敲了ctrl c，因为有道翻译取词翻译时，应该要悄悄复制
         bind '\C-F' find-file-peco
@@ -280,6 +280,9 @@ zle -N process-peco
         bind "\C-u" undo # 撤销, 好用
         # bind "\ed" undo # 撤销, 好用
         # bind "\e\d"  同上
+
+        bind '\C-p'  up-line-or-history
+        bind '\C-n'  down-line-or-history
 
     # ctrl alt h  和 zsh-vi-mode里, 敲shift h (后者 还不知道怎么改成 map H 0)
         # zle -N h
@@ -307,6 +310,8 @@ zle -N process-peco
         bind -s "\C-t" "tt \C-j"  # python ~/d/tmp.py  # t for try
         bind -s "\C-H" "echo '我是ctrl H，被tmux占用' \n"
         bind -s "\C-g" "echo '待用' \n"
+        # bind -s "\C-o" "cle \C-j"  # 很少用
+        bind -s "\C-o" "- \n"  # 和vim的体验一致
 
     # 待绑定：
         # C-b
@@ -322,15 +327,10 @@ zle -N process-peco
             # https://github.com/ohmyzsh/ohmyzsh/issues/7609
         # \C-[   和esc同体，别改！"
 
+    # ctrl 空格 貌似被ahk覆盖了
+    bind '\C- ' delete-word
 
 
-
-
-bind '\C- ' delete-word
-
-
-
-# vi mode 出问题来这里
 
 # alt键：\e
     # These are all the same.
@@ -339,14 +339,12 @@ bind '\C- ' delete-word
 
     bind -s '\e\C-?' 'echo "wf  bind, hi" \n'  # ASCII DEL  == ^?
 
-# `-m' option
-        # to bind tells zsh that wherever it binds an escape sequence like `\eb',
-        # it  should also bind the corresponding meta sequence like `\M-b'.
-        # 不加-m的话：you can rebind them separately. and if you want both sequences to be bound to a new command,
-        # you have to bind them both explicitly.
+    # `-m' option
+            # to bind tells zsh that wherever it binds an escape sequence like `\eb',
+            # it  should also bind the corresponding meta sequence like `\M-b'.
+            # 不加-m的话：you can rebind them separately. and if you want both sequences to be bound to a new command,
+            # you have to bind them both explicitly.
 
-
-# ctrl p/n  和 上下箭头 只能找到以特定内容开头的历史命令，这个可以所有？
 
 
 
@@ -373,12 +371,6 @@ alias rcd='cd -P ..'  # 同上
 # # autohotkey 使得lalt & vk88, 实现了这功能.避免干扰zsh-vim-mode:
 # bind -s '\el' 'cd - \n'  # 目录 后退一次
 
-# bind '\ek' up-line-or-history
-bind '\C-p'  up-line-or-history  # 有了history-substring-search-up 似乎用不到了
-# \C-p 本来是 history-beginning-search-forward, 搜以当前已敲内容开头的history 用↑代替了
-
-# bind '\ej' down-line-or-history
-bind '\C-n'  down-line-or-history
 
 #可以换成别的功能
 bind '\eJ' beginning-of-line
@@ -396,10 +388,6 @@ bind '\ex' execute-named-cmd
 
 
 
-#这3行 都会显示alt最为prefix的键位
-# bind -p "\033"
-# bind -p "\e"
-# bind -p "^["
 
 # https://sgeb.io/posts/zsh-zle-custom-widgets/
 # bind -s '^[^H' 'echo "ctrl alt H"'   # 被zsh-vim-mode占用？
@@ -410,14 +398,8 @@ bind -s '\C-l'   'echo "tmux要用" \n'
 
 
 
-
-# setup for deer
-# autoload -U deer
-# zle -N deer
-# bind ............
-
-# select viins keymap and bind it to main
-# bind -v 别在这里用,放在rc.zsh的zplug那块的zsh-vim-mode插件附近吧
+# autoload -U ranger
+    # zle -N deer
 
 # 改了不生效
 # bind '^x^e' vi-find-next-char
@@ -425,27 +407,8 @@ bind -s '\C-l'   'echo "tmux要用" \n'
 # bind '\C-g'
 
 
-# json里写不了注释：
-# C-c	peco.Cancel
-
-# 不知道怎么用, 敲了没反应：
-# C-k	 peco.KillEndOfLine
-# C-t	peco.ToggleQuery:  Toggle list between filtered by query and not filtered.
-
-# 熟悉后删掉：
-# C-u	    peco.KillBeginningOfLine
-# C-w	    peco.DeleteBackwardWord
-# C-n	    peco.SelectDown
-# C-p	    peco.SelectUp
-
-# C-r	    peco.RotateFilter
-
-
 bind -s "\ei" 'ln -s "$(pwd)/"'
 
-
-# todo
+# 记一笔:
 # \C-D在当前行 有字符时, 相当于Del
 #            无字符是, 退出 (但无字符时, 按真正的Del, 不会退出)
-#
-# 没有unbind命令, 想unbind,可以把某个key, bind为不存在的function, 报错后删掉

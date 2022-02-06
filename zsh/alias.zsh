@@ -1,49 +1,46 @@
-# The shell evaluation order (per POSIX) for the entities in your question is:
-# aliases 优先于  variables --> command substitutions --> special built-ins --> functions --> regular built-ins
+# The shell evaluation order ( POSIX)
+    # aliases 优先于
+    # variables
+    # command substitutions
+    # special built-ins
+    # functions
+    # regular built-ins
 
-# zsh bindkey
-alias zbk='e ~/dotF/zsh/bindkey_wf.zsh ; zsh'
-alias ll='flake8'
-alias pl='e ~/dotF/cfg/nvim/plug_wf.vim'
 
-alias con='conda'
-alias ci='conda install -y'
-# conda create --name new_name --clone old_name
-# conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
-cda(){
-    conda activate $1
-    echo $1 > $XDG_CACHE_HOME/conda_name
-}
-alias c_ac='conda activate'
-alias c_de='conda deactivate &&  t $XDG_CACHE_HOME/conda_name'
-    # 结合tmux send-keys  'conda activate `cat $XDG_CACHE_HOME/conda_name`' Enter
+# nn: new name 或者nick name
+alias nn='alias'
+
+nn zbk='e ~/dotF/zsh/bindkey_wf.zsh ; zsh'
+nn ll='flake8'
+nn pl='e ~/dotF/cfg/nvim/plug_wf.vim'
+
 
 
 # https://stackoverflow.com/questions/58601523/how-do-i-remove-the-head-of-dollar-sign-on-stdin-line-in-shell#comment103516994_58601646
-alias '$'='' # 省去删掉复制来的命令 最前面的$
+nn '$'='' # 省去删掉复制来的命令 最前面的$
 # oh my git    oh my god
 
-alias w3m='echo "w3m或者ranger显示图片是很难的__等关注的issue的邮件通知吧" ; w3m'
-alias u='unset ALL_PROXY'
+nn w3m='echo "w3m或者ranger显示图片是很难的__等关注的issue的邮件通知吧" ; w3m'
+nn u='unset ALL_PROXY'
 
 # 多加一个找manpage的路径
 # -M 指定manpath
-alias man='man -M "$(manpath -g):~/dotF/man_wf"'
+nn man='man -M "$(manpath -g):~/dotF/man_wf"'
 
 # 在~/dotF/mini_FS/bin 下
-alias names='massren'
-alias rename='massren'
+nn names='massren'
+nn rename='massren'
 #  never use normal sudo to start graphical applications as root
 # 否则普通用户可能无法登陆（文件变成root的了）
 #
 
-alias fzf='~/dotF/fuzzyF/bin/fzf --height 40% --layout=reverse --border'
+nn fzf='~/dotF/fuzzyF/bin/fzf --height 40% --layout=reverse --border'
 
-alias cfg='~/dotF/cfg/'
+nn cfg='~/dotF/cfg/'
 
 export CHTSH_CONF='~/dotF/cfg/cht.sh.conf'
-# alias ch='echo "搜Stack Overflow还行, tldr别用它" ; cht.sh --shell'
-alias ch='echo "tldr找不到的话, 直接上Stack Overflow吧", 不管别人怎么夸这个cheatsheet, 但目前没屁用!!!!!!!!!!!!!'
+# nn ch='echo "搜Stack Overflow还行, tldr别用它" ; cht.sh --shell'
+nn ch='echo "tldr找不到的话, 直接上Stack Overflow吧", 不管别人怎么夸这个cheatsheet, 但目前没屁用!!!!!!!!!!!!!'
 
 # todo: bat换成nvimpager?  单页能显示完的就还是用bat?
 # cheat website
@@ -53,9 +50,9 @@ chw(){
     tmp="cheat.sh/$*"
     curl --silent $tmp\?T | bat
     }
-alias chw='echo "tldr找不到的话, 直接上Stack Overflow吧'
+nn chw='echo "tldr找不到的话, 直接上Stack Overflow吧'
 
-alias nvtop='/home/wf/d/fancy_repo_follow_up/nvtop_wf_built/usr/local/bin/nvtop'
+nn nvtop='/home/wf/d/fancy_repo_follow_up/nvtop_wf_built/usr/local/bin/nvtop'
 
 aps(){
     apt search $1 | peco
@@ -65,13 +62,13 @@ aps(){
 # file1 = $(cat answer.txt)  # 能避免特殊字符发挥作用
 
 
-# alias echo='print "正在用print代替echo" && print -l'
-alias ec='print -l && print "正在用print代替echo" '
+# nn echo='print "正在用print代替echo" && print -l'
+nn ec='print -l && print "正在用print代替echo" '
 
-alias ver='version'
+nn ver='version'
 
-alias grep='grep --color=always'
-alias gr='grep'
+nn grep='grep --color=always'
+nn gr='grep'
 
 
 ht(){
@@ -100,7 +97,7 @@ ht(){
 #            2 直接定义 my_func_ls(){ }      与上面相反. 【注意函数名别和built-in重复】
 
 
-alias cle='clear -x'
+nn cle='clear -x'
 
 q(){
     tree -L 2 --filelimit=50 $1 | peco
@@ -174,14 +171,14 @@ unzip_multi(){
         unzip ${x} -d ${dir} && t ${x}
     done
 }
-alias -s zip=unzip_multi
+nn -s zip=unzip_multi
 
 # Use [] : if you want your script to be portable across shells.
 # Use [[]] : if you want conditional expressions not supported by `[]` and don't need to be portable.
 #
 
-alias nls='export chpwd_functions=()'
-# alias cd='export chpwd_functions=() ; builtin cd' #  加了这行，就算没敲cd，chpwd_functions也废掉了
+nn nls='export chpwd_functions=()'
+# nn cd='export chpwd_functions=() ; builtin cd' #  加了这行，就算没敲cd，chpwd_functions也废掉了
 
 
 
@@ -194,28 +191,27 @@ alias nls='export chpwd_functions=()'
 # %y表示  `modify time`
 
 mt(){
-    # todo: 送到peco
-    echo '如果在目录下新增内容，该目录的mtime会变。如果只是修改其下内容，该目录的mtime不变'
-    # %y得到的  +0800表示东八区
-    find $1 -type f -print0 | xargs --null stat --format "%y 改%n"  | \
-    sort --numeric-sort --reverse | \
-    head -100 | \
-    cut --delimiter=' ' --fields=1,2,4 | \
-    awk -F " " \
-    '{OFMT="%.6f" ; \
-    print NR"】", \
-    $1,           \
-    " ",          \
-    $2,           \
-    " ",          \
-    $3            \
-    }'  | bat   # 这里不能用双引号代替单引号
-    # 不行:
-    # }'  | $PAGER   # 这里不能用双引号代替单引号
+    # echo '如果在目录下新增内容，该目录的mtime会变。'
+    # echo '如果只是修改其下内容，则不变'
+                                                        # %y得到的  +0800表示东八区
+    find $1 -type f -print0 |                       \
+        xargs --null stat --format "%y 改%n"  |     \
+        sort --numeric-sort --reverse |             \
+        head -50 |                                  \
+        cut --delimiter=' ' --fields=1,2,4 |        \
+        awk -F " "                                  \
+        '{OFMT="%.6f" ; \
+        print NR"】", \
+        $1,           \
+        " ",          \
+        $2,           \
+        " ",          \
+        $3            \
+        }'  | $PAGER   # 这里不能用双引号代替单引号
     # date --date="${UglyTime}"  +"%Y年%m月%d日 %X"` | \
     # PrettyTime=`date --date="${UglyTime}"  +"%Y年%-m月%-d日 %X"
-    # \grep : --color=always
 }
+
 # access time
 # mtime变了，ctime跟着变。ctime变了，atime跟着变
 # https://zhuanlan.zhihu.com/p/429228870  # atime不是很可靠
@@ -295,7 +291,7 @@ nt(){
 # <_<---------------------------------------------------------关于mtime-----------------------------------<_<
 
 #移到垃圾箱
-alias tvsc='t'
+nn tvsc='t'
 
 
 
@@ -309,8 +305,8 @@ alias tvsc='t'
 # }
 #
 
-# 作为alias 可以同名
-alias rg='\rg --pretty --hidden --smart-case'
+# 作为nn 可以同名
+nn rg='\rg --pretty --hidden --smart-case'
 
 
 
@@ -326,25 +322,25 @@ cfc(){
 }
 
 
-alias ca='cat'
-alias ba='bat'
-alias w=$PAGER
+nn ca='cat'
+nn ba='bat'
+nn w=$PAGER
 
 # bat read git output
 bgit(){git $* | bat}
 
 # /home/wf/dotF/zsh/color_less_很少用了.zsh 里，export LESS='--quit-if-one-screen 一大串.....'
-alias le="less  --quit-if-one-screen"
-# alias le="less  "
+nn le="less  --quit-if-one-screen"
+# nn le="less  "
 
 # 方便在命令中间直接敲nvim
-alias vim='nvim'
-alias vi='nvim'
+nn vim='nvim'
+nn vi='nvim'
     # rc.zsh里有:
             # export PATH="$HOME/dotF/nvim-linux64/bin:$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
-    # 这个不必了: alias nvim='~/dotF/nvim-linux64/bin/nvim'
+    # 这个不必了: nn nvim='~/dotF/nvim-linux64/bin/nvim'
 # 不用加-u 指定 因为默认就在~/.config/下
-# alias vim='nvim ~/dotF/cfg/nvim/init.vim'
+# nn vim='nvim ~/dotF/cfg/nvim/init.vim'
 
 
 
@@ -425,32 +421,32 @@ r4(){
          --before-context 4 \
          --after-context 4  \
          --smart-case "$*" |  less --pattern="$*"
-                            # alias le="less  --quit-if-one-screen"
+                            # nn le="less  --quit-if-one-screen"
 }
 
-alias ac='_ack(){ ack "$*";};_ack'
+nn ac='_ack(){ ack "$*";};_ack'
 
 #找到软链接的真实路径
-alias rl='readlink -f'
+nn rl='readlink -f'
 #j for jump
-alias j='ln -s --interactive --verbose --logical'
+nn j='ln -s --interactive --verbose --logical'
 #logical: dereference TARGETs that are symbolic links
 
 
 
 #==============================ls相关===================================
 # todo 现在exa和ls混用, 最好统一一下
-    alias ls='\ls -hrt --color=always'
-        # alias ls='ls | awk "{print $4,$5,$6,$7, $3}"'
-    alias la='\ls -ACF1GhFtr --color=always --classify'
-    alias lc='lt -c'
-    alias lla='\ls -gGhtrFA --color=always'
-    alias lr='ls -gGhtF --color=always'
-    alias lt='ll -tr'
-    alias lx='\ls -l'
-    alias l.='\ls -d1 .* --color=always --classify | ba'
+    nn ls='\ls -hrt --color=always'
+        # nn ls='ls | awk "{print $4,$5,$6,$7, $3}"'
+    nn la='\ls -ACF1GhFtr --color=always --classify'
+    nn lc='lt -c'
+    nn lla='\ls -gGhtrFA --color=always'
+    nn lr='ls -gGhtF --color=always'
+    nn lt='ll -tr'
+    nn lx='\ls -l'
+    nn l.='\ls -d1 .* --color=always --classify | ba'
     # list lean
-    alias ll='\ls -1htr --color=always --classify | head -30'
+    nn ll='\ls -1htr --color=always --classify | head -30'
 
     l(){
         exa                    \
@@ -496,7 +492,7 @@ alias j='ln -s --interactive --verbose --logical'
 
 
 # [[===========================================================================被替代了,先放这儿
-# alias l=leo_func_ls
+# nn l=leo_func_ls
 #写成l()会报错。可能和built-in冲突了
 # leo_func_ls(){
 #     # --classify:   append indicator (one of */=>@|) to entries
@@ -521,11 +517,14 @@ alias j='ln -s --interactive --verbose --logical'
 # [[===========================================================================被替代了,先放这儿
 
 ls_after_cd() {
-    # add `emulate -L zsh` to  the body of your script or function
-    # 这样可以 use zsh's `built-in features` 避免setopt等搞乱默认配置
-    emulate -L zsh  # -L  | set local_options and local_traps as well
-    # -R  | reset all options instead of only those needed for script portability
-    #  模拟 csh ksh sh 或者 （没加配置的）zsh
+    emulate -L zsh  # add this to  the body of your script or function
+                    # 这样可以 use zsh's `built-in features`,  避免setopt等搞乱默认配置
+                    # to get round problems with options being changed in /etc/zshenv:
+                        # put `emulate zsh' at the top of the script.
+         # -L  | set local_options(activates LOCAL_OPTIONS) and local_traps as well
+                    #                         trap命令:   trap 'echo "hi"' SIGINT
+         # -R  | reset all options instead of only those needed for script portability
+    # emulate: 模拟 csh ksh sh 或者 （没加配置的）zsh
 
     exa \
         --long \
@@ -586,7 +585,7 @@ chpwd_functions=(${chpwd_functions[@]} "date_leo")
 chpwd_functions=(${chpwd_functions[@]} "ls_after_cd")
 
 # 加了这行，就算没敲cd，chpwd_functions也废掉了:
-# alias cd='export chpwd_functions=() ; builtin cd'
+# nn cd='export chpwd_functions=() ; builtin cd'
 
 
 
@@ -601,28 +600,28 @@ chpwd_functions=(${chpwd_functions[@]} "ls_after_cd")
 # t: trash
 
 
-alias e='nvim'
+nn e='nvim'
 # edit diff
-alias ed='nvim -d'
+nn ed='nvim -d'
 # if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
 # if [[ -z "$TMUX" ]];then
       # -z string :  true if length of string is zero.
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-    alias e='code'
-    alias ed='code -d'
+    nn e='code'
+    nn ed='code -d'
 fi
 
-alias -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s,json}=e
+nn -s {cpp,txt,zsh,vim,py,toml,conf.cfg,s,json}=e
     # zsh默认用vim打开，导致无法执行？有其他bug？但是很多人都这么写
                                     # 后缀名s表示seting,简洁,代替conf
-    # alias -s py=vim  # 要是想 让python被zsh自动补全,注释掉这行
+    # nn -s py=vim  # 要是想 让python被zsh自动补全,注释掉这行
 
 # ed是一个没啥用的系统bin
-alias vd='nvim -d'
+nn vd='nvim -d'
 
-alias ep='e'
-alias eb='e'
-# alias epe='e'  # 太复杂了，先不搞
+nn ep='e'
+nn eb='e'
+# nn epe='e'  # 太复杂了，先不搞
 
 
 t() {
@@ -634,32 +633,32 @@ t() {
     done
 }
 
-alias tw=t
-alias te=t
-alias tp=t
-alias tb=t
+nn tw=t
+nn te=t
+nn tp=t
+nn tb=t
 
 # 第一次用才需要
-# alias p='python3 -W ignore -m pretty_errors'
+# nn p='python3 -W ignore -m pretty_errors'
 p(){
     chpwd_functions=()
     \python3 -W ignore $*  # 打断后就不再执行下面几行
     chpwd_functions=(${chpwd_functions[@]} "ls_after_cd")
 }
-alias python='p'
-alias python3='p'
+nn python='p'
+nn python3='p'
 
-alias pb='p'
-alias pe='p'
-alias pw='p'
+nn pb='p'
+nn pe='p'
+nn pw='p'
 
-alias b='pudb3'
+nn b='pudb3'
 
-alias bp='b'
-alias be='b'
-alias bw='b'
+nn bp='b'
+nn be='b'
+nn bw='b'
 
-alias ee='p'
+nn ee='p'
 # ahk has set:
     # insert & v::
     # send, ^a
@@ -690,17 +689,17 @@ cl(){
 
 
 # gpustat and grep wf
-alias g='echo "gpu序号记得减1";  gpustat  --show-user --no-header  | cut --delimiter="," -f2 | bat  --number --language=py3'
-alias gw='g --your-name wf '
-alias gwf='g --your-name wf '
+nn g='echo "gpu序号记得减1";  gpustat  --show-user --no-header  | cut --delimiter="," -f2 | bat  --number --language=py3'
+nn gw='g --your-name wf '
+nn gwf='g --your-name wf '
 
-alias gi='gpustat  --show-user --no-header --show-pid'
-alias giw='gi --your-name wf'
-alias giwf='gi --your-name wf'
+nn gi='gpustat  --show-user --no-header --show-pid'
+nn giw='gi --your-name wf'
+nn giwf='gi --your-name wf'
 
-alias au='apt update'
+nn au='apt update'
 
-alias nv='nvidia-smi'
+nn nv='nvidia-smi'
 
 # count line number
 #$ echo "$((20+5))"
@@ -709,35 +708,54 @@ alias nv='nvidia-smi'
 #22
 
 # edit tempt
-alias et='e ~/d/tmp.py'
+nn et='e ~/d/tmp.py'
 # try tempt
-alias tt='python ~/d/tmp.py'
+nn tt='python ~/d/tmp.py'
 # bd : 本地
-alias bd='e ~/local.zsh ; zsh'
-# alias jn='jupyter notebook'
+nn bd='e ~/local.zsh ; zsh'
+# nn jn='jupyter notebook'
 
 
-alias snp='~/dotF/snippetS'
+nn snp='~/dotF/snippetS'
 
 
-# Sometimes it is convenient to create separate tmux servers,
-# perhaps to ensure an important process is completely isolated or to test a tmux configuration.
-# S socket-path:  Specify a full alternative path to the server socket.
-# If -S is specified, the default socket directory is not  used and any -L flag is ignored
-alias tmux='\tmux \
-            -S $XDG_CACHE_HOME/tmux_socket  \
-            -f ~/dotF/cfg/tmux/tmux.conf'
+# tmux:
+#   3.0升到3.2后, 老是说server too old
+#   暂时用nvim的terminal吧  懒得配tmux.conf了
+    # Sometimes it is convenient to create separate tmux servers,
+    # perhaps to ensure an important process is completely isolated or to test a tmux configuration.
+    # S socket-path:  Specify a full alternative path to the server socket.
+    # If -S is specified, the default socket directory is not  used and any -L flag is ignored
+    nn tmux='\tmux -S $XDG_CACHE_HOME/tmux_socket'
+                # -f ~/dotF/cfg/tmux/tmux.conf'
+                # tmux 3.1开始: add  ~/.config/tmux/tmux.conf to the default search path for configuration  files.
 
-tm() {
-    # https://stackoverflow.com/a/29369681/14972148
-    # export MY_VAR="some value"
-    if [ "$1" != "" ] # or better, if [ -n "$1" ]
-    then
-        tmux  new -s s_$1 || tmux attach -t s_$1  -d
-    else
-        tmux  new -s s_初代 || tmux attach -t s_初代 -d
-    fi
-}
+    tm() {
+        # https://stackoverflow.com/a/29369681/14972148
+        # export MY_VAR="some value"
+        if [ "$1" != "" ] # or better, if [ -n "$1" ]
+        then
+            tmux  new -s s_$1 || tmux attach -t s_$1  -d
+        else
+            tmux  new -s s_初代 || tmux attach -t s_初代 -d
+        fi
+    }
+
+    nn con='conda'
+    nn ci='conda install -y'
+    # conda create --name new_name --clone old_name
+    # conda remove --name old_name --all # or its alias: `conda env remove --name old_name`
+    cda(){
+        conda activate $1
+        echo "$1" > $XDG_CACHE_HOME/conda_name
+            # echo "$foo" instead of just echo $foo.
+            # Without double-quotes the variable's contents get parsed in a somewhat weird way that tends to cause bugs.
+
+    }
+    nn c_ac='conda activate'
+    nn c_de='conda deactivate &&  t $XDG_CACHE_HOME/conda_name'
+        # 结合tmux send-keys  'conda activate `cat $XDG_CACHE_HOME/conda_name`' Enter
+    nn tc='e ~/dotF/cfg/tmux/tmux.conf'
 
 bk(){
     for my_file in $*
@@ -767,7 +785,7 @@ bk(){
 
 # if $1 expands to demo , then ${1%.wf_run} 把传进来的文件名的后缀wf_run扔掉
 # if $1 expands to demo , then ${1%.*} expands to demo  ??
-alias oc='_oc(){ g++ -g $* -o ${1%.*} `pkg-config --cflags --libs opencv` ; ./${1%.*}; };_oc'
+nn oc='_oc(){ g++ -g $* -o ${1%.*} `pkg-config --cflags --libs opencv` ; ./${1%.*}; };_oc'
 # oc demo.cpp draw.h draw.cpp
 # ./demo
 
@@ -789,33 +807,33 @@ alias oc='_oc(){ g++ -g $* -o ${1%.*} `pkg-config --cflags --libs opencv` ; ./${
     # fi
 # }
 
-alias sc='scp'
-alias scp='scp -r'
-# alias scp='sshpass -p "你的密码" scp -r '
+nn sc='scp'
+nn scp='scp -r'
+# nn scp='sshpass -p "你的密码" scp -r '
 # tr本来是linux的builtin
 # 最近15个文件
 # printf 命令 指定格式
 
 
 #都说别改动或者覆盖linux的builtin!
-# 最规范的语法 alias custom-alias='command'  command 里面没空格就不用引号
+# 最规范的语法 nn custom-alias='command'  command 里面没空格就不用引号
 # {后一定要有空格
 # []  和{}内侧左右都留一个空格 不然可能报错
 # [ your_code ]才对  [your_code]少了空格
 # 需要vim的语法检查时，改后缀名.sh再打开
 # 双引号换成单引号就不行
-# alias vj='_j(){ jq -C '' $1 ; }; _j'
+# nn vj='_j(){ jq -C '' $1 ; }; _j'
 # 最外层用双引号也不行
-# alias vj="_j(){ jq -C "" $1 |bat -R;};_j"
+# nn vj="_j(){ jq -C "" $1 |bat -R;};_j"
 
 # 还可以用:
 # x
 
 
-alias sa='chmod -R 777'  #share to all
-alias t_a='t *'
-alias sc='noglob scp -r'
-alias scp='noglob scp -r'
+nn sa='chmod -R 777'  #share to all
+nn t_a='t *'
+nn sc='noglob scp -r'
+nn scp='noglob scp -r'
 # tac:
 # Print and concatenate files in reverse (last line first)
 
@@ -824,28 +842,27 @@ alias scp='noglob scp -r'
 # print /l "${PATH//:/\n }"
 
 
-alias pt='ptpython --vi'
-#alias pt='ptpython --vi --config-dir=~/dotF/cfg/ptpython'
-alias pti='ptipython --vi'
-alias matlab='matlab -nosplash -nodesktop'
-# alias ml='matlab -nosplash -nodesktop'
-# 避免sudo后的alias失效？
-# alias sudo=''
+nn pt='ptpython --vi'
+#nn pt='ptpython --vi --config-dir=~/dotF/cfg/ptpython'
+nn pti='ptipython --vi'
+nn matlab='matlab -nosplash -nodesktop'
+# nn ml='matlab -nosplash -nodesktop'
+# 避免sudo后的nn失效？
+# nn sudo=''
 
-alias tc='e ~/dotF/cfg/tmux/tmux.conf'
-alias s='e ~/dotF/zsh/rc.zsh ; zsh'
+nn s='e ~/dotF/zsh/rc.zsh ; zsh'
 
 # az: 安装an zhuang
-alias az='e ~/dotF/auto_install/auto_install.sh'
+nn az='e ~/dotF/auto_install/auto_install.sh'
 # al: alias
-alias al='e ~/dotF/zsh/alias.zsh; zsh'
+nn al='e ~/dotF/zsh/alias.zsh; zsh'
 
 # i for init.vim
-alias in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
+nn in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
 
 
-alias x='PAGER=bat git'
-alias lg='lazygit'
+nn x='PAGER=bat git'
+nn lg='lazygit'
 
 
 # get github
@@ -940,38 +957,38 @@ compdef _dirs d  # compdef: 一个函数，定义自动补全。让函数d能被
 #   '(* -c)-p[display directory entries one per line]' \
 #   '(-)*:directory:_directories'
 
-# global alias，有点危险， 别用
-# alias -g ...='../..'
+# global nn，有点危险， 别用
+# nn -g ...='../..'
 #
 # 什么特殊语法？
-alias _='待用'
-alias -- -='cd -'  # 和下面这行一样？
-alias -- -='cd -1'
+nn _='待用'
+nn -- -='cd -'  # 和下面这行一样？
+nn -- -='cd -1'
 
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
+nn ..='cd ..'
+nn ...='cd ../..'
+nn ....='cd ../../..'
 
-alias 2='cd -2'
-alias 3='cd -3'
-alias 4='cd -4'
-alias 5='cd -5'
-alias 6='cd -6'
+nn 2='cd -2'
+nn 3='cd -3'
+nn 4='cd -4'
+nn 5='cd -5'
+nn 6='cd -6'
 
 # 光标
-alias gb='echo -e "\033[?25h"'
+nn gb='echo -e "\033[?25h"'
 #加了这行导致./build_ops.sh等执行不了
-#alias alias -s sh=vi
+#nn nn -s sh=vi
 #大小写不敏感  If you want to ignore .gitignore and .hgignore, but still take .ignore into account, use -U
-alias c=cp
-alias cp='cp -ivr'
-alias c.='cp -ivr -t `pwd`'
-alias df='df -h | bat'
+nn c=cp
+nn cp='cp -ivr'
+nn c.='cp -ivr -t `pwd`'
+nn df='df -h | bat'
 # bie dai li，别代理
-alias bdl='unset ALL_PROXY; pqi use tuna; conda conf'
+nn bdl='unset ALL_PROXY; pqi use tuna; conda conf'
 
-alias dkr='docker'
-alias dkrps='docker ps -a --format "table {{.Names}} 我是分隔符 {{.Image}}  "'
+nn dkr='docker'
+nn dkrps='docker ps -a --format "table {{.Names}} 我是分隔符 {{.Image}}  "'
 # zsh启动不了时, 并不会启动bash, 搁置
 
 dk(){
@@ -981,7 +998,7 @@ docker start $1 ; docker exec -it $1 zsh
 }
 
 
-alias peco='peco --rcfile $HOME/.config/peco/config.json'
+nn peco='peco --rcfile $HOME/.config/peco/config.json'
 
 
 
@@ -1014,7 +1031,7 @@ pid(){
         # bsdtime      The display format is usually "MMM:SS",
                     # but can be `shifted to the right` if the process used more
                     # than 999 minutes of cpu time??
-        # time      "[天数-]时:分:秒" format.  (alias cputime).
+        # time      "[天数-]时:分:秒" format.  (nn cputime).
 
 
         # START::time the command started.-- 下面两种情况，只有细微差异
@@ -1114,15 +1131,15 @@ gc(){
     echo $1 $2 $3
     git clone $1 $2
 }
-alias gcc='nocorrect gcc'
-alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
-# alias git='pro &&  git'
-alias globurl='noglob urlglobber '
+nn gcc='nocorrect gcc'
+nn get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
+# nn git='pro &&  git'
+nn globurl='noglob urlglobber '
 hl(){
     du --summarize --human-readable $* | sort --human-numeric-sort --reverse| bat
  }
 
-alias http-serve='python3 -m http.server'
+nn http-serve='python3 -m http.server'
 
 # check ip
 cip(){
@@ -1146,16 +1163,16 @@ cip(){
 }
 
 # kill -15
-alias k='kill -s TERM'
+nn k='kill -s TERM'
 
 
-alias locate='noglob locate'
+nn locate='noglob locate'
 
 
-alias m='\mv -iv'
-alias mv='\mv -iv'
-alias mm='\mv -iv -t `pwd`'
-alias m.='\mv -iv -t `pwd`'
+nn m='\mv -iv'
+nn mv='\mv -iv'
+nn mm='\mv -iv -t `pwd`'
+nn m.='\mv -iv -t `pwd`'
 
 
 # Makes a directory and changes to it.
@@ -1178,82 +1195,82 @@ mcd() {
 }
 
 
-alias pi='pip3 install'
-alias pip='pip3'
+nn pi='pip3 install'
+nn pip='pip3'
 
 
-alias rm='nocorrect rm -Irv --preserve-root'
+nn rm='nocorrect rm -Irv --preserve-root'
 
-alias n='zsh'  # n:  new zsh
-
-
-alias to='htop --user=`whoami` --delay=30 --tree'  # system monitor
-alias top=htop
-alias toc='htop -s %cpu'
-alias tom='htop -s %mem'
-
-alias z='_z 2>&1'
+nn n='zsh'  # n:  new zsh
 
 
-# alias oc='_oc(){ g++ $* -o ${1%.*} `pkg-config --cflags --libs opencv` ; ./${1%.*}; };_oc'
+nn to='htop --user=`whoami` --delay=30 --tree'  # system monitor
+nn top=htop
+nn toc='htop -s %cpu'
+nn tom='htop -s %mem'
+
+nn z='_z 2>&1'
+
+
+# nn oc='_oc(){ g++ $* -o ${1%.*} `pkg-config --cflags --libs opencv` ; ./${1%.*}; };_oc'
 # -f指定归档文件
 #  -z (同 --gzip, --gunzip, --ungzip)  通过 gzip 过滤归档
-# alias -s gz='wf_gz(){ tar -xzf $* ; t $* ; };wf_gz'
+# nn -s gz='wf_gz(){ tar -xzf $* ; t $* ; };wf_gz'
 
-alias disimg="imcat"
-alias imcat="imcat"
-alias -s png=imcat
-alias -s jpg=imcat
-alias -s jpeg=imcat
-alias -s svg=imcat
-alias -s bmp=imcat
-alias -s gif=imcat
+nn disimg="imcat"
+nn imcat="imcat"
+nn -s png=imcat
+nn -s jpg=imcat
+nn -s jpeg=imcat
+nn -s svg=imcat
+nn -s bmp=imcat
+nn -s gif=imcat
 
 # -x 等同 --extrac
-alias -s tar='tar -xf'
+nn -s tar='tar -xf'
 
-alias -s gz='tar -xzf'
-alias -s bz2='tar -xjf'  # -j   针对bz2
+nn -s gz='tar -xzf'
+nn -s bz2='tar -xjf'  # -j   针对bz2
 
-alias -s tar.bz2='tar --extract --bzip2 --verbose -f' #-f指定文件
-alias -s tbz='tar --extract --bzip2 --verbose -f' # 同上
+nn -s tar.bz2='tar --extract --bzip2 --verbose -f' #-f指定文件
+nn -s tbz='tar --extract --bzip2 --verbose -f' # 同上
 
-alias -s tar.gz='tar -xzf'
-alias -s tgz='tar -xzf'  # 同上
+nn -s tar.gz='tar -xzf'
+nn -s tgz='tar -xzf'  # 同上
 
-alias -s tar.xz='tar -xJf'
-alias -s txz='tar -xJf'  # 同上
+nn -s tar.xz='tar -xJf'
+nn -s txz='tar -xJf'  # 同上
 
 ##加了这行导致./build_ops.sh等执行不了
-#alias -s sh=vi
+#nn -s sh=vi
 # 会导致执行不了?
-# alias -s make='vim'
+# nn -s make='vim'
 
 # 只看不改的文件:
-    alias -s md=bat
-    alias -s log=bat
-    alias -s txt=bat
-    alias -s html=bat
-    alias -s csv=vim
+    nn -s md=bat
+    nn -s log=bat
+    nn -s txt=bat
+    nn -s html=bat
+    nn -s csv=vim
 
-alias -s yaml=vim
-alias -s yml=vim
+nn -s yaml=vim
+nn -s yml=vim
 
 cj(){
     # cj: 意思是 see json
     jq -C "" $1 |le -R  # jq: json query？
 }
-alias -s json=cj
+nn -s json=cj
 
-alias ai='sudo apt install'
-alias apt='sudo apt'
-alias apt-get='apt'
+nn ai='sudo apt install'
+nn apt='sudo apt'
+nn apt-get='apt'
 
 
 # unix software resoure python
-# alias up='/usr/bin/python'
+# nn up='/usr/bin/python'
 
-# 函数开头, 比如下面的echo, 前少了空格，在用这个alias时，报错zsh: parse error near `}
+# 函数开头, 比如下面的echo, 前少了空格，在用这个nn时，报错zsh: parse error near `}
 
 # http://faculty.salina.k-state.edu/tim/unix_sg/shell/variables.html
 # 1. 方法名后面可以有多个空格
@@ -1278,36 +1295,35 @@ alias apt-get='apt'
     # -S : Show error even when -s is used
     # -L : follow redirects
 
-# alias wg='axel'
-alias wg='python3 ~/dotF/mini_FS/bin/axel_with_quote.py'
-alias wget='echo "using axel. 要是遇到别人写wget -O-，知道它是重定向到stdout就好。 axel的参数和wget不同" ; axel'
-alias wgname='wget -c -O "wf_need_to_change_name"'
+# nn wg='axel'
+nn wg='python3 ~/dotF/mini_FS/bin/axel_with_quote.py'
+nn wget='echo "using axel. 要是遇到别人写wget -O-，知道它是重定向到stdout就好。 axel的参数和wget不同" ; axel'
+nn wgname='wget -c -O "wf_need_to_change_name"'
 
     # sh -c "$(wget -q -O- git.io/chezmoi)"
     # -O: 指定输出文件名
 
 
-alias help=run-help
-alias hp=run-help
+nn help=run-help
+nn hp=run-help
 
-alias _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
+nn _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
             # 网络不好时, 自己下载tldr.zip, 解压到~/.tldr/cache/ 可以删掉pages.某某语言,
             # 只剩pages目录
-# alias _tldr='/home/linuxbrew/.linuxbrew/bin/tldr'
+# nn _tldr='/home/linuxbrew/.linuxbrew/bin/tldr'
             # 同样是下载tldr.zip   ~/.tldrc/tldr/ 一堆各种语言的pages
 
-        # alias tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
+        # nn tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
 
         # 在各种client中,它最好看, 但要是找不到, 会一直找
         # brew install tldr, 得到的格式用vim打开很乱
 
-alias cm='whence -ca'
+nn cm='whence -ca'
     # 这可以退休了?  直接用h()
     # cm for command
     # 代替where which type
     # -v for verbose, 不过好像没用
 
-# 在zshrc里设置了代理，这里不用设
-alias goo='googler'
-alias bi='brew  install'
+nn goo='dl ; googler'
+nn bi='brew  install'
 

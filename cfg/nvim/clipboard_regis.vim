@@ -3,6 +3,7 @@ lua require('wf_lua')
 " 我的飞书笔记:https://cmb-d3-ocr.feishu.cn/docs/doccnSbue41vpDkdPAtYDWrxaNc#
 " 和系统粘贴板打通(但隔着ssh, 到不了本地), 有了tmux_好像不用了
     nnoremap <Leader>y "+y
+        " 没有tmux复制得快
     vnoremap <leader>y "+y
 
     noremap <Leader>Y "+Y

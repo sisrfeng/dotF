@@ -37,3 +37,21 @@ autoload -Uz run-help-ip
 autoload run-help-git
 #====================================================zsh function==============================
 
+
+
+
+# =============================================================================================
+# 放到zplug的东西前 会报错
+# setopt ignorebraces     #  turns off csh-style brace ({)   expansion.  不知道哪里复制来的
+# 设置前:
+# % echo x{y{z,a},{b,c}d}e
+# xyze xyae xbde xcde
+# % setopt ignorebraces
+# % echo x{y{z,a},{b,c}d}e
+# x{y{z,a},{b,c}d}e
+# =============================================================================================
+
+
+# If you want to preserve (and don't want to alter) the existing definition, you can :
+# prmptcmd() { eval "$PROMPT_COMMAND" }
+# precmd_functions=(prmptcmd)

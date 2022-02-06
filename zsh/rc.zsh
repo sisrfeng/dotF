@@ -1,33 +1,146 @@
-# echo "$foo" instead of just echo $foo.
-# Without double-quotes the variable's contents get parsed in a somewhat weird way that tends to cause bugs.
+# homebrew
+    # 为了在ubuntu18也能用最新的zsh, 所有机器都用homebrew装的zsh, 但是:
+        # 貌似没能换成用homebrew的zsh
+        # /etc/passwd里, 还是:
+        # wf:x:1002:1002:,,,:/home/wf:/usr/bin/zsh
+                                        #  the name of the user's command language interpreter, or the name of the initial program to execute.
+                                        # The login program uses this information to set the value of  the $SHELL environmental variable.
+                                        # If this field is empty, it defaults to the value /bin/sh.
+    export HOMEBREW_NO_AUTO_UPDATE=1
+                    # 需要更新时自己敲 brew update
+    brew_wf="/home/linuxbrew/.linuxbrew"
 
-# 这3行 解决peco里复制的问题, 很多人都unset这个，（它的功能是防止粘贴多行时，乱执行命令）
-unset zle_bracketed_paste
+    # https://zhuanlan.zhihu.com/p/81840844  # 真的要避免污染系统环境?
+
+    export HOMEBREW_PREFIX=${brew_wf}
+    export HOMEBREW_CELLAR="${brew_wf}/Cellar"
+    export HOMEBREW_REPOSITORY="${brew_wf}/Homebrew"
+    export HOMEBREW_BAT=1
 
 
-# [[===========================================================================begin
-# 为了交互使用zsh时可以 通配, 比如 mv ~/Linux/Old/^Tux.png ~/Linux/New/   (mv除了Tux.png的所有文件)
-setopt extended_glob  # 可能导致这些命令出bug, 使用时要注意:   git diff HEAD^
-# Treat the ‘#’, ‘~’ and ‘^’ characters as part of patterns for filename generation, etc.
-# (An initial unquoted ‘~’ always produces named directory expansion.)
-#
-#  https://www.techrepublic.com/article/globbing-wildcard-characters-with-zsh/
-#
-# end==============================================================================]]
+
+# 自动补全/auto-completions/ fpath FPATH
+    # 用homebrew的zsh 代替/usr下的
+    # brew install zsh-completions后, To activate these completions:
+        FPATH=${brew_wf}/share/zsh-completions:$FPATH
+                        # to make Homebrew’s completions available in zsh,
+                        # you must insert the Homebrew-managed zsh/site-functions path into your FPATH
+
+        # FPATH 是scaler, 冒号分隔
+        # fpath 是个array
+        # 默认下，二者所含东西相同
+        # path 和PATH同理。
+
+    fpath=(~/.local/bin $fpath)
+    fpath=(~/dotF/zsh/_zfunc $fpath)  # _zfunc用于存放自动补全命令  要在compinit之前.
+        # 某工具里教的#  put `fpath=(~/你的zsh函数所在路径 $fpath)` somewhere before `compinit` in your
+
+    autoload -U compinit  # -U : suppress alias expansion for functions
+                        # load进来一个函数, 以供使用
+    compinit -d $XDG_CACHE_HOME/zcompdump-$ZSH_VERSION-我指定的  # 指定compinit的缓存文件的存放位置
+    # 不会自动帮你新建文件夹
+
+# [[==================================zsh插件管理：zplug=================================
+        # zplug的环境变量都在这里指定了
+        export ZPLUG_HOME=$HOME/.zplug && source $ZPLUG_HOME/init.zsh
+            # 其余的zplug环境变量,统一用默认的.
+
+        export PS_PERSONALITY=linux  # Without this setting, ps follows the useless and bad parts
+                                      # of the Unix98 standard.
+
+        # use double quotes
+        # zplug "soimort/translate-shell"  #  不行
+        zplug "zplug/zplug", hook-build:"zplug --self-manage"
+        zplug "srijanshetty/zsh-pip-completion" # 能补全pip包的名字，但没生效?
+        # 这两个插件有点像: 先试着参考他们的内容,自己配
+            # zplug "zsh-users/zsh-completions"
+                        # brew install zsh-completions  装的也是它, apt install则找不到
+            # zplug "marlonrichert/zsh-autocomplete"
+
+        # 避免冲突，顺序： zsh-autosuggestions > zsh-syntax-highlighting > zsh-vim-mode
+        zplug "zsh-users/zsh-autosuggestions"  # 弹出之前敲过的命令
+                         ZSH_AUTOSUGGEST_USE_ASYNC=1
+                         ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#888888,bg=bold"
+
+        zplug "rupa/z", use:z.sh
+            # 这样不行： zplug "rupa/z", as:plugin, use:"*.sh"
+            # todo
+            # zplug "agkozak/zsh-z"
+
+        zplug "zsh-users/zsh-syntax-highlighting", defer:2  # 对命令行中的目录 可执行文件等 进行语法高亮
+                    # must be loaded after:
+                        # 1. executing compinit command (让defer>= 2 )
+                        # 2. sourcing other plugins
+
+        zplug "zsh-users/zsh-history-substring-search"
+                    # 要在zsh-syntax-highlighting后面, 在我建的bindky.zsh里面改快捷键
 
 
-# todo 有人说，这样可以避免不明alias干扰
-# unalias -a
+        zplug "softmoth/zsh-vim-mode"  # 没有这个，也会进vim-mode, 或者vi-mode？用了它，ctrl →和←都能正常在单词间跳转
+                # zplug "jeffreytse/zsh-vi-mode"  # 有奇怪错误，提issue很繁琐，别用了。
+                # bindkey -v  # select viins keymap and bind it to main  # 在softmoth/zsh-vim-mode里面已经有这行
+        # todo: 自己配键位
+        bindkey -M vicmd V edit-command-line
 
-# 敲`zsh 某.sh`时，这里的东西全都不起作用. 放心覆盖built-in命令
+        # zplug "hchbaw/zce.zsh"
 
-export PYTHONPATH=
-export PTPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython
-export PTIPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython # ptipython
-export PYTHONSTARTUP=$HOME/dotF/py_startup.py
+        # Install plugins if there are plugins that have not been installed
+            if ! zplug check --verbose; then
+                printf "Install? [y/N]: "
+                if read -q; then
+                    echo; zplug install
+                fi
+            fi
+
+        zplug load     # source plugins and add commands to $PATH
+# ==================================zsh插件管理：zplug=================================]]
+
+
+# setopt等 基础设置
+# 敲`zsh 某.sh`时，这里的东西(只影响interactive shell)全都不起作用. 可以放心覆盖built-in命令
+
+    # unalias -a
+            # todo 有人说，这样可以避免不明alias干扰 (以防别人改了系统的zshenv等文件, 不过暂时不会遇到这情况)
+    setopt autocd
+    setopt globdots
+    setopt interactivecomments
+
+    unset zle_bracketed_paste
+            # 解决peco里复制的问题, 很多人都unset这个，（它的功能是防止粘贴多行时，乱执行命令）
+
+
+    setopt extended_glob  # 可能导致这些命令出bug, 使用时要注意:   git diff HEAD^
+        # 为了交互使用zsh时可以通配, 比如 mv ~/Linux/Old/^Tux.png ~/Linux/New/   (mv除了Tux.png的所有文件)
+        # Treat the ‘#’, ‘~’ and ‘^’ characters as part of patterns for filename generation, etc.
+        # (An initial unquoted ‘~’ always produces named directory expansion.)
+        #
+        #  https://www.techrepublic.com/article/globbing-wildcard-characters-with-zsh/
+
+    DIRSTACKSIZE=15 # Setup dir stack
+        # https://zsh.sourceforge.io/Intro/intro_6.html
+    setopt autopushd  pushdminus pushdsilent pushdtohome pushdignoredups cdablevars
+
+    autoload -U select-word-style
+    select-word-style bash  # 斜杠 下划线等 会作为单词的分隔
+                            # zplug里面的vim-mode搞鬼，导致放在zplug load后 会不起作用
+
+
+
+# python相关:
+    export PYTHONPATH=
+    export PTPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython
+    export PTIPYTHON_CONFIG_HOME=$HOME/dotF/cfg/ptpython # ptipython
+    export PYTHONSTARTUP=$HOME/dotF/py_startup.py
+
+    export TIMEFMT=$'\n================\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
+    export LOGURU_FORMAT="{time} | <lvl>{message}</lvl>"
+
+    export PYTHON_PRETTY_ERRORS=1
+    export TF_CPP_MIN_LOG_LEVEL=2
 # export ZDOTDIR="$HOME:$HOME/dotF/zsh"  # 不能有多个
 
-# 指定nvim等
+
+# 指定nvim等 常用默认程序
     export PAGER='bat'
         # 在~/.config/bat/config里设置所有选项
         # 别给theme名字加双引号
@@ -64,89 +177,60 @@ export PYTHONSTARTUP=$HOME/dotF/py_startup.py
     #     export VISUAL=code
     # fi
 
+    export BROWSER=w3m
 
-export LOGURU_FORMAT="{time} | <lvl>{message}</lvl>"
-export PYTHON_PRETTY_ERRORS=1
-export TIMEFMT=$'\n================\nCPU\t%P\nuser\t%*U\nsystem\t%*S\ntotal\t%*E'
-export TF_CPP_MIN_LOG_LEVEL=2
-
-
-
-# LANGUAGE: 是唯一不会被LC_ALL覆盖的同类环境变量？ 也优先于 LC_MESSAGES, and LANG.
-# export LANGUAGE=en_US.UTF-8:zh_CN.UTF-8  #  used only for messages (GNU gettext)
-export LANGUAGE=en_US.UTF-8  #  used only for messages (GNU gettext)
-export LANG=en_US.UTF-8   # 类似LC_ALL，对各种LC_类型起作用，但会被覆盖
-# export LC_MESSAGES=zh_CN.UTF-8 #  determines the language and encoding of messages
-export LC_MESSAGES=en_US.UTF-8 #  determines the language and encoding of messages
-export LC_CTYPE=en_US.UTF-8 #  defines character classes, a named sets of characters
-export LC_COLLATE=en_US.UTF-8 # in ASCII order: A B C … a b c…  有些loal是A a B b排的
-export LC_NUMERIC=en_US.UTF-8
+# 中英文 language
+    # LANGUAGE: 是唯一不会被LC_ALL覆盖的同类环境变量？ 也优先于 LC_MESSAGES, and LANG.
+    # export LANGUAGE=en_US.UTF-8:zh_CN.UTF-8  #  used only for messages (GNU gettext)
+    export LANGUAGE=en_US.UTF-8  #  used only for messages (GNU gettext)
+    export LANG=en_US.UTF-8   # 类似LC_ALL，对各种LC_类型起作用，但会被覆盖
+    # export LC_MESSAGES=zh_CN.UTF-8 #  determines the language and encoding of messages
+    export LC_MESSAGES=en_US.UTF-8 #  determines the language and encoding of messages
+    export LC_CTYPE=en_US.UTF-8 #  defines character classes, a named sets of characters
+    export LC_COLLATE=en_US.UTF-8 # in ASCII order: A B C … a b c…  有些loal是A a B b排的
+    export LC_NUMERIC=en_US.UTF-8
 
 
 PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 export PKG_CONFIG_PATH
 
-
-# 交互式模式的初始化脚本, 防止被加载两次
-if [ -z "$_INIT_SH_LOADED" ]; then   # test -z returns true, if the parameter is empty
-    _INIT_SH_LOADED=1
-else
-    return  #不再执行剩下的才做，退出.zshrc
-fi
-
-# exit for non-interactive shell:
-# `$-` : 获取“-”这个变量的值(类似于$PATH  $HOME)。他表示zsh -c 等参数(类似rm -rf中的r和f)，又称flag
-# i: 表示interactive，[但自动补全时，显示I h等，不显示i，因为没有意义] --
-    # 只敲zsh时，默认就是进了交互式程。
-    # 另外，在bash命令行下，敲zsh -i my_echo.sh，echo里面的东西之后，还是回到bash
-[[ $- != *i* ]] && return
+# interactive vs  non-interactive shell  (可以删掉吧?)
+    # 交互式模式的初始化脚本, 防止被加载两次
+        if [ -z "$_INIT_SH_LOADED" ]; then   # test -z returns true, if the parameter is empty
+            _INIT_SH_LOADED=1
+        else
+            return  #不再执行剩下的才做，退出.zshrc
+        fi
 
 
-
-# https://zsh.sourceforge.io/Intro/intro_6.html
-DIRSTACKSIZE=15 # Setup dir stack
-setopt autopushd  pushdminus pushdsilent pushdtohome pushdignoredups cdablevars
+    # exit for non-interactive shell:
+        # `$-` : 获取“-”这个变量的值(类似于$PATH  $HOME)。他表示zsh -c 等参数(类似rm -rf中的r和f)，又称flag
+        # i: 表示interactive，[但自动补全时，显示I h等，不显示i，因为没有意义] --
+            # 只敲zsh时，默认就是进了交互式。
+            # 另外，在bash命令行下，敲zsh -i my_echo.sh，echo里面的东西之后，还是回到bash
+        [[ $- != *i* ]] && return
 
 
 
-
-
-# https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95  :
 # 对于tmux:
-# The screen-256color in most cases is enough and more portable solution.
-# But it does not support any italic font style.
+    # https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95  :
+    # set -g default-terminal "tmux-256color"  # 先别用
+            # Unfortunately, The latest (6.2) ncurses version does not work properly:
 
-# Unfortunately, The latest (6.2) ncurses version does not work properly:
-# set -g default-terminal "tmux-256color"  # 先别用
-#
-# export TERM="screen-256color"  #之前没在zshrc设TERM，没进tmux就不会用vi-mode。 设了这个，没进tmux也会用vi-mode,
-# export TERM="tmux-256color"  #之前没在zshrc设TERM，没进tmux就不会用vi-mode。 设了这个，没进tmux也会用vi-mode,
+    # The screen-256color in most cases is enough and more portable solution.
+    # But it does not support any italic font style.
 
-
-# case EXPRESSION in
-#  (PATTERN_1)
-#     STATEMENTS
-#     ;;
-#  (PATTERN_2)
-#     STATEMENTS
-#     ;;
-#  (PATTERN_N)
-#     STATEMENTS
-#     ;;
-#  (*)
-#     STATEMENTS
-#     ;;
-# esac
 
 # 如果终端支持truecolor, 用之
 case $TERM in
     # export TERM="xterm-256color" # Enable 256 color to make auto-suggestions look nice
     (screen-256color |  tmux-256color   |  xterm-256color  )
-        # Set the COLORTERM environment variable to 'truecolor' to advertise 24-bit color support
-        # COLORTERM 的选项:no|yes|truecolor
         export COLORTERM=truecolor
+             # COLORTERM 的选项:no|yes|truecolor
+             # Set the COLORTERM environment variable to 'truecolor' to advertise 24-bit color support
         ;;           # 一个分号能把2个命令串在一起,所以要2个分号
-    (*)              #  (*) :  a final pattern to define the default case  This pattern will always match? 不是啊, 就跟if else差不多
+    (*)              #  (*) :  a final pattern to define the default case  This pattern will always match?
+                     # 不是啊, 就跟if else差不多
         echo 'TERM是:'
         echo $TERM
         echo '---'
@@ -155,96 +239,21 @@ case $TERM in
         ;;
 esac
 
+            # case EXPRESSION in
+            #  (PATTERN_1)
+            #     STATEMENTS
+            #     ;;
+            #  (PATTERN_2)
+            #     STATEMENTS
+            #     ;;
+            #  (PATTERN_N)
+            #     STATEMENTS
+            #     ;;
+            #  (*)
+            #     STATEMENTS
+            #     ;;
+            # esac
 
-# 某工具里教的#  put `fpath=(~/你的zsh函数所在路径 $fpath)` somewhere before `compinit` in your
-
-# FPATH 是scaler, 冒号分隔
-# fpath 是个array
-# 默认下，二者所含东西相同
-
-# path 和PATH同理。
-
-fpath=(~/.local/bin $fpath)
-fpath=(~/dotF/zsh/_zfunc $fpath)  # _zfunc用于存放自动补全命令  要在compinit之前.
-autoload -U compinit # -U : suppress alias expansion for functions
-
-compinit -d $XDG_CACHE_HOME/zcompdump-$ZSH_VERSION  # 指定compinit的缓存文件的存放位置
-# 不会自动帮你新建文件夹
-
-setopt autocd
-setopt globdots
-setopt interactivecomments
-
-
-
-
-
-
-autoload -U select-word-style
-select-word-style bash  # 斜杠 下划线等 会作为单词的分隔
-# zplug里面的vim-mode搞鬼，导致放在zplug load后 会不起作用
-
-# [[==================================zsh插件管理：zplug=================================
-# 别用等号对齐! zsh的空格是有意义的!
-# zplug的环境变量都在这里指定了
-export ZPLUG_HOME=$HOME/.zplug && source $ZPLUG_HOME/init.zsh
-# 其余的zplug环境变量,统一用默认的.
-# 换机器时,  敲这个就好,别同步$ZPLUG_HOME, 权限\缓存啥的有冲突
-        # git clone https://github.com/zplug/zplug $ZPLUG_HOME
-
-export PS_PERSONALITY=linux  # Without this setting, ps follows the useless and bad parts
-                             # of the Unix98 standard.
-
-# use double quotes
-# zplug "modules/prompt", from:prezto
-# zplug "soimort/translate-shell"  #  不行
-zplug "zplug/zplug", hook-build:"zplug --self-manage"
-zplug "srijanshetty/zsh-pip-completion" # 能补全pip包的名字，但没生效
-# 这两个插件有点像: 先试着自己配, 参考他们的内容
-    # zplug "zsh-users/zsh-completions"
-    # zplug "marlonrichert/zsh-autocomplete"
-
-# 避免冲突，顺序： zsh-autosuggestions > zsh-syntax-highlighting > zsh-vim-mode
-zplug "zsh-users/zsh-autosuggestions"  # 弹出之前敲过的命令
-ZSH_AUTOSUGGEST_USE_ASYNC=1
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#888888,bg=bold"
-
-# todo
-# zplug "agkozak/zsh-z"
-zplug "rupa/z", use:z.sh # 这样不行： zplug "rupa/z", as:plugin, use:"*.sh"
-
-# 下面这个插件，must be loaded after:
-# 1. executing compinit command (让defer>= 2 )
-# 2. sourcing other plugins
-zplug "zsh-users/zsh-syntax-highlighting", defer:2  # 对命令行中的目录 可执行文件等 进行语法高亮
-
-zplug "zsh-users/zsh-history-substring-search"  # 要在syntax-highlighting后面  , 在我建的bindky.zsh里面改快捷键
-
-
-# zplug "jeffreytse/zsh-vi-mode"  # 有奇怪错误，提issue很繁琐，别用了。
-
-
-# bindkey -v  # select viins keymap and bind it to main  # 在softmoth/zsh-vim-mode里面已经有这行
-zplug "softmoth/zsh-vim-mode"  # 没有这个，也会进vim-mode, 或者vi-mode？用了它，ctrl →和←都能正常在单词间跳转
-# todo: 自己配键位
-bindkey -M vicmd V edit-command-line
-
-# zplug "hchbaw/zce.zsh"
-
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-zplug load     # source plugins and add commands to $PATH
-# zplug load --verbose
-
-# zplug update  #需要时，自己敲
-# ==================================zsh插件管理：zplug=================================]]
 
 
 # 关于run-help
@@ -257,8 +266,8 @@ zplug load     # source plugins and add commands to $PATH
         # functions supplied with the zsh distribution  \
             # for functions precompiled with the zcompile builtin command \
                 # the flag `-U must be provided` when the `.zwc file is created`
-        autoload -Uz run-help   # -z  | mark function for zsh-style autoloading
-        autoload -Uz run-help-ip  # 暂时用不着，不过开始开着吧
+        autoload -U run-help   # -z  | mark function for zsh-style autoloading 默认就是吧? 不用加-z?
+        autoload -U run-help-ip  # 暂时用不着，不过还是开着吧
         run-help-sudo(){
         if [ $# -eq 0 ]; then
             man sudo
@@ -267,7 +276,6 @@ zplug load     # source plugins and add commands to $PATH
         fi
         }
 
-        # autoload -Uz run-help-git
         run-help-git(){
         if [ $# -eq 0 ]; then
             man git
@@ -281,6 +289,7 @@ zplug load     # source plugins and add commands to $PATH
             echo 'hi, leo. Above is help for subcommand'
         fi
         }
+        autoload -U run-help-git
 
         run-help-ssh() {
             emulate -LR zsh
@@ -302,9 +311,9 @@ zplug load     # source plugins and add commands to $PATH
 
 # 放在插件管理后面，避免被别人的配置覆盖
 
-# 不能用\换行
-# 不用LESS这个环境变量, 放到alias里? 不，man要用LESS
 export LESS='--incsearch --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=2 -X'
+        # 不能用\换行
+        # 不用LESS这个环境变量, 放到alias里? 不，man要用LESS
 
     #--RAW-CONTROL-CHARS 就是-R  h
     # Man-db passes extra options to the pager via the `LESS` environment variable,
@@ -320,56 +329,23 @@ export LESS='--incsearch --ignore-case --status-column --LONG-PROMPT --RAW-CONTR
 
     # https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
 
+# source各个zsh配置文件
+    source $HOME/dotF/zsh/color_less_很少用了.zsh
+    source $HOME/dotF/zsh/color_syntax高亮.zsh
+    source $HOME/dotF/zsh/tab补全_comp.zsh  #  设置颜色 候选等
+    source $HOME/dotF/zsh/ls_color.zsh
 
-source $HOME/dotF/zsh/color_less_很少用了.zsh
-source $HOME/dotF/zsh/color_syntax高亮.zsh
-source $HOME/dotF/zsh/tab补全_comp.zsh  #  设置颜色 候选等
-source $HOME/dotF/zsh/ls_color.zsh
+    source $HOME/dotF/zsh/hist_cfg.zsh
+    # todo: 检查一遍再source
+    # source /home/wf/dotF/per-dir-history.zsh
 
+    source $HOME/dotF/zsh/alias.zsh   # 里面有：chpwd_functions=(${chpwd_functions[@]} "list_all_after_cd")
+    source $HOME/dotF/zsh/bindkey_wf.zsh
 
-source $HOME/dotF/zsh/hist_cfg.zsh
-# todo: 检查一遍再source
-# source /home/wf/dotF/per-dir-history.zsh
-
-source $HOME/dotF/zsh/alias.zsh   # 里面有：chpwd_functions=(${chpwd_functions[@]} "list_all_after_cd")
-source $HOME/dotF/zsh/bindkey_wf.zsh
-
-autoload -Uz chpwd_recent_dirs  cdr add-zsh-hook  # -U: suppress alias expansion for functions
+autoload -Uz add-zsh-hook chpwd_recent_dirs cdr
 add-zsh-hook chpwd chpwd_recent_dirs
 
 
-# If you want to preserve (and don't want to alter) the existing definition, you can :
-# prmptcmd() { eval "$PROMPT_COMMAND" }
-# precmd_functions=(prmptcmd)
-
-
-# =============================================================================================
-# 放到zplug的东西前 会报错
-# setopt ignorebraces     #  turns off csh-style brace ({)   expansion.  不知道哪里复制来的
-# 设置前后：
-#  echo x{y{z,a},{b,c}d}e
-            # xyze xyae xbde xcde
-
-#  echo x{y{z,a},{b,c}d}e
-            # xyze xyae xbde xcde
-# =============================================================================================
-
-
-# done附近报错：
-## 整理 PATH，删除重复路径:
-# if [ -n "$PATH" ]; then
-#     old_PATH=$PATH:; PATH=
-#     while [ -n "$old_PATH" ]; do
-#         x=${old_PATH%%:*}
-#         case $PATH: in
-#            *:"$x":*) ;;
-#            *) PATH=$PATH:$x;;
-#         esac
-#         old_PATH=${old_PATH#*:}
-#     done
-#     PATH=${PATH#:}
-#     unset old_PATH x
-# fi
 
 
 if grep -q WSL2 /proc/version ; then  # set DISPLAY to use X terminal in WSL
@@ -627,22 +603,7 @@ export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
 # 这个就不必了:alias nvim='~/dotF/nvim-linux64/bin/nvim'
 #
 
-
-# homebrew
-    # 需要更新时自己敲 brew update
-    export HOMEBREW_NO_AUTO_UPDATE=1
-    brew_wf="/home/linuxbrew/.linuxbrew"
-
-    # hb() {
-    #       PATH="$brew_wf/bin:$PATH" \
-    #         $brew_wf/bin/brew         \
-    #         "$@"
-    #     }
-    # https://zhuanlan.zhihu.com/p/81840844  #  避免污染系统环境, 不再用下面的 ??
-
-    export HOMEBREW_PREFIX=${brew_wf}
-    export HOMEBREW_CELLAR="${brew_wf}/Cellar"
-    export HOMEBREW_REPOSITORY="${brew_wf}/Homebrew"
+# 让homebrew的路径被优先搜索
     export PATH="${brew_wf}/bin:${brew_wf}/sbin${PATH+:$PATH}"
         # bash里好像是:+ 下面内容待确认
         # ${PATH+:$PATH}
@@ -656,9 +617,7 @@ export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
         # ${wf_var+:$PATH}
     export MANPATH="${brew_wf}/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="${brew_wf}/share/info:${INFOPATH:-}"  # 最后的减号是啥?zsh的文档太难懂了...
-    export HOMEBREW_BAT=1
 
-export BROWSER=w3m
 source ~/local.zsh
 
 # dl && echo '开了代理'
