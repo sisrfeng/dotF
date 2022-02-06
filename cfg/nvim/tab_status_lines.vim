@@ -21,7 +21,7 @@
                         " !~   regexp doesn't match
                 " echo bufname() 显示:
                     " term://~/dotF/cfg/nvim//809801:zsh
-                let file_name = "shell_" . bufnr
+                let file_name = "< " . bufnr . " >"
             endif
             let style .= (file_name != '' ? ''. fnamemodify(file_name, ':t') . ' ' : 'No Name')
 
@@ -34,6 +34,7 @@
         return style
     endfunc
     set tabline=%!Tabline()
+
 
 
     hi TabLineFill  guibg=#e0e5e3  guifg=#123456

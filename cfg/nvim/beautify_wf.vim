@@ -116,4 +116,3 @@ hi StatusLineNC   gui=bold guibg=#e0f0f0 guifg=#0099a0
 
 " 每行超过 n 个字的时候 , vim 自动加上换行符
 set textwidth=100
-

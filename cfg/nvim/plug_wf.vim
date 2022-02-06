@@ -2,9 +2,32 @@
 " nvr :  避免:terminal时 嵌套nvim
 " gonvim:  gui, 且能替代nvr, 貌似比目前的官方qt版gui更受欢迎:  https://github.com/equalsraf/neovim-qt/wiki
 "
-"
-" 插件不放进dotF, 避免用submodule等复杂命令.
+
+" 插件源码不放进dotF, 避免用submodule等复杂命令.
 " 如何应对内网, 离线安装? 到时再说
+
+func! VimPlugConds(arg1, ...)
+    " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
+    " https://github.com/junegunn/vim-plug/wiki/tips
+    " leo改过
+
+    " a: 表示argument
+    " You must prefix a parameter name with "a:" (argument).
+        " a:0  等于 len(a:000)),
+        " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
+    " A function cannot change a parameter
+
+            " To avoid an error for an invalid index use the get() function
+            " get(list, idx, default)
+    let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
+    " Borrowed from the C language is the conditional expression:
+    " a ? b : c
+    " If "a" evaluates to true, "b" is used
+    let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
+    " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
+    return  out
+endfunc
+
 
 Plug 'junegunn/vim-plug'
     " 为了能用:help plug-options

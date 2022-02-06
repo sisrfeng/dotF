@@ -1,3 +1,5 @@
+let mapleader =" "
+
 " 文件路径
     if exists('g:vscode')
         " 用vscode时，本文件里也有依赖于$MYVIMRC的变量。别扔掉$MYVIMRC
@@ -39,9 +41,99 @@
     " 4. Go back to the default group, named "end"
     augroup end
 
+" 插件:
+        call plug#begin(stdpath('data') . '/plugged')
+            source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf / 用了vim-plug
+            " 插件 (plugin) 在~/.local/share/nvim/plugged
 
-let mapleader =" "
-inoremap jj <esc>
+            if !exists('g:vscode')
+                Plug 'plasticboy/vim-markdown'
+                " Plug 'preservim/nerdtree'
+                " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
+                "
+                    autocmd StdinReadPre * let s:std_in=1
+                    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+                Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
+            endif
+        call plug#end()
+            " update &runtimepath and initialize plugin system
+            " Automatically executes:
+                " filetype plugin indent on
+                " syntax enable或者syntax on
+				" plug#end() 这行只能出现一次, 如果多次出现, 会让registered的插件可以plugclean, (被视为invalid plugins)
+
+        autocmd VimEnter *
+                \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+                \|   PlugInstall --sync | q
+                \| endif
+
+    " vim-sandwich的设置, 要在plug#end()后
+            let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
+
+            " add spaces inside bracket
+            let g:sandwich#recipes += [
+            \   {'buns': ['{ ', ' }'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['{']},
+            \   {'buns': ['[ ', ' ]'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['[']},
+            \   {'buns': ['( ', ' )'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['(']},
+            \   {'buns': ['{\s*', '\s*}'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['{']},
+            \   {'buns': ['\[\s*', '\s*\]'], 'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['[']},
+            \   {'buns': ['(\s*', '\s*)'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['(']},
+            \ ]
+
+            let g:sandwich_no_default_key_mappings = 1
+            let g:operator_sandwich_no_default_key_mappings = 1
+
+            " : To prevent unintended operation
+                " nmap s <Nop>
+                    "搞死了前面这个 nmap s <Plug>(easymotion-f)
+                " xmap s <Nop>
+                " xmap creates a mapping for just Visual mode
+                    " <NOP>    do nothing (useful in mappings)  no-opperation
+
+            " [number]<command>[text object or motion]
+            " t: 记作tag, 成对符号
+            nmap ta <Plug>(operator-sandwich-add)
+            xmap ta <Plug>(operator-sandwich-add)
+            xmap td <Plug>(operator-sandwich-delete)
+            xmap tr <Plug>(operator-sandwich-replace)
+            nmap <silent> td <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+            nmap <silent> tr <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
+            nmap <silent> tdb <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+            nmap <silent> trb <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+            " DEBUG: easymotion发疯来这里
+
+            " xnoremap sd <Plug>(operator-sandwich-delete)
+            " xnoremap sr <Plug>(operator-sandwich-replace)
+            "
+            " sc:  sandwich surround Code
+            " nmap <Leader>pb <Plug>(operator-sandwich-add-query1st)
+            " nmap sa <Plug>(operator-sandwich-add-query1st)
+            "
+            " 加了没反应
+
+            nmap trt     <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+                        " p for pairs
+                        " 这里不能用noremap
+
+                        " 默认的是srb
+                            " silent! nmap <unique> srb <Plug>(sandwich-replace-auto)
+                            " nmap <silent> <Plug>(sandwich-replace-auto) <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
+
+
+" 如何处理string等
+	set iskeyword+=-
+		" 不加连字符, peco-find 就不是一个word, viw就被连字符打断
+	set iskeyword-=#
+		" 如果井号作为单词的一部分, 会导致替换时, ctrl w多删了井号
+	let g:selecmode="mouse"
+
+	" Return to last edit position when opening files
+		autocmd BufReadPost *
+			\ if line("'\"") > 0 && line("'\"") <= line("$") |
+			\   execute "normal! g`\"zv" |
+			\ endif
+
+
 
  " 主要影响map
     set timeoutlen=600
@@ -50,41 +142,83 @@ inoremap jj <esc>
 " tty?
     set ttimeout ttimeoutlen=10
 
+" 我的map 不涉及插件
+	inoremap jj <esc>
+	nnoremap yf ggyG<C-O>
+	" ctrl o 让光标看着没动
+	nnoremap vf ggVGp:echo"已粘贴之前复制的内容"<CR>
+	nnoremap df ggdG
+		" p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
+	" inoremap yf <Esc>ggyG<C-O>
+		" vscode里不行，vscode外也别试了, 保持一致
 
-" 看哪个好用:
-" nnoremap gj :tabedit <cfile><CR>
-    " gj留给vscode作为wrapped line的j
-nnoremap gf :tab drop <cfile><CR>
-nnoremap gd :split<CR>md<C-]>
-        " gd只能在本文件内找
-        " 先mark个d, 看完再'd
+	" 上下左右
+		noremap <Right> *
+		noremap <Left> #
+
+		noremap <Up> <C-O>
+			" up在vusial mode下好像没功能
+		vnoremap <Up> :<esc><C-O>
+			" vnoremap <Up> <Esc><C-O>  " 不行
+
+		nnoremap <Down> <C-I>
+			" CTRL-I 等价于<Tab>
+		vnoremap <Down> :<esc><C-I>
 
 
-nnoremap gh :tab help <C-R><C-W>
-" vim本来用K, K被我map了
-    " to be used:  " select mode 是为了讨好MS word患者, 没啥用
+	nnoremap X <C-A>
+		" normal模式：<C-X>  数字减1
+		" shift在ctrl上，加1 vs 减一，刚好
 
-            "                             *gV* *v_gV*
-            " gV			Avoid the automatic reselection of the Visual area
-            "             after a Select mode mapping or menu has finished.
-            "             Put this just before the end of the mapping or menu.
-            "             At least it should be after any operations on the
-            "             selection.
-            "
-            "                             *gh*
-            " gh			Start Select mode, charwise.  This is like "v",
-            "             but starts Select mode instead of Visual mode.
-            "             Mnemonic: "get highlighted".
-            "
-            "                             *gH*
-            " gH			Start Select mode, linewise.  This is like "V",
-            "             but starts Select mode instead of Visual mode.
-            "             Mnemonic: "get Highlighted".
-            "
-            "                             *g_CTRL-H*
-            " g CTRL-H		Start Select mode, blockwise.  This is like CTRL-V,
-            "             but starts Select mode instead of Visual mode.
-            "             Mnemonic: "get Highlighted".
+	inoremap <C-F> <C-X><C-F>
+		" <C-X> 调自带的omnicomplete
+		" 被coc占用了？
+		" 对于vscode-nvim：insert mode is being handled by vscode 所以<C-X>没反应
+
+	" 待用的map
+		" U is seldom useful in practice,U 本身的功能，不及C-R
+		nnoremap U <C-R>
+		nnoremap <M-u> <C-R>
+
+		nnoremap <S-Left> :echom 'hihihihihi'<CR>
+		nnoremap <S-Right> :echom 'hihihihihi'<CR>
+		nnoremap <C-Left> :echom 'hihihihihi'<CR>
+		nnoremap <C-Right> :echom 'hihihihihi'<CR>
+		nnoremap <m-s-u> :echom 'hihi'<CR>
+
+	" 看哪个好用:
+		nnoremap gf :tab drop <cfile><CR>
+		" nnoremap gj :tab drop <cfile><CR>
+			" gj留给vscode作为wrapped line的j
+		nnoremap gd :split<CR>md<C-]>
+			" gd只能在本文件内找
+			" 先mark个d, 看完再'd
+
+	nnoremap gh :tab help <C-R><C-W>
+			" vim本来用K, K被我map了
+		" to be used:  " select mode 是为了讨好MS word患者, 没啥用
+
+				"                             *gV* *v_gV*
+				" gV			Avoid the automatic reselection of the Visual area
+				"             after a Select mode mapping or menu has finished.
+				"             Put this just before the end of the mapping or menu.
+				"             At least it should be after any operations on the
+				"             selection.
+				"
+				"                             *gh*
+				" gh			Start Select mode, charwise.  This is like "v",
+				"             but starts Select mode instead of Visual mode.
+				"             Mnemonic: "get highlighted".
+				"
+				"                             *gH*
+				" gH			Start Select mode, linewise.  This is like "V",
+				"             but starts Select mode instead of Visual mode.
+				"             Mnemonic: "get Highlighted".
+				"
+				"                             *g_CTRL-H*
+				" g CTRL-H		Start Select mode, blockwise.  This is like CTRL-V,
+				"             but starts Select mode instead of Visual mode.
+				"             Mnemonic: "get Highlighted".
 
 " block模式
     " 记忆：c for block
@@ -121,16 +255,8 @@ nnoremap gh :tab help <C-R><C-W>
     " 加了这两行，还是删除到行首
     " cnoremap <c-q> <c-v>
     " inoremap <c-q> <c-v>
-    "
 
 
-" focus on comment or not
-
-
-set iskeyword+=-
-    " 不加连字符, peco-find 就不是一个word, viw就被连字符打断
-set iskeyword-=#
-    " 如果井号作为单词的一部分, 会导致替换时, ctrl w多删了井号
 
 
 " About search
@@ -220,71 +346,34 @@ set iskeyword-=#
     " end=====================================================================<_<_<
 
 
-" todo
-    " U is seldom useful in practice,U 本身的功能，不及C-R
-    nnoremap U <C-R>
-    nnoremap <M-u> <C-R>
-
-let g:selecmode="mouse"
 
 " set linebreak
 " set list  " 没设listchar时，这行会导致tab排版混乱
 " set listchars=tab:>_,trail:-,nbsp:+
-
-
-nnoremap <S-Left> :echom 'hihihihihi'<CR>
-nnoremap <S-Right> :echom 'hihihihihi'<CR>
-nnoremap <C-Left> :echom 'hihihihihi'<CR>
-nnoremap <C-Right> :echom 'hihihihihi'<CR>
-nnoremap <m-s-u> :echom 'hihi'<CR>
 
 " ctrl and shift
     " map <c-s-a>
     " map <s-c-a>
         " 暂不支持
         " https://stackoverflow.com/a/47656794/14972148
-        "
-source ~/dotF/cfg/nvim/clipboard_regis.vim
 
+" source各种文件
+	source ~/dotF/cfg/nvim/clipboard_regis.vim
+	source ~/dotF/cfg/nvim/beautify_wf.vim
+			" 这行要调用lucius， 要在`call plug#end()`后面
+	source ~/dotF/cfg/nvim/tab_status_lines.vim
 
-" :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
-nnoremap <F2>   : .,$sub  #\<\>##gc<Left><Left><Left><Left><Left><Left><C-R><C-W><Right><Right><Right><C-R><C-W>
-nnoremap <M-F2> : .,$sub  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
-    "       %       表示全文. Example: :%s/foo/bar/g.
-    "       .       当前行
-    "       $       表示结尾
-    "       .,$     from the current line to the end of the file.
+" 替换/replace
+	" :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
+	nnoremap <F2>   : .,$sub  #\<\>##gc<Left><Left><Left><Left><Left><Left><C-R><C-W><Right><Right><Right><C-R><C-W>
+	nnoremap <M-F2> : .,$sub  ###gc<Left><Left><Left><Left><C-R><C-W><Right>
+		"       %       表示全文. Example: :%s/foo/bar/g.
+		"       .       当前行
+		"       $       表示结尾
+		"       .,$     from the current line to the end of the file.
                                 " 这些不能作为delimiter : 双引号， 竖线， backslash
                                 " 其他single-byte character都可以
 
-" 上下左右
-    noremap <Right> *
-    noremap <Left> #
-
-    noremap <Up> <C-O>
-        " up在vusial mode下好像没功能
-    vnoremap <Up> :<esc><C-O>
-        " vnoremap <Up> <Esc><C-O>  " 不行
-
-    nnoremap <Down> <C-I>
-        " CTRL-I 等价于<Tab>
-    vnoremap <Down> :<esc><C-I>
-
-
-nnoremap X <C-A>
-    " normal模式：<C-X>  数字减1
-    " shift在ctrl上，加1 vs 减一，刚好
-
-inoremap <C-F> <C-X><C-F>
-    " <C-X> 调自带的omnicomplete
-    " 被coc占用了？
-    " 对于vscode-nvim：insert mode is being handled by vscode 所以<C-X>没反应
-
-" Return to last edit position when opening files
-    autocmd BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \   execute "normal! g`\"zv" |
-        \ endif
 
 autocmd FileType json syntax match Comment +\/\/.\+$+
     " get correct comment highlighting for jonsc
@@ -329,15 +418,6 @@ func! <SID>TrailingWhiteSpace()
         call cursor(l, c)
     endfunc
     autocmd FileType c,cpp,javascript,python,vim,sh,zsh autocmd BufWritePre <buffer> :call <SID>TrailingWhiteSpace()
-
-
-nnoremap yf ggyG<C-O>
-  " ctrl o 让光标看着没动
-nnoremap vf ggVGp:echo"已粘贴之前复制的内容"<CR>
-nnoremap df ggdG
-    " p后面一般没有参数，所以pf不好。选中全文，一般只是为了替换。所以vf选中后，多了p这一步
-" inoremap yf <Esc>ggyG<C-O>
-    " vscode里不行，vscode外也别试了, 保持一致
 
 
 let g:ft_man_folding_enable=1
@@ -937,105 +1017,9 @@ func! Conceal_strang_chr_3()
     " set concealcursor=vcni
 endfunc
 
-func! VimPlugConds(arg1, ...)
-    " Lazy loading, my preferred way, as you can have both [避免被PlugClean删除没启动的插件]
-    " https://github.com/junegunn/vim-plug/wiki/tips
-    " leo改过
 
-        " a: 表示argument
-        " You must prefix a parameter name with "a:" (argument).
-            " a:0  等于 len(a:000)),
-            " a:1 first unnamed parameters, and so on.  `a:1` is the same as "a:000[0]".
-        " A function cannot change a parameter
 
-                " To avoid an error for an invalid index use the get() function
-                " get(list, idx, default)
-        let leo_opts = get(a:000, 0, {})  "  a:000 (list of all parameters), 获得该list的第一个元素
-        " Borrowed from the C language is the conditional expression:
-        " a ? b : c
-        " If "a" evaluates to true, "b" is used
-        let out = (a:arg1 ? leo_opts : extend(leo_opts, { 'on': [], 'for': [] }))  " 括号不能换行
-        " an empty `on` or `for` option : plugin is registered but not loaded by default depending on the condition.
-        return  out
-    endfunc
 
-" 插件 (plugin) 在~/.local/share/nvim/plugged
-        call plug#begin(stdpath('data') . '/plugged')
-            source ~/dotF/cfg/nvim/plug_wf.vim  " 方便搜索:plugin_wf
-
-            if !exists('g:vscode')
-                Plug 'plasticboy/vim-markdown'
-                " Plug 'preservim/nerdtree'
-                " Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }  " 会报错
-                "
-                    autocmd StdinReadPre * let s:std_in=1
-                    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-                Plug 'jonathanfilip/vim-lucius'   " colorscheme lucius
-            endif
-        " call plug#end() | echo '这行只能出现一次, 不然会覆盖前面放的plug 某某某'
-        call plug#end()
-          " 如果多次出现, 会让registered的插件可以plugclean, (被视为invalid plugins)
-            " update &runtimepath and initialize plugin system
-            " Automatically executes
-                " filetype plugin indent on
-                " syntax enable或者syntax on
-
-        autocmd VimEnter *
-                \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-                \|   PlugInstall --sync | q
-                \| endif
-
-" vim-sandwich的设置, 要在plug#end()后
-    let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
-
-    " add spaces inside bracket
-    let g:sandwich#recipes += [
-      \   {'buns': ['{ ', ' }'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['{']},
-      \   {'buns': ['[ ', ' ]'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['[']},
-      \   {'buns': ['( ', ' )'], 'nesting': 1, 'match_syntax': 1, 'kind': ['add', 'replace'], 'action': ['add'], 'input': ['(']},
-      \   {'buns': ['{\s*', '\s*}'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['{']},
-      \   {'buns': ['\[\s*', '\s*\]'], 'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['[']},
-      \   {'buns': ['(\s*', '\s*)'],   'nesting': 1, 'regex': 1, 'match_syntax': 1, 'kind': ['delete', 'replace', 'textobj'], 'action': ['delete'], 'input': ['(']},
-      \ ]
-
-    let g:sandwich_no_default_key_mappings = 1
-    let g:operator_sandwich_no_default_key_mappings = 1
-
-    " : To prevent unintended operation
-        " nmap s <Nop>
-            "搞死了前面这个 nmap s <Plug>(easymotion-f)
-        " xmap s <Nop>
-        " xmap creates a mapping for just Visual mode
-             " <NOP>    do nothing (useful in mappings)  no-opperation
-
-    " [number]<command>[text object or motion]
-    " t: 记作tag, 成对符号
-    nmap ta <Plug>(operator-sandwich-add)
-    xmap ta <Plug>(operator-sandwich-add)
-    xmap td <Plug>(operator-sandwich-delete)
-    xmap tr <Plug>(operator-sandwich-replace)
-    nmap <silent> td <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
-    nmap <silent> tr <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-query-a)
-    nmap <silent> tdb <Plug>(operator-sandwich-delete)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
-    nmap <silent> trb <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
-    " DEBUG: easymotion发疯来这里
-
-    " xnoremap sd <Plug>(operator-sandwich-delete)
-    " xnoremap sr <Plug>(operator-sandwich-replace)
-    "
-    " sc:  sandwich surround Code
-    " nmap <Leader>pb <Plug>(operator-sandwich-add-query1st)
-    " nmap sa <Plug>(operator-sandwich-add-query1st)
-    "
-    " 加了没反应
-
-    nmap trt     <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
-                " p for pairs
-                " 这里不能用noremap
-
-                " 默认的是srb
-                    " silent! nmap <unique> srb <Plug>(sandwich-replace-auto)
-                    " nmap <silent> <Plug>(sandwich-replace-auto) <Plug>(operator-sandwich-replace)<Plug>(operator-sandwich-release-count)<Plug>(textobj-sandwich-auto-a)
 
 " cnoreabbrev
 " cmap 对vscode也有效
