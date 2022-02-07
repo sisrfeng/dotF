@@ -173,7 +173,7 @@ mkdir -p ~/coc
 ln -sf ~/coc ~/dotF/cfg/
 yes |(mv ~/.tmux ~/.tmux_bk)
 yes |(mv ~/.config ~/.old_config ;  ln -sf ~/dotF/cfg ~/.config)
-yes |(cp ~/dotF/zsh/local_template.zsh ~/local.zsh )
+yes |(cp ~/dotF/auto_install/local_template.zsh ~/local.zsh )
 
 # tmux插件
     TP="$HOME/.tmux_wf/plugins/tpm"
