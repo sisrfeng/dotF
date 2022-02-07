@@ -21,7 +21,7 @@
                         " !~   regexp doesn't match
                 " echo bufname() 显示:
                     " term://~/dotF/cfg/nvim//809801:zsh
-                let file_name = "< " . bufnr . " >"
+                let file_name = "<" . bufnr . ">"
             endif
             let style .= (file_name != '' ? ''. fnamemodify(file_name, ':t') . ' ' : 'No Name')
 
@@ -136,13 +136,12 @@ set laststatus=2  "  always show statusline
 
 " statusline是个str, 竖线 空格都要escape
 " %几* 表示User几的highlight
-    set statusline+=%1*\ %2p%%\ \|\ %F\                                "File+path
+    set statusline=
+    set statusline+=%1*\ %2p%%\ \|\ \                                "File+path
     set statusline+=\[buf号:%n]                          "buffernr
     set statusline+=\ \ %r%w\                            " Readonly? Top/bot.
     set statusline+=\ \ 行:%l/%L\ \             "Rownumber/total (%)
     set statusline+=\ 列:%2c\                            "Colnr
     set statusline+=\|\ 格式:%{&fileformat}\                                  "FileFormat (dos/unix)
     set statusline+=\ %{&spelllang}\                         "Spellanguage
-
-
 

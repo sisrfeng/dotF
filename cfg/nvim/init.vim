@@ -1,4 +1,4 @@
-let mapleader =" "
+let mapleader = " "
 
 " 文件路径
     if exists('g:vscode')
@@ -31,11 +31,12 @@ let mapleader =" "
     " ++nested 在老版本中是nested
     " todo: ~/dotF/cfg/nvim/*.vim会match~/dotF/cfg/nvim/notes/*.vim.
     " 现在只好把notes下的文件改成其他后缀名
-    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."init.vim系列"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
-    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
-    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim source %   | echom "更新了配置"| redraw!
-    autocmd BufWritePost ~/dotF/cfg/nvim/lua/wf_lua.lua echom "更新了lua写的配置" | lua require("wf_lua")
-                                                            " 还是得重启nvim才能更新
+    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim    source %   | echom "更新了"."init.vim系列"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    " autocmd BufWritePost ~/dotF/cfg/nvim/*.vim    source %   | echom "更新了"."配置"."要是改了has_code.vim, 会有点问题,建议重启"| redraw!
+    autocmd BufWritePost ~/dotF/cfg/nvim/*.vim           source ~/dotF/cfg/nvim/init.vim   | echom '重新加载nvim'  | redraw!
+    autocmd BufWritePost ~/dotF/cfg/nvim/lua/wf_lua.lua  source ~/dotF/cfg/nvim/init.vim   | echom '重新加载nvim'  | redraw!
+                                                             " 还是得重启nvim才能更新
+
 
 
     " 4. Go back to the default group, named "end"
@@ -135,7 +136,7 @@ let mapleader =" "
 
 
 
- " 主要影响map
+" 主要影响map
     set timeoutlen=600
     " set notimeout
 
@@ -755,6 +756,7 @@ endif
         set shortmess=filnxtToOF
 
 
+
         set cmdheight=1
         " set cmdheight=2
             " To reduce the number of hit-enter prompts:
@@ -1047,46 +1049,54 @@ endfunc
         " todo: 把:h xxx自动替换成:tab help xxx
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
 
-autocmd TermOpen * startinsert
-    " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
-    " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
 
-    " 0到255
-    let g:terminal_color_4 = '442200'
-    let g:terminal_color_5 = 'black'
-    let g:terminal_color_255 = 'black'
-    "  DEBUG:
-    tnoremap <M-C-Y>h <c-\><c-n>:tabprev<cr>
-                                "" space好像不能传到termnial的父进程
+" terminal mode
+    autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
+    autocmd TermClose *  set laststatus=1
 
-    nnoremap <M-C-Y>c       : tabedit term://zsh<cr>
-    nnoremap <M-C-Y><space> : split term://zsh<cr>
+    autocmd TermOpen * startinsert
+        " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
+        " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
 
-    inoremap <M-C-Y>c       <esc>:tabedit term://zsh<cr>
-    inoremap <M-C-Y><space> <esc>:split term://zsh<cr>
+        " Like ":set" but set only the value local to the
+                " current buffer or window.  Not all options have a
+                "
+        " 0到255
+        let g:terminal_color_4 = '442200'
+        " let g:terminal_color_5 = 'black'
+        " let g:terminal_color_255 = 'black'
+        tnoremap <M-C-F10> <c-\><c-n>
+        "  DEBUG:
+        tnoremap <M-C-F10>h <c-\><c-n>:tabprev<cr>
+                                    "" space好像不能传到termnial的父进程
 
-    nnoremap <M-C-Y>\ :vsplit term://zsh<cr>
-    nnoremap <M-C-Y>\ :vsplit term://zsh<cr>
+        nnoremap <M-C-F10>c       : tabedit term://zsh<cr>
+        nnoremap <M-C-F10><space> : split term://zsh<cr>
 
-    inoremap <M-C-Y>\ <esc>:vsplit term://zsh<cr>
-    inoremap <M-C-Y>\ <esc>:vsplit term://zsh<cr>
+        inoremap <M-C-F10>c       <esc>:tabedit term://zsh<cr>
+        inoremap <M-C-F10><space> <esc>:split term://zsh<cr>
 
-    nnoremap <silent> <M-C-Y>h  :tabprev<cr>
-    nnoremap <silent> <M-C-Y>l  :tabnext<cr>
+        nnoremap <M-C-F10>\ :vsplit term://zsh<cr>
+        nnoremap <M-C-F10>\ :vsplit term://zsh<cr>
 
-    inoremap <silent> <M-C-Y>h  <esc>:tabprev<cr>
-    inoremap <silent> <M-C-Y>l  <esc>:tabnext<cr>
+        inoremap <M-C-F10>\ <esc>:vsplit term://zsh<cr>
+        inoremap <M-C-F10>\ <esc>:vsplit term://zsh<cr>
 
-    nnoremap <silent> <M-C-Y>j  <c-w>j
-    nnoremap <silent> <M-C-Y>k  <c-w>k
+        nnoremap <silent> <M-C-F10>h  :tabprev<cr>
+        nnoremap <silent> <M-C-F10>l  :tabnext<cr>
 
-    " z: 表示zsh
-    nnoremap <C-Z> :tabedit term://zsh<cr>
+        inoremap <silent> <M-C-F10>h  <esc>:tabprev<cr>
+        inoremap <silent> <M-C-F10>l  <esc>:tabnext<cr>
+        nnoremap <silent> <M-C-F10>j  <c-w>j
+        nnoremap <silent> <M-C-F10>k  <c-w>k
 
-nnoremap <leader>h :tabprev<cr>
-nnoremap <leader>l :tabnext<cr>
-nnoremap <c-l> /<c-r><c-w><cr>
-nnoremap <c-h> ?<c-r><c-w><cr>
+        " z: 表示zsh
+        nnoremap <C-Z> :tabedit term://zsh<cr>
+
+    nnoremap <leader>h :tabprev<cr>
+    nnoremap <leader>l :tabnext<cr>
+    nnoremap <c-l> /<c-r><c-w><cr>
+    nnoremap <c-h> ?<c-r><c-w><cr>
 
 " m: middle
 " nnoremap mm zz

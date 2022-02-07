@@ -1,3 +1,4 @@
+--
 -- print('重新定义vim.paste')
 -- vim.cmd('echom "读取wf_lua.lua"')  -- 还是要重开nvim的session, 本文件的新内容才生效
 
