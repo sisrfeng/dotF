@@ -604,7 +604,8 @@ chpwd_functions=(${chpwd_functions[@]} "ls_after_cd")
 # t: trash
 
 
-nn e='nvim'
+# nn e='nvim'
+nn e='nvr'
 # edit diff
 nn ed='nvim -d'
 # if [[ $HOST != 'redmi14-leo' ]] && [[ -z "$TMUX" ]];then  # 远程服务器且用vscode
@@ -734,16 +735,26 @@ nn snp='~/dotF/snippetS'
                 # -f ~/dotF/cfg/tmux/tmux.conf'
                 # tmux 3.1开始: add  ~/.config/tmux/tmux.conf to the default search path for configuration  files.
 
-    tm() {
-        # https://stackoverflow.com/a/29369681/14972148
-        # export MY_VAR="some value"
-        if [ "$1" != "" ] # or better, if [ -n "$1" ]
+    # tm() {
+    #     # https://stackoverflow.com/a/29369681/14972148
+    #     # export MY_VAR="some value"
+    #     if [ "$1" != "" ]
+    #     then
+    #         tmux  new -s s_$1 || tmux attach -t s_$1  -d
+    #     else
+    #         tmux  new -s s_初代 || tmux attach -t s_初代 -d
+    #     fi
+    # }
+
+    tm(){
+        if [ "$1" != "" ]
         then
-            tmux  new -s s_$1 || tmux attach -t s_$1  -d
+            abduco -A Nvim_S_1 nvim ~/dotF/cfg/nvim/init.vim
         else
-            tmux  new -s s_初代 || tmux attach -t s_初代 -d
+            abduco -A Nvim_S_$* nvim ~/dotF/cfg/nvim/init.vim
         fi
     }
+
 
     nn con='conda'
     nn ci='conda install -y'

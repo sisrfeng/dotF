@@ -126,22 +126,24 @@ set laststatus=2  "  always show statusline
     " 在上面的基础上：  (几表示某个highlight设置)
     " %Highlight配色号码
 
-"    %=   右对齐
-"    %r  readonly, 显示 [RO]
+"
 
 
 "  貌似不能放进colorscheme file.
     hi User1 guibg=#e0e5e3  guifg=#123456
     hi User2 guibg=#e0f6e3  guifg=#000000
 
+" stl: statusline
 " statusline是个str, 竖线 空格都要escape
 " %几* 表示User几的highlight
-    set statusline=
-    set statusline+=%1*\ %2p%%\ \|\ \                                "File+path
-    set statusline+=\[buf号:%n]                          "buffernr
-    set statusline+=\ \ %r%w\                            " Readonly? Top/bot.
-    set statusline+=\ \ 行:%l/%L\ \             "Rownumber/total (%)
-    set statusline+=\ 列:%2c\                            "Colnr
-    set statusline+=\|\ 格式:%{&fileformat}\                                  "FileFormat (dos/unix)
-    set statusline+=\ %{&spelllang}\                         "Spellanguage
+    set stl=
+    set stl+=%1*\ %2p%%\ \ %F\ \          " File+path
+    " set stl+=\[buf号:%n]                  " buffernr
+    set stl+=\ \ %r\                      " %r  readonly, 显示 [RO]
+    set stl+=\ \ %w\                      " Top/bot.
+    set stl+=\ \ 行:%l/%L\ \              " Rownumber/total (%)
+    set stl+=\ 列:%2c\                    " Colnr
+    set stl+=\|\ 格式:%{&fileformat}\     " FileFormat (dos/unix)
+    " set stl+=\ %{&spelllang}\             " Spell language?
 
+    autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2

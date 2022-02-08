@@ -42,10 +42,14 @@
     cnoremap <C-e> <End>
 
 
-    nnoremap ss :wq<CR>
-    vnoremap ss :<C-U>wq<CR>
-    nnoremap qq :q!<CR>
-    vnoremap qq :<C-U>q!<CR>
+    " todo:参考  https://github.com/mhinz/vim-sayonara
+    " nnoremap ss      :update<CR>:Sayonara<CR>
+    nnoremap ss      :update<CR>:bdel<CR>
+    vnoremap ss :<C-U>update<CR>:bdel<CR>
+        " :q只退出tab或者window, 但还留在buffer里
+    nnoremap qq       :q!<CR>
+    vnoremap qq :<C-U>:q!<CR>
+
     " nnoremap q :wq<CR>  按一次q要等一会才退出， 不如连续按2次快
     " inoremap qq <ESC>:wq<CR>  别这么干，容易在编辑时敲错
 

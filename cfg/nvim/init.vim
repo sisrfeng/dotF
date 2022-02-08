@@ -37,6 +37,9 @@ let mapleader = " "
     autocmd BufWritePost ~/dotF/cfg/nvim/lua/wf_lua.lua  source ~/dotF/cfg/nvim/init.vim   | echom '重新加载nvim'  | redraw!
                                                              " 还是得重启nvim才能更新
 
+                                                             "
+    nnoremap <M-C-F10>r :source ~/dotF/cfg/nvim/init.vim<CR>:echo "手动reload完了"<cr>
+    " tnoremap <M-C-F10>r :source ~/dotF/cfg/nvim/init.vim<CR>:echo "reload完了"<cr>
 
 
     " 4. Go back to the default group, named "end"
@@ -605,10 +608,11 @@ set autowrite
 " saving,
 noremap <C-S>       :update<CR>
 inoremap <C-S>      <C-O>:update<CR>
-" *v_CTRL-C*  v表示 Visual mode; Stop Visual mode
 vnoremap <C-S>      <C-C>:update<CR>
+                    " Stop Visual mode
+                    " *v_CTRL-C*  v表示 Visual mode;
 
-" For CTRL-V to work autoselect must be off.
+" For CTRL-V to work,  autoselect must be off.
 " On Unix we have two selections, autoselect can be used.
 " if !has("unix")
 "   set guioptions-=a
@@ -985,7 +989,7 @@ endfunc
 
 " unmap <C-[>
 nnoremap  <c-'>     :tab drop ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
-nnoremap  <Leader>: :tab drop ~/.t/wf_out.vim<CR>:put = Vim_out('')<left><left>
+nnoremap  <Leader>: :tab drop ~/.t/wf_out.vim<CR>ggdG:put = Vim_out('')<left><left>
 
 " nnoremap <c-p> :echo 'to be uesd'<CR>
 nnoremap <c-n> :echo 'ctrl-n to be uesd'<CR>
@@ -1050,11 +1054,30 @@ endfunc
         " cnoreabbrev <expr> :h    getcmdtype() == ":" && getcmdline() == ':h '          ? 'cd ~/'                             :   '~/'
 
 
-" terminal mode
-    autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
-    autocmd TermClose *  set laststatus=1
+" terminal mode/windows设置
+    set hidden
+    " lua require("toggleterm").setup{} " 没动静
+	let g:toggleterm_terminal_mapping = '<C-t>'
+    nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+    inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
-    autocmd TermOpen * startinsert
+
+    set  splitbelow  " split后的新窗口 位于下方
+    set  splitright
+
+    " autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
+
+    " autocmd TermClose *  set laststatus=1
+    " autocmd TermClose *  bdel
+
+    autocmd BufWinEnter,WinEnter  term://* startinsert
+    autocmd BufWinEnter,WinEnter  term://* nnoremap <M-C-F10>q :q!<cr>
+                                                                " 要是用bdel, 原来的窗口会split
+    autocmd BufLeave              term://* stopinsert
+    " autocmd BufLeave              term://* nnoremap <M-C-F10>q :echo "真要退出?" |q
+    autocmd BufLeave              term://* nnoremap <M-C-F10>q :q
+
+
         " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
         " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
 
@@ -1062,16 +1085,40 @@ endfunc
                 " current buffer or window.  Not all options have a
                 "
         " 0到255
-        let g:terminal_color_4 = '442200'
+        " let g:terminal_color_4 = '442200'
         " let g:terminal_color_5 = 'black'
         " let g:terminal_color_255 = 'black'
         tnoremap <M-C-F10> <c-\><c-n>
         "  DEBUG:
-        tnoremap <M-C-F10>h <c-\><c-n>:tabprev<cr>
-                                    "" space好像不能传到termnial的父进程
+        tnoremap <M-C-F10>h  <c-\><c-n>:tabprev<cr>
+        tnoremap <M-C-F10>c  <c-\><c-n>:tabedit term://zsh<cr>
+        tnoremap <M-C-F10>q  <c-d><c-\><c-n>:bdel<cr>
+        tnoremap <M-C-F10>\   <c-\><c-n>:vsplit term://zsh<cr>
+        tnoremap <M-C-F10><space> <c-\><c-n>:split term://zsh<cr>
+        tnoremap <c-w> <c-w>
+                " 不map的话, 是vim的window系列的prefix键
+                " map了可以用 ,但有点慢
 
-        nnoremap <M-C-F10>c       : tabedit term://zsh<cr>
-        nnoremap <M-C-F10><space> : split term://zsh<cr>
+
+        " To simulate |i_CTRL-R| in terminal-mode: >
+            tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
+
+        " To use `ALT+{h,j,k,l}` to navigate windows from any mode:
+            " tnoremap <A-h> <C-\><C-N><C-w>h
+            " tnoremap <A-j> <C-\><C-N><C-w>j
+            " tnoremap <A-k> <C-\><C-N><C-w>k
+            " tnoremap <A-l> <C-\><C-N><C-w>l
+            " inoremap <A-h> <C-\><C-N><C-w>h
+            " inoremap <A-j> <C-\><C-N><C-w>j
+            " inoremap <A-k> <C-\><C-N><C-w>k
+            " inoremap <A-l> <C-\><C-N><C-w>l
+            " nnoremap <A-h> <C-w>h
+            " nnoremap <A-j> <C-w>j
+            " nnoremap <A-k> <C-w>k
+            " nnoremap <A-l> <C-w>l
+
+        nnoremap <M-C-F10>c            :tabedit term://zsh<cr>
+        nnoremap <M-C-F10><space>      :split term://zsh<cr>
 
         inoremap <M-C-F10>c       <esc>:tabedit term://zsh<cr>
         inoremap <M-C-F10><space> <esc>:split term://zsh<cr>

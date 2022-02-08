@@ -13,7 +13,7 @@
 -- 这里在生效!!
 -- 如果让函数啥也不干, ctrl v在insort mode和normal mode下都没动静
         vim.paste = (function(lines, phase)
-                        vim.cmd('echo "粘贴会调用 wf_lua.lua里的vim.paste"')
+                        vim.cmd('echo "normal模式和insert模式下, ctrl_v粘贴会调用 wf_lua.lua里的vim.paste"')
 
                         -- vim.cmd('!mkdir -p ~/.t/llllllllll')  -- 会生效
 
@@ -23,19 +23,17 @@
 
                         -- 没有vim.put
                         -- 本来用的是 nvim_paste, 这里换成nvim_put
-                        vim.api.nvim_put(lines,   'c',    true,    true)
+                        vim.api.nvim_put(lines,   'c',    true,    false)
 
                     end)
 
 
-                -- nvim_put({lines}, {type}, {after}, {follow})
-                --                     • "c" |charwise| mode
-                --                     • "l" |linewise| mode
-                --                             {after}   If true insert after cursor (like |p|),
-                --                                     {follow}  If true place cursor at end of inserted text.
-                --
-        --             --
-        --             --
+                            -- nvim_put({lines}, {type}, {after}, {follow})
+                            --                     • "c" |charwise| mode
+                            --                     • "l" |linewise| mode
+                            --                             {after}   If true insert after cursor (like |p|),
+                            --                                     {follow}  If true place cursor at end of inserted text.
+                            --
 
 
 -- 参考:

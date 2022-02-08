@@ -19,6 +19,7 @@ if !exists('g:vscode')
     hi Menu   guibg=#abefcd  guifg=#123456
     hi Pmenu guibg=#ede6d3
     hi SpecialKey guibg=Yellow guifg=black  " unprintable的字符 例如
+    hi ErrorMsg  guibg=#ede6d3
 
     " 背景米白色
     let g:rice_white_wf='#fdf6e3'
