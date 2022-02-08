@@ -147,3 +147,5 @@ set laststatus=2  "  always show statusline
     " set stl+=\ %{&spelllang}\             " Spell language?
 
     autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
+
+

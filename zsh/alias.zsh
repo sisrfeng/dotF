@@ -748,9 +748,9 @@ nn snp='~/dotF/snippetS'
     # }
 
     tm(){
-        if [ "$1" != "" ]
+        if [ "$1" == "" ]
         then
-            abduco -A Nvim_S_1 nvim ~/dotF/cfg/nvim/init.vim
+            abduco -A Nvim_S_默认 nvim ~/dotF/cfg/nvim/init.vim
         else
             abduco -A Nvim_S_$* nvim ~/dotF/cfg/nvim/init.vim
         fi

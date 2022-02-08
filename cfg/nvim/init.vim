@@ -1,4 +1,6 @@
 let mapleader = " "
+hi ErrorMsg  guibg=#ede6d3  " 放init.vim最开头, 这样才能在出错前生效
+
 
 " 文件路径
     if exists('g:vscode')
@@ -1077,6 +1079,9 @@ endfunc
     " autocmd BufLeave              term://* nnoremap <M-C-F10>q :echo "真要退出?" |q
     autocmd BufLeave              term://* nnoremap <M-C-F10>q :q
 
+    augroup MyTerminal | au!
+            autocmd TerminalWinOpen * setlocal statusline=foobar
+    augroup end
 
         " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
         " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
@@ -1088,6 +1093,13 @@ endfunc
         " let g:terminal_color_4 = '442200'
         " let g:terminal_color_5 = 'black'
         " let g:terminal_color_255 = 'black'
+        "
+        "
+         " In nvim, the terminal acts more like a normal buffer.
+                " In vim, the 'termwinkey' option controls which key is recognized as "special" and
+                " doesn't get passed directly to the terminal.
+                " so in nvim, you would need to leave insert mode (via <C-\><C-n>) and then you can use normal mode commands like usual
+                " of course, you can setup your own tmap bindings in nvim to make things work better for your workflow
         tnoremap <M-C-F10> <c-\><c-n>
         "  DEBUG:
         tnoremap <M-C-F10>h  <c-\><c-n>:tabprev<cr>
@@ -1198,3 +1210,5 @@ else
     source $no_vscode
 endif
 
+" 没生效
+" leuut g:neomux_win_num_status='wfwf'
