@@ -80,8 +80,9 @@ aps(){
 # file1 = $(cat answer.txt)  # 能避免特殊字符发挥作用
 
 
-# nn echo='print "正在用print代替echo" && print -l'
 nn ec='print -l && print "正在用print代替echo" '
+nn ev='printenv'
+    # ev: ENV var
 
 nn ver='version'
 

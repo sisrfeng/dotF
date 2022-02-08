@@ -140,7 +140,7 @@ source $ZPLUG_HOME/init.zsh
 
 yes | (unset ALL_PROXY ; pip install --upgrade pip  ; pip install pysocks)
 pip install -r pip_tools.txt
-
+pip install neovim-remote
 pip uninstall pynvim  # 不删会报错
 
 echo '如果有网络问题，这2行要在 设置PROXY后，手动敲: \n

@@ -1092,12 +1092,19 @@ endfunc
         "  DEBUG:
         tnoremap <M-C-F10>h  <c-\><c-n>:tabprev<cr>
         tnoremap <M-C-F10>c  <c-\><c-n>:tabedit term://zsh<cr>
-        tnoremap <M-C-F10>q  <c-d><c-\><c-n>:bdel<cr>
+        tnoremap <M-C-F10>q  <c-d><c-\><c-n>:bdel!<cr>
         tnoremap <M-C-F10>\   <c-\><c-n>:vsplit term://zsh<cr>
         tnoremap <M-C-F10><space> <c-\><c-n>:split term://zsh<cr>
         tnoremap <c-w> <c-w>
                 " 不map的话, 是vim的window系列的prefix键
                 " map了可以用 ,但有点慢
+
+        tnoremap <C-r> <c-r>
+        tnoremap <M-C-F10>e  <c-\><c-n><c-w><S-t>
+        nnoremap <M-C-F10>e  <c-w><S-t>
+        inoremap <M-C-F10>e  <esc><c-w><S-t>
+        vnoremap <M-C-F10>e  <esc><c-w><S-t>
+        cnoremap <M-C-F10>e  <esc><c-w><S-t>
 
 
         " To simulate |i_CTRL-R| in terminal-mode: >

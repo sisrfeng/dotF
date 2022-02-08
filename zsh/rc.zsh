@@ -22,7 +22,7 @@
 # 自动补全/auto-completions/ fpath FPATH
     # 用homebrew的zsh 代替/usr下的
     # brew install zsh-completions后, To activate these completions:
-        FPATH=${brew_wf}/share/zsh-completions:$FPATH
+        # FPATH=${brew_wf}/share/zsh-completions:$FPATH
                         # to make Homebrew’s completions available in zsh,
                         # you must insert the Homebrew-managed zsh/site-functions path into your FPATH
 
@@ -563,18 +563,6 @@ export PATH="$PATH:/usr/local/go/bin"
     上行=$'\e[1A'
     上行=$'\e[1B'
 
-
-    PS1=
-        PS1+="%{${CONDA_PROMPT_MODIFIER}"
-                    # export PS1="%{$fg[cyan]%}【82服务器】%~       %T_周%w号"${换行}">%{$reset_color%}"
-                    # 放文件开头时，颜色时有时无
-                    # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html#Prompt-Expansion
-                    # 不加下面这行，改了conda环境时，才显示（环境名）?
-                        # PS1="${换行}%{${CONDA_PROMPT_MODIFIER}"
-        PS1+="$fg[cyan]%}%~${换行}"
-        PS1+="%{$reset_color%}"
-        PS1+=">"
-        export PS1
 
     source ~/dotF/zsh/zsh-git-prompt/zshrc.sh
         function precmd {
