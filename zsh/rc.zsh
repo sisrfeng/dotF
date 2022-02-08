@@ -628,7 +628,7 @@ source ~/local.zsh
                     # 目标目录
     }
     git_pull_wf(){
-        git pull || echo '网不好,toggle代理' && dl && git pull
+        git pull || (echo '网不好,toggle代理' && dl && git pull)
     }
 
         # 应该没用, 开了代理, 有的应用能连, 有的又要关掉, 连接失败就自动切换吧(用我的函数:dl)
