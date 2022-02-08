@@ -39,7 +39,6 @@ nn '$'='' # 省去删掉复制来的命令 最前面的$
 
 
 nn w3m='echo "w3m或者ranger显示图片是很难的__等关注的issue的邮件通知吧" ; w3m'
-nn u='unset ALL_PROXY'
 
 # 多加一个找manpage的路径
 # -M 指定manpath
@@ -108,6 +107,7 @@ q(){
     tree -L 2 --filelimit=50 $1 | peco
 }
 
+# 暂时不用, 用前检查一下
 git_rm_sub(){
     sub_name=$1
     git submodule deinit -f $sub_name
@@ -880,57 +880,6 @@ nn in='e ~/dotF/cfg/nvim/init.vim'  # init.vim
 nn x='PAGER=bat git'
 nn lg='lazygit'
 
-
-# get github
-gg(){
-    chpwd_functions=()  # 别显示 所去目录下的文件
-    cd ~/dotF
-    # echo "\n-----------1. stash，藏起本地修改（但忽略新增文件）------------"
-    git stash --include-untracked --message="【stash的message_`date  +"%m月%d日%H:%M"`】"
-    # echo "\n-----------------2. pull, 拉远程的新代码-----------------"
-    git pull  # Update the branch to the latest code   = fetch + merge? 还是只fetch?
-    # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
-    # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
-    git stash pop  # Merge your local changes into the latest code, 并且在没有conflict时，删掉stash里的这个东西
-    # 貌似比git stash apply好
-    # echo '会报：Dropped refs/stash@{0}'
-    # echo "\n 【亲，检查一下有没有冲突】 "
-    zsh
-}
-
-
-# 我最新的配置 真是yyds
-
-
-yy(){
-    # echo "\n--------------------------------4. add commit push三连-----------------------------------------------"
-    cd ~/dotF
-    git stash clear  # 避免pull后有冲突，合并完后，再敲gg，死循环地有冲突
-    echo "\n--------------------------------add commit push三连-----------------------------------------------"
-    git add --verbose  --all .
-    if [[ "$1" != "" ]]  # if [[ "$1" == "" ]] 容易出bug？一般都不这么写
-        # string = pattern
-        # string == pattern
-        #        true if string matches pattern.  The two forms are exactly equivalent.  The `=' form is the traditional shell
-        #        syntax (and hence the only one generally used with the test and [ builtins); the `==' form provides  compati‐
-        #        bility with other sorts of computer language.
-        #
-        # string != pattern
-        #        true if string does not match pattern.
-    then
-        # 不加--all时，如过github有些文件，而本地删掉了，则github上不想要的文件 还在
-        git commit --all --message "$1"
-    else
-        git commit --all --message "我是commit名__`date  +"%m月%d日%H:%M"`"
-    fi
-    git push --quiet  #  只在出错时有输出
-    # git push 2>&1 >~/.t/git_push的stdout  # 不行
-    cd -
-    zsh
-}
-
-
-
 # todo  # alt left 搞成和windows一样的体验
 # }
 
@@ -1000,8 +949,6 @@ nn c=cp
 nn cp='cp -ivr'
 nn c.='cp -ivr -t `pwd`'
 nn df='df -h | bat'
-# bie dai li，别代理
-nn bdl='unset ALL_PROXY; pqi use tuna; conda conf'
 
 nn dkr='docker'
 nn dkrps='docker ps -a --format "table {{.Names}} 我是分隔符 {{.Image}}  "'
@@ -1137,46 +1084,14 @@ th(){ touch $1.n }
 #$ echo l*
 #l*
 
-gc(){
-    if [[ -z ${ALL_PROXY} ]]; then  # -z: 看是否empty
-        echo '没开代理'
-    else
-        echo '代理：'
-        echo ${ALL_PROXY}
-    fi
-    echo $1 $2 $3
-    git clone $1 $2
-}
 nn gcc='nocorrect gcc'
-nn get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
-# nn git='pro &&  git'
+# nn get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
 nn globurl='noglob urlglobber '
 hl(){
     du --summarize --human-readable $* | sort --human-numeric-sort --reverse| bat
  }
 
 nn http-serve='python3 -m http.server'
-
-# check ip
-cip(){
-    curl --show-error --silent cip.cc 2> ~/.t/curl_cip.cc.out
-                                      # redirects/重定向
-                                     # "2"必须紧贴着它:  ">",  不能有空格
-    OUT=`cat ~/.t/curl_cip.cc.out`
-    # string contain substring? shell处理字符串切片
-        # string='My string';
-        # if [[ $string =~ "My" ]]; then
-        #     echo "It's there!"
-        # fi
-    if [[ $OUT == *"Recv failure"* ]];then
-        echo "curl cip.cc 的结果 >_> $OUT"
-        unset ALL_PROXY &&  echo "\n代理挂了，切回无代理"
-        INDEX=0
-    else
-
-    fi
-    source ~/dotF/auto_install/apt_source.sh
-}
 
 # kill -15
 nn k='kill -s TERM'
@@ -1341,6 +1256,5 @@ nn cm='whence -ca'
     # 代替where which type
     # -v for verbose, 不过好像没用
 
-nn goo='dl ; googler'
 nn bi='brew  install'
 

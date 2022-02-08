@@ -511,9 +511,12 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'https://github.com/rickhowe/diffchar.vim'
 
 " 准备抛弃tmux
-    Plug 'akinsho/toggleterm.nvim'
+    " Plug 'akinsho/toggleterm.nvim'
     Plug 'https://github.com/mhinz/neovim-remote'
-    Plug 'nikvdp/neomux'
+
+    Plug 'nikvdp/neomux'  " 会导致terminal退出后, 多出一个split窗口
+        let g:neomux_win_num_status='窗:%{WindowNumber()}'
+
     Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
     let g:sayonara_confirm_quit=1  " 没有buffer就退出, 不用确认,
                                 " 智能处理:wq :bd等

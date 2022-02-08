@@ -146,6 +146,9 @@ set laststatus=2  "  always show statusline
     set stl+=\|\ 格式:%{&fileformat}\     " FileFormat (dos/unix)
     " set stl+=\ %{&spelllang}\             " Spell language?
 
-    autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
 
-
+autocmd BufWinEnter,WinEnter  term://* setlocal statusline=%Y
+         " 这样不起任何作用?
+            " autocmd BufWinEnter,WinEnter  term://* setlocal statusline=
+" 不生效:
+" autocmd BufWinEnter,WinEnter  term://* setlocal laststatus=0 | setglobal laststatus=2

@@ -2,6 +2,7 @@ let mapleader = " "
 hi ErrorMsg  guibg=#ede6d3  " 放init.vim最开头, 这样才能在出错前生效
 
 
+
 " 文件路径
     if exists('g:vscode')
         " 用vscode时，本文件里也有依赖于$MYVIMRC的变量。别扔掉$MYVIMRC
@@ -368,6 +369,7 @@ hi ErrorMsg  guibg=#ede6d3  " 放init.vim最开头, 这样才能在出错前生�
 	source ~/dotF/cfg/nvim/beautify_wf.vim
 			" 这行要调用lucius， 要在`call plug#end()`后面
 	source ~/dotF/cfg/nvim/tab_status_lines.vim
+
 
 " 替换/replace
 	" :[range]s[ubstitute]/{pattern}/{string}/[flags] [count]
@@ -1057,31 +1059,27 @@ endfunc
 
 
 " terminal mode/windows设置
-    set hidden
-    " lua require("toggleterm").setup{} " 没动静
-	let g:toggleterm_terminal_mapping = '<C-t>'
-    nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
-    inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
+    " 插件toggleterm的设置
+        " set hidden
+        " lua require("toggleterm").setup{} " 没动静
+        " let g:toggleterm_terminal_mapping = '<C-t>'
+        " nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+        " inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
 
     set  splitbelow  " split后的新窗口 位于下方
     set  splitright
 
-    " autocmd TermEnter *  setlocal laststatus=0 | setglobal laststatus=2
-
-    " autocmd TermClose *  set laststatus=1
     " autocmd TermClose *  bdel
 
     autocmd BufWinEnter,WinEnter  term://* startinsert
-    autocmd BufWinEnter,WinEnter  term://* nnoremap <M-C-F10>q :q!<cr>
-                                                                " 要是用bdel, 原来的窗口会split
+    autocmd BufWinEnter,WinEnter  term://* nnoremap <M-C-F10>q :bdel!<cr>
+                                                                " 无论用bdel还是q, 原来的窗口都会split
     autocmd BufLeave              term://* stopinsert
     " autocmd BufLeave              term://* nnoremap <M-C-F10>q :echo "真要退出?" |q
     autocmd BufLeave              term://* nnoremap <M-C-F10>q :q
 
-    augroup MyTerminal | au!
-            autocmd TerminalWinOpen * setlocal statusline=foobar
-    augroup end
+
 
         " 不便于用vim的键位粘贴. 如果用tmux的键位粘贴, 那不如直接用tmux开zsh
         " 改变主意: 如果nvim代替tmux, 进入terminal一般要进insert mode
@@ -1104,10 +1102,10 @@ endfunc
         "  DEBUG:
         tnoremap <M-C-F10>h  <c-\><c-n>:tabprev<cr>
         tnoremap <M-C-F10>c  <c-\><c-n>:tabedit term://zsh<cr>
-        tnoremap <M-C-F10>q  <c-d><c-\><c-n>:bdel!<cr>
+        tnoremap <M-C-F10>q  <c-d><c-\><c-n>:q!<cr>
         tnoremap <M-C-F10>\   <c-\><c-n>:vsplit term://zsh<cr>
         tnoremap <M-C-F10><space> <c-\><c-n>:split term://zsh<cr>
-        tnoremap <c-w> <c-w>
+        " tnoremap <c-w> <c-w>
                 " 不map的话, 是vim的window系列的prefix键
                 " map了可以用 ,但有点慢
 
@@ -1210,5 +1208,3 @@ else
     source $no_vscode
 endif
 
-" 没生效
-" leuut g:neomux_win_num_status='wfwf'
