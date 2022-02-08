@@ -614,10 +614,10 @@ source ~/local.zsh
     dl(){
         if [[ $ALL_PROXY == "" ]] ; then
             export_all_proxy
-            # pqi use pypi
+            pqi use pypi
         else
             unset ALL_PROXY
-            # pqi use tuna
+            pqi use tuna
             # conda 切换国内
         fi
         }
