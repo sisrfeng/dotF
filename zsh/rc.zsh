@@ -621,6 +621,7 @@ source ~/local.zsh
     # 代理/网络
         nn u='unset ALL_PROXY'  # 应该不用再手动设了
 
+    # 如果在前面定义了alias dl='某某', 这里会报错: error near dl()
         dl(){
             if [[ $ALL_PROXY == "" ]] ; then
                 export_all_proxy
@@ -686,7 +687,7 @@ source ~/local.zsh
         gg(){
             chpwd_functions=()  # 别显示 所去目录下的文件
             cd ~/dotF
-            git stash --include-untracked --message="【`date  +"%m月%d日%H:%M"` 的stash】"
+            git stash --include-untracked --message="【`date  +"%m月%d日%H时"` 的stash】"
             git_pull_wf && git stash pop
                 # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
                 # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
@@ -700,7 +701,7 @@ source ~/local.zsh
             git add --verbose  --all .
                         # 不加--all时，如果github有些文件，而本地删掉了，则github上不想要的文件 还在
 
-            MSG_wf=${1:-$(`date  +"%m月%d日%H:%M"` 的commit)}
+            MSG_wf=${1:-$(`date  +"%m月%d日%H时"` 的commit)}
             git commit --all --message "$MSG_wf"
 
             (git push --quiet &&  git stash clear) || echo '网不好 toggle了代理' && dl && git push --quiet &&  git stash clear
@@ -709,3 +710,7 @@ source ~/local.zsh
             cd -
             zsh
         }
+
+        # alias ori='pqi use pypi '  # PyQuickInstall
+        # alias tuna='pqi use tuna' # pip change
+

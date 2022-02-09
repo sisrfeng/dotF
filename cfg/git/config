@@ -71,13 +71,18 @@
 
 
 [http]
-# 避免出现这类卡死:  fatal: unable to access
-                  # 'https://github.com/sisrfeng/dotF.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
-    lowSpeedLimit = 30000  # 单位B/s
-        #  If the HTTP transfer speed is less than 'http.lowSpeedLimit'
-        # for longer than 'http.lowSpeedTime' seconds, the transfer is aborted
-    lowSpeedTime = 5  # 单位秒
+  # 避免出现这类卡死:  fatal: unable to access
+                    # 'https://github.com/sisrfeng/dotF.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+      lowSpeedLimit = 30000  # 单位B/s
+          #  If the HTTP transfer speed is less than 'http.lowSpeedLimit'
+          # for longer than 'http.lowSpeedTime' seconds, the transfer is aborted
+      lowSpeedTime = 5  # 单位秒
+  
+      # 危险的解决方法: 
+        # git config --global http.sslVerify false
+        # git config --global http.postBuffer 1048576000
 
-    # 危险的解决方法: 
-      # git config --global http.sslVerify false
-      # git config --global http.postBuffer 1048576000
+
+	proxy = ${WF_ip}
+      # works for both http and https repos
+
