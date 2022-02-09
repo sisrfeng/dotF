@@ -748,8 +748,7 @@ nn snp='~/dotF/snippetS'
     # }
 
     tm(){
-        if [ "$1" == "" ]
-        then
+        if [[ "$1" == "" ]] ;  then
             abduco -A Nvim_S_默认 nvim ~/dotF/cfg/nvim/init.vim
         else
             abduco -A Nvim_S_$* nvim ~/dotF/cfg/nvim/init.vim
@@ -1236,25 +1235,57 @@ nn wgname='wget -c -O "wf_need_to_change_name"'
     # -O: 指定输出文件名
 
 
-nn help=run-help
-nn hp=run-help
+# help/man/tldr
 
-nn _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
-            # 网络不好时, 自己下载tldr.zip, 解压到~/.tldr/cache/ 可以删掉pages.某某语言,
-            # 只剩pages目录
-# nn _tldr='/home/linuxbrew/.linuxbrew/bin/tldr'
-            # 同样是下载tldr.zip   ~/.tldrc/tldr/ 一堆各种语言的pages
+    nn help=run-help
+    nn hp=run-help
 
-        # nn tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
+    nn _tldr='/usr/local/lib/node_modules/tldr/bin/tldr --theme base16'
+                # 网络不好时, 自己下载tldr.zip, 解压到~/.tldr/cache/ 可以删掉pages.某某语言,
+                # 只剩pages目录
+    # nn _tldr='/home/linuxbrew/.linuxbrew/bin/tldr'
+                # 同样是下载tldr.zip   ~/.tldrc/tldr/ 一堆各种语言的pages
 
-        # 在各种client中,它最好看, 但要是找不到, 会一直找
-        # brew install tldr, 得到的格式用vim打开很乱
+                # nn tldr='tldr --platform=linux'  # 别这样? linux目录和common, mac等平级
 
-nn cm='whence -ca'
-    # 这可以退休了?  直接用h()
-    # cm for command
-    # 代替where which type
-    # -v for verbose, 不过好像没用
+                # 在各种client中,它最好看, 但要是找不到, 会一直找
+                # brew install tldr, 得到的格式用vim打开很乱
+
+    # 逐级查help
+    h(){
+        # todo https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion-Flags
+        # parameter expansion
+        # 结合brew和npm安装的tldr的优点, 跑2次tldr
+        # if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 2> /dev/null` == *"This page doesn't exist yet"* ]];  then
+        echo '这具体是:'
+        whence -ca $1
+        echo ' '
+        echo "$1 的用法:"
+        if [[ `/home/linuxbrew/.linuxbrew/bin/tldr $1 ` == *"This page doesn't exist yet"* ]];  then
+            run-help $1
+                # 要是tldr找不到, 才run-help
+        else
+            # _tldr $1 > ~/.t/tldr_tmp.zsh
+            _tldr $1 > ~/.t/tldr_tmp.zsh
+            nvim ~/.t/tldr_tmp.zsh
+                    # 不好的方案
+                        # _tldr $1 | nvim  # nvim会抽风
+                        # nvim   `_tldr $1`  # 不行, ``返回的是-1, 而非stdout内容
+                        # bat ~/.t/.tldr_tmp.zsh  # 粘贴不方便
+        fi
+        # echo 'zsh的man不全？试试这个'
+        # echo 'w3m man.cx/你的命令'  # 更新：run-help就可以找到zsh的built-in
+
+        # todo
+        # man可以指定pager,  less这个pager可以指定打开的位置
+        # man --pager="less --pattern 'keyboard definition'" zshcontrib
+    }
+
+    nn cm='whence -ca'
+        # 这可以退休了?  直接用h()
+        # cm for command
+        # 代替where which type
+        # -v for verbose, 不过好像没用
 
 nn bi='brew  install'
 
