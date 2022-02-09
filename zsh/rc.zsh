@@ -548,32 +548,6 @@ export PATH="$PATH:/usr/local/go/bin"
 
 
 
-#
-# prompt  ps1等
-    autoload -U promptinit    # -U: suppress alias expansion for functions
-    promptinit
-    autoload -U colors && colors
-        # 定义了fg  bg等环境变量
-        # Red, Blue, Green, Cyan, Yellow, Magenta, Black & White
-
-
-    # https://void-shana.moe/linux/customize-your-zsh-prompt.html
-
-    换行=$'\n'
-    上行=$'\e[1A'
-    上行=$'\e[1B'
-
-
-    source ~/dotF/zsh/zsh-git-prompt/zshrc.sh
-        function precmd {
-            export RPS1='$(git_super_status)'
-        }
-
-    export PS2="%{$fg[cyan]%}%_>%{$reset_color%}"
-    export RPS2="%{$fg[cyan]%} 换行后继续敲  %{$reset_color%}"
-    # 别加$bg[white]:
-    # export RPS2="%{$fg[cyan]$bg[white]%} 换行后继续敲  %{$reset_color%}"
-
 export RANGER_LOAD_DEFAULT_RC=FALSE
 
 if [ -d "$HOME/.local/bin" ]; then
@@ -606,93 +580,132 @@ export PATH="$HOME/dotF/mini_FS/bin:$PATH:/snap/bin"
     export MANPATH="${brew_wf}/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="${brew_wf}/share/info:${INFOPATH:-}"  # 最后的减号是啥?zsh的文档太难懂了...
 
+
+# prompt  ps1等
+    autoload -U promptinit    # -U: suppress alias expansion for functions
+    promptinit
+    autoload -U colors && colors
+        # 定义了fg  bg等环境变量
+        # 可以用这些颜色:Red, Blue, Green, Cyan, Yellow, Magenta, Black & White
+
+    # https://void-shana.moe/linux/customize-your-zsh-prompt.html
+
+    换行=$'\n'
+    上行=$'\e[1A'
+    上行=$'\e[1B'
+
+    source ~/dotF/zsh/zsh-git-prompt/zshrc.sh
+        function precmd {
+            export RPS1='$(git_super_status)'
+        }
+    export RPS1="%{$fg[cyan]%}%T_周%w号 %{$reset_color%}"
+
+    export PS2="%{$fg[cyan]%}%_>%{$reset_color%}"
+    export RPS2="%{$fg[cyan]%} 换行后继续敲  %{$reset_color%}"
+    # 别加$bg[white]:
+    # export RPS2="%{$fg[cyan]$bg[white]%} 换行后继续敲  %{$reset_color%}"
+
+
 source ~/local.zsh
 
-# 代理/网络
-    nn u='unset ALL_PROXY'  # 应该不用再手动设了
 
-    dl(){
-        if [[ $ALL_PROXY == "" ]] ; then
-            export_all_proxy
-            pqi use pypi
-        else
-            unset ALL_PROXY
-            pqi use tuna
-            # conda 切换国内
-        fi
+# 这些要在local.zsh后:
+
+    # 在local.zsh的PS1后append:
+        PS1+="$fg[cyan]%}%~${换行}"
+        PS1+="%{$reset_color%}"
+        PS1+=">"
+        export PS1
+
+
+    # 代理/网络
+        nn u='unset ALL_PROXY'  # 应该不用再手动设了
+
+        dl(){
+            if [[ $ALL_PROXY == "" ]] ; then
+                export_all_proxy
+                pqi use pypi
+            else
+                unset ALL_PROXY
+                pqi use tuna
+                # conda 切换国内
+            fi
+            }
+
+        gc(){
+            git clone $1 $2 || echo '网不好,toggle代理' && dl && git clone $1 $2
+                    # url
+                        # 目标目录
+        }
+        git_pull_wf(){
+            git pull || (echo '网不好,toggle代理' && dl && git pull)
         }
 
-    gc(){
-        git clone $1 $2 || echo '网不好,toggle代理' && dl && git clone $1 $2
-                  # url
-                    # 目标目录
-    }
-    git_pull_wf(){
-        git pull || (echo '网不好,toggle代理' && dl && git pull)
-    }
+            # 应该没用, 开了代理, 有的应用能连, 有的又要关掉, 连接失败就自动切换吧(用我的函数:dl)
+                # check ip
+                # cip(){
+                #     curl --show-error --silent cip.cc 2> ~/.t/curl_cip.cc.out
+                #                                     # redirects/重定向
+                #                                     # "2"必须紧贴着它:  ">",  不能有空格
+                #     OUT=`cat ~/.t/curl_cip.cc.out`
+                #     # string contain substring? shell处理字符串切片
+                #         # string='My string';
+                #         # if [[ $string =~ "My" ]]; then
+                #         #     echo "It's there!"
+                #         # fi
+                #     if [[ $OUT == *"Recv failure"* ]];then
+                #         echo "curl cip.cc 的结果 >_> $OUT"
+                #         unset ALL_PROXY &&  echo "\n代理挂了，切回无代理"
+                #         INDEX=0
+                #     else
+                #
+                #     fi
+                #     source ~/dotF/auto_install/apt_source.sh
+                # }
 
-        # 应该没用, 开了代理, 有的应用能连, 有的又要关掉, 连接失败就自动切换吧(用我的函数:dl)
-            # check ip
-            # cip(){
-            #     curl --show-error --silent cip.cc 2> ~/.t/curl_cip.cc.out
-            #                                     # redirects/重定向
-            #                                     # "2"必须紧贴着它:  ">",  不能有空格
-            #     OUT=`cat ~/.t/curl_cip.cc.out`
-            #     # string contain substring? shell处理字符串切片
-            #         # string='My string';
-            #         # if [[ $string =~ "My" ]]; then
-            #         #     echo "It's there!"
-            #         # fi
-            #     if [[ $OUT == *"Recv failure"* ]];then
-            #         echo "curl cip.cc 的结果 >_> $OUT"
-            #         unset ALL_PROXY &&  echo "\n代理挂了，切回无代理"
-            #         INDEX=0
-            #     else
+
+
+    # 要用到代理的alias
+
+        nn git='export_all_proxy; git'
+                # git不开代理用不了? 出现过开了代理反而用不了?
+
+        gc(){
+            # if [[ ${ALL_PROXY} == "" ]]; then
+            #     echo '没开代理'
+            # else
+            #     echo '代理：'
+            #     echo ${ALL_PROXY}
+            # fi
             #
-            #     fi
-            #     source ~/dotF/auto_install/apt_source.sh
-            # }
+            # echo $1 $2 $3
+            git clone $1 $2
+        }
+
+        # get github
+        gg(){
+            chpwd_functions=()  # 别显示 所去目录下的文件
+            cd ~/dotF
+            git stash --include-untracked --message="【`date  +"%m月%d日%H:%M"` 的stash】"
+            git_pull_wf && git stash pop
+                # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
+                # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
+            zsh
+        }
 
 
+        # 我最新的配置 真是yyds
+        yy(){
+            cd ~/dotF
+            git add --verbose  --all .
+                        # 不加--all时，如果github有些文件，而本地删掉了，则github上不想要的文件 还在
 
-# 要用到代理的alias
+            MSG_wf=${1:-$(`date  +"%m月%d日%H:%M"` 的commit)}
+            git commit --all --message "$MSG_wf"
 
-    gc(){
-        if [[ -z ${ALL_PROXY} ]]; then  # -z: 看是否empty
-            echo '没开代理'
-        else
-            echo '代理：'
-            echo ${ALL_PROXY}
-        fi
-
-        echo $1 $2 $3
-        git clone $1 $2
-    }
-
-    # get github
-    gg(){
-        chpwd_functions=()  # 别显示 所去目录下的文件
-        cd ~/dotF
-        git stash --include-untracked --message="【`date  +"%m月%d日%H:%M"` 的stash】"
-        git_pull_wf && git stash pop
-            # echo "\n如果giithub上领先于本地，那么 此时本地的修改还被藏着，现在打开本地文件和github上一样"
-            # echo "\n---------------------3. stashed的东西并到 本地的当前代码 ---------------------"
-        zsh
-    }
-
-
-    # 我最新的配置 真是yyds
-    yy(){
-        cd ~/dotF
-        git add --verbose  --all .
-                    # 不加--all时，如果github有些文件，而本地删掉了，则github上不想要的文件 还在
-
-        MSG_wf=${1:-$(`date  +"%m月%d日%H:%M"` 的commit)}
-        git commit --all --message "$MSG_wf"
-
-        (git push --quiet &&  git stash clear) || echo '网不好 toggle了代理' && dl && git push --quiet &&  git stash clear
-                            # 要是pull后有conflit,stashed的东西会留着. 都commit了, 还留着stash干啥?
-                    # quiet: 只在出错时有输出
-        cd -
-        zsh
-    }
+            (git push --quiet &&  git stash clear) || echo '网不好 toggle了代理' && dl && git push --quiet &&  git stash clear
+                                # 要是pull后有conflit,stashed的东西会留着. 都commit了, 还留着stash干啥?
+                        # quiet: 只在出错时有输出
+            cd -
+            zsh
+        }
