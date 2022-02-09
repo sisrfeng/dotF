@@ -711,7 +711,8 @@ source ~/local.zsh
             MSG_wf=${1:-"$(date +"%m月%d日%H时")的commit"}
             \git commit --all --message $MSG_wf
 
-            git push --quiet &&  \git stash clear
+            git push --quiet
+            \git stash clear
                                 # 要是pull后有conflit,stashed的东西会留着. 但是 都commit了, 还留着stash干啥?
                         # quiet: 只在出错时有输出
             cd -
