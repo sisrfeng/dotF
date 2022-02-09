@@ -708,11 +708,11 @@ source ~/local.zsh
             \git add --verbose  --all .
                         # 不加--all时，如果github有些文件，而本地删掉了，则github上不想要的文件 还在
 
-            MSG_wf=${1:-$(`date +"%m月%d日%H时"` 的commit)}
-            \git commit --all --message "$MSG_wf"
+            MSG_wf=${1:-"$(date +"%m月%d日%H时")的commit"}
+            \git commit --all --message $MSG_wf
 
-            (git push --quiet &&  \git stash clear) || echo '网不好 toggle了代理' && dl && git push --quiet &&  git stash clear
-                                # 要是pull后有conflit,stashed的东西会留着. 都commit了, 还留着stash干啥?
+            git push --quiet &&  \git stash clear
+                                # 要是pull后有conflit,stashed的东西会留着. 但是 都commit了, 还留着stash干啥?
                         # quiet: 只在出错时有输出
             cd -
             zsh
